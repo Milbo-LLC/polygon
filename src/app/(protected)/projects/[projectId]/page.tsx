@@ -20,5 +20,5 @@ export default function ProjectPage() {
     }
   }, [project, projectId, router]);
 
-  return <div>Loading project...</div>;
+  return <div>Loading...</div>;
 }
