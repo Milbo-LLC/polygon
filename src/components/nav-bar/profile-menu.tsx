@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { PROFILE_MENU_LINKS } from '~/constants/links';
 import { LogOutIcon, UserIcon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -29,7 +28,7 @@ export const ProfileMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer hover:opacity-80 h-8 w-8">
+        <Avatar className="cursor-pointer hover:opacity-80 size-6">
           <AvatarImage src={user?.image ?? ''} alt="User avatar" />
           <AvatarFallback>
             <UserIcon className="size-4" />

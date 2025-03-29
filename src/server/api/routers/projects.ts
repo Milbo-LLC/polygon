@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -65,7 +65,7 @@ export const projectRouter = createTRPCRouter({
       const { id } = input;
 
       const project = await ctx.db.project.findUnique({
-        where: { id },
+        where: { id, deletedAt: null },
         include: {
           documents: true,
         },
@@ -82,6 +82,9 @@ export const projectRouter = createTRPCRouter({
     .output(z.array(ProjectSchema))
     .query(async ({ ctx }) => {
       const projects = await ctx.db.project.findMany({
+        where: {
+          deletedAt: null
+        },
         include: { documents: true },
       });
       

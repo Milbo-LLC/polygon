@@ -20,8 +20,17 @@ const currentPositionAtom = atomWithStorage<Coordinates>('current-position', [0,
 const historyIndexAtom = atomWithStorage<number>('history-index', 0)
 
 // Fusion 360-style adaptive grid
-const Fusion360Grid = () => {
+const Fusion360Grid = ({ units = 'mm' }) => {
   const { camera } = useThree()
+  const gridColor = "#3471eb" // Consistent Fusion 360-like blue color
+  
+  // Scale factors for different units
+  const unitScales = {
+    mm: 1,
+    inch: 25.4 // 1 inch = 25.4mm
+  }
+  
+  const scale = unitScales[units as keyof typeof unitScales]
 
   const gridRefs = {
     major: useRef<LineBasicMaterial>(null),
@@ -99,76 +108,80 @@ const Fusion360Grid = () => {
     }
   })
 
+  // Grid sizes scaled based on units
+  const baseSize = 1000 * scale
+  const detailSize = 100 * scale
+
   return (
     <>
       {/* Major grid lines that are always visible (10x10) */}
       <gridHelper
-        args={[1000, 10, '#3471eb', '#3471eb']}  // Fusion 360-like blue
+        args={[baseSize, 10, gridColor, gridColor]}
         position={[0, 0, 0]}
       >
         <lineBasicMaterial
           ref={gridRefs.major}
           transparent={true}
           opacity={0.7}
-          color="#3471eb"
+          color={gridColor}
           linewidth={1}
         />
       </gridHelper>
 
       {/* Level 0 - base grid (100x100) */}
       <gridHelper
-        args={[1000, 100]}
+        args={[baseSize, 100]}
         position={[0, 0, 0]}
       >
         <lineBasicMaterial
           ref={gridRefs.level0}
           transparent={true}
           opacity={0.0}
-          color="#606060"
+          color={gridColor}
         />
       </gridHelper>
 
       {/* Level 1 - medium zoom (50x50) */}
       <gridHelper
-        args={[100, 50]}
+        args={[detailSize, 50]}
         position={[0, 0, 0]}
       >
         <lineBasicMaterial
           ref={gridRefs.level1}
           transparent={true}
           opacity={0.0}
-          color="#808080"
+          color={gridColor}
         />
       </gridHelper>
 
       {/* Level 2 - closer zoom (250x250) */}
       <gridHelper
-        args={[100, 250]}
+        args={[detailSize, 250]}
         position={[0, 0, 0]}
       >
         <lineBasicMaterial
           ref={gridRefs.level2}
           transparent={true}
           opacity={0.0}
-          color="#666666"    // Darker gray
+          color={gridColor}
         />
       </gridHelper>
 
       {/* Level 3 - closest zoom (1250x1250) */}
       <gridHelper
-        args={[100, 1250]}
+        args={[detailSize, 1250]}
         position={[0, 0, 0]}
       >
         <lineBasicMaterial
           ref={gridRefs.level3}
           transparent={true}
           opacity={0.0}
-          color="#dddddd"    // Much lighter gray
+          color={gridColor}
         />
       </gridHelper>
 
       {/* Axes */}
-      <axesHelper args={[500]} />
+      <axesHelper args={[500 * scale]} />
     </>
   )
 }
