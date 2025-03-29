@@ -10,7 +10,7 @@ import { Small } from "~/components/ui/typography";
 import { Badge } from "~/components/ui/badge";
 import { sidebarCollapsedAtom } from "./_atoms";
 import { ProfileMenu } from "~/components/nav-bar/profile-menu";
-import { type PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { useRouter } from "next/navigation";
