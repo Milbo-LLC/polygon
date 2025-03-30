@@ -10,7 +10,7 @@ import { Small } from "~/components/ui/typography";
 import { Badge } from "~/components/ui/badge";
 import { sidebarCollapsedAtom } from "./_atoms";
 import { ProfileMenu } from "~/components/nav-bar/profile-menu";
-import { PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, useEffect } from "react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { useRouter } from "next/navigation";
@@ -55,7 +55,7 @@ export function ClientLayout({
             <SidebarHeader className="flex flex-row border-b items-center justify-between">
                 
               {!sidebarCollapsed && 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-1">
                   <ProfileMenu />
                 </div>
               }
@@ -63,7 +63,7 @@ export function ClientLayout({
                 <TooltipTrigger asChild>
                   <SidebarTrigger />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent side="right">
                   <div className="flex gap-2">
                     {
                       sidebarCollapsed ? (

@@ -9,6 +9,7 @@ import { Card, CardHeader, CardContent } from "~/components/ui/card";
 import { usePostHog } from "posthog-js/react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { useEffect } from "react";
+import WaitListScene from "./components/waitlist-scene";
 
 export default function WaitListPage() {
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function WaitListPage() {
   if (session) {
     return (
       <div className="flex flex-col p-4 gap-4 items-center justify-center h-screen w-screen">
+        <WaitListScene />
         <H3>You have been added to the wait list</H3>
         <P className="text-sm text-muted-foreground">
           We&apos;ll notify you when you have access to the app.
