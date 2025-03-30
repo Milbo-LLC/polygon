@@ -20,7 +20,9 @@ export function BouncingCube() {
       meshRef.current.position.y = Math.sin(time * 2) * 0.5;
 
       // Color transition
-      meshRef.current.material.color = updateColor(delta);
+      if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
+        meshRef.current.material.color = updateColor(delta);
+      }
     }
   });
 
