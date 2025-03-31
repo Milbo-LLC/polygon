@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { PlusIcon, Trash2Icon, MoreVertical, Pencil } from "lucide-react";
 import { P } from "~/components/ui/typography";
@@ -18,7 +19,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "~/components/ui/alert-dialog";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,12 +26,45 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
+import { socket } from "~/socket";
+
 
 export default function ProjectsPage() {
+  const [isConnected, setIsConnected] = useState(false);
+  const [transport, setTransport] = useState("N/A");
+
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [projectToRename, setProjectToRename] = useState<Project | null>(null);
   const [newName, setNewName] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (socket.connected) {
+      onConnect();
+    }
+
+    function onConnect() {
+      setIsConnected(true);
+      setTransport(socket.io.engine.transport.name);
+
+      socket.io.engine.on("upgrade", (transport) => {
+        setTransport(transport.name);
+      });
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+      setTransport("N/A");
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
+  }, []);
 
   const createProject = api.project.create.useMutation({
     onSuccess: async (project: Project) => {
@@ -68,8 +101,6 @@ export default function ProjectsPage() {
   const { data: projects } = api.project.getAll.useQuery();
   const utils = api.useUtils();
 
-  console.log('projects: ', projects);
-
   const CreateProjectCard = (
     <Card
       className="h-[240px] cursor-pointer hover:border-primary/50 transition-colors flex flex-col items-center justify-center"
@@ -86,7 +117,8 @@ export default function ProjectsPage() {
   return (
     <>
       <div className="flex flex-col w-full h-full p-4 gap-4 justify-start">
-
+          <P>Status: {isConnected ? "Connected" : "Disconnected"}</P>
+          <P>Transport: {transport}</P>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
             {CreateProjectCard}
             {projects?.map((project) => (
