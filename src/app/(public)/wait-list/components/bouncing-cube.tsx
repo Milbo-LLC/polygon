@@ -21,7 +21,7 @@ export function BouncingCube() {
 
       // Color transition
       if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
-        meshRef.current.material.color = updateColor(delta);
+        meshRef.current.material.color = updateColor();
       }
     }
   });

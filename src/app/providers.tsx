@@ -11,7 +11,6 @@ import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession();
 
   useEffect(() => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
@@ -39,7 +38,7 @@ function PostHogIdentifier() {
         email: session.user.email,
       });
     }
-  }, [session?.user.email]);
+  }, [session?.user.email, session?.user.name]);
 
   return null;
 }
