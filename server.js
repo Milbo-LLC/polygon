@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import next from "next";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -20,28 +20,26 @@ app.prepare().then(() => {
   // Debug: Log all connected users
   const connectedUsers = new Map();
 
-  io.on("connection", (socket: Socket) => {
-
+  io.on("connection", (socket) => {
     // Handle joining a document room
     socket.on("joinDocument", ({ documentId, userId, name }) => {
       socket.join(documentId);
-      
+
       // Initialize user in the document with their name
       if (!documentUsers.has(documentId)) {
         documentUsers.set(documentId, new Map());
       }
       documentUsers.get(documentId).set(userId, { position: { x: 0, y: 0 }, name });
-      
+
       // Store user info with name
       connectedUsers.set(socket.id, { documentId, userId, name });
-      
+
       // Broadcast to others that a new user joined (include name)
       socket.to(documentId).emit("userJoined", { userId, name });
     });
 
     // Handle cursor movement
     socket.on("cursorMove", ({ documentId, userId, position, name }) => {
-      
       // Update stored position and name
       if (documentUsers.has(documentId)) {
         const userMap = documentUsers.get(documentId);
@@ -49,10 +47,10 @@ app.prepare().then(() => {
           userMap.set(userId, { position, name });
         }
       }
-      
+
       // Broadcast to others
-      socket.to(documentId).emit("cursor:update", { 
-        userId, 
+      socket.to(documentId).emit("cursor:update", {
+        userId,
         position,
         name
       });
@@ -64,8 +62,8 @@ app.prepare().then(() => {
       if (userInfo) {
         const { documentId, userId } = userInfo;
         // Clean up user data
-        documentUsers.forEach((users: Map<string, any>, docId: string) => {
-          users.forEach((_: any, uid: string) => {
+        documentUsers.forEach((users, docId) => {
+          users.forEach((_, uid) => {
             socket.to(docId).emit("userLeft", { userId: uid });
           });
         });
