@@ -25,7 +25,6 @@ export function generateColorForUser(userId: string): string {
 }
 
 export function Cursor({ position, name, color }: CursorProps) {
-  console.log("Rendering cursor for:", name);
   return (
     <div
       className="fixed pointer-events-none z-50"

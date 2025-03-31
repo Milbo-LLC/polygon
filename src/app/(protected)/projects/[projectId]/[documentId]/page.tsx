@@ -33,23 +33,12 @@ export default function DocumentPage() {
 
     const socketInstance = io();
     setSocket(socketInstance);
-
-    console.log("Connecting with user:", {
-      documentId,
-      userId: user?.id,
-      name: user?.name
-    });
-
+    
     // Join document room
     socketInstance.emit("joinDocument", {
       documentId,
       userId: user?.id,
       name: user?.name,
-    });
-
-    // Log when socket connects
-    socketInstance.on("connect", () => {
-      console.log("Socket connected!", socketInstance.id);
     });
 
     // Handle cursor updates from other users
@@ -105,13 +94,6 @@ export default function DocumentPage() {
       onMouseMove={handleMouseMove}
     >
       <Scene />
-      
-      {/* Debug info */}
-      <div className="fixed top-0 right-0 bg-black/50 text-white p-2 z-50">
-        Active cursors: {Object.keys(cursors).length}
-      </div>
-
-      {/* Cursor layer */}
       <div className="fixed inset-0 z-50 pointer-events-none">
         {Object.entries(cursors).map(([userId, { position, name }]) => (
           <Cursor

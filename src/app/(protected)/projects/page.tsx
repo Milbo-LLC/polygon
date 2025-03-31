@@ -79,7 +79,6 @@ export default function ProjectsPage() {
 
   const deleteProject = api.project.delete.useMutation({
     onSuccess: async () => {
-      console.log("Project deleted");
       toast.success("Project deleted");
       await utils.project.getAll.invalidate();
     },
