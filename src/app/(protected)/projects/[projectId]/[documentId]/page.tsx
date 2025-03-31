@@ -34,11 +34,22 @@ export default function DocumentPage() {
     const socketInstance = io();
     setSocket(socketInstance);
 
+    console.log("Connecting with user:", {
+      documentId,
+      userId: user?.id,
+      name: user?.name
+    });
+
     // Join document room
     socketInstance.emit("joinDocument", {
       documentId,
       userId: user?.id,
       name: user?.name,
+    });
+
+    // Log when socket connects
+    socketInstance.on("connect", () => {
+      console.log("Socket connected!", socketInstance.id);
     });
 
     // Handle cursor updates from other users
@@ -47,10 +58,14 @@ export default function DocumentPage() {
       position: { x: number; y: number }; 
       name: string; 
     }) => {
-      setCursors(prev => ({
-        ...prev,
-        [userId]: { position, name }
-      }));
+      
+      setCursors(prev => {
+        const newCursors = {
+          ...prev,
+          [userId]: { position, name }
+        };
+        return newCursors;
+      });
     });
 
     // Handle user leaving
@@ -84,10 +99,6 @@ export default function DocumentPage() {
     });
   };
 
-  useEffect(() => {
-    console.log("Current cursors state:", cursors);
-  }, [cursors]);
-
   return (
     <div 
       className="flex w-full h-full relative" 
@@ -101,13 +112,13 @@ export default function DocumentPage() {
       </div>
 
       {/* Cursor layer */}
-      <div className="fixed inset-0 z-50">
+      <div className="fixed inset-0 z-50 pointer-events-none">
         {Object.entries(cursors).map(([userId, { position, name }]) => (
           <Cursor
             key={userId}
             position={position}
             name={name}
-            color={myColor} // Just use the one color we generated
+            color={myColor}
           />
         ))}
       </div>

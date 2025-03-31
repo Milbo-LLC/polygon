@@ -21,11 +21,9 @@ app.prepare().then(() => {
   const connectedUsers = new Map();
 
   io.on("connection", (socket: Socket) => {
-    console.log("New connection:", socket.id);
 
     // Handle joining a document room
     socket.on("joinDocument", ({ documentId, userId, name }) => {
-      console.log(`User ${userId} (${name}) joining document ${documentId}`);
       socket.join(documentId);
       
       // Initialize user in the document with their name
@@ -43,7 +41,6 @@ app.prepare().then(() => {
 
     // Handle cursor movement
     socket.on("cursorMove", ({ documentId, userId, position, name }) => {
-      console.log("SERVER RECEIVED:", { documentId, userId, position, name });
       
       // Update stored position and name
       if (documentUsers.has(documentId)) {
@@ -54,13 +51,11 @@ app.prepare().then(() => {
       }
       
       // Broadcast to others
-      socket.to(documentId).emit("cursorUpdate", { 
+      socket.to(documentId).emit("cursor:update", { 
         userId, 
         position,
         name
       });
-      
-      console.log("SERVER BROADCAST:", { userId, position, name });
     });
 
     // Handle disconnection
@@ -68,7 +63,6 @@ app.prepare().then(() => {
       const userInfo = connectedUsers.get(socket.id);
       if (userInfo) {
         const { documentId, userId } = userInfo;
-        console.log(`User ${userId} disconnected from ${documentId}`);
         // Clean up user data
         documentUsers.forEach((users: Map<string, any>, docId: string) => {
           users.forEach((_: any, uid: string) => {
