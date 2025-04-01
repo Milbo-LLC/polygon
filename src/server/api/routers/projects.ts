@@ -65,7 +65,7 @@ export const projectRouter = createTRPCRouter({
       const { id } = input;
 
       const project = await ctx.db.project.findUnique({
-        where: { id, deletedAt: null },
+        where: { id, userId: ctx.session.user.id, deletedAt: null },
         include: {
           documents: true,
         },
@@ -83,6 +83,7 @@ export const projectRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const projects = await ctx.db.project.findMany({
         where: {
+          userId: ctx.session.user.id,
           deletedAt: null
         },
         include: { documents: true },
@@ -112,7 +113,7 @@ export const projectRouter = createTRPCRouter({
       const { id, name, description } = input;
 
       const project = await ctx.db.project.update({
-        where: { id },
+        where: { id, userId: ctx.session.user.id },
         data: {
           name,
           description,
@@ -134,7 +135,7 @@ export const projectRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { projectId, documentId } = input;
       const project = await ctx.db.project.update({
-        where: { id: projectId },
+        where: { id: projectId, userId: ctx.session.user.id },
         data: {
           documents: { connect: { id: documentId } },
         },
