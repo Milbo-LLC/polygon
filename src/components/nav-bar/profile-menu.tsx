@@ -9,13 +9,12 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { LogOutIcon, UserIcon } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 
 export const ProfileMenu = () => {
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleLogout = async () => {
     await signOut();

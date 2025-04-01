@@ -69,8 +69,6 @@ export const authConfig = {
           include: { organizations: true }
         });
 
-        console.log('existingUser: ', existingUser);
-
         if (existingUser && existingUser.organizations?.length === 0) {
           await db.organization.create({
             data: {
