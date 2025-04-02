@@ -8,6 +8,19 @@
 # testing
 /coverage
 
+# python
+__pycache__/
+
+# uploads
+uploads/
+*.glb
+*.obj
+*.stp
+*.step
+*.stp
+*.step
+
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal

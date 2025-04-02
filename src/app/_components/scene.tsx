@@ -1,16 +1,24 @@
 'use client'
 import { Canvas } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
+import GlbModel from './GlbModel'
+import ModelUploader from './ModelUploader'
 
 export default function Scene() {
   const cameraControlsRef = useRef<CameraControls | null>(null)
+  const [modelPath, setModelPath] = useState<string | null>(null)
+
+  const handleModelUpload = (path: string) => {
+    setModelPath(path || null) // Convert empty string to null
+  }
 
   return (
     <div className="flex h-full w-full relative">
+      <ModelUploader onModelUpload={handleModelUpload} />
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
 
       <Canvas 
@@ -23,6 +31,7 @@ export default function Scene() {
       >
         <Gizmo />
         <Grid />
+        <GlbModel modelPath={modelPath} />
         <CameraControls 
           ref={cameraControlsRef}
           minDistance={1}
