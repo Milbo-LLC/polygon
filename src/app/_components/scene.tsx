@@ -6,19 +6,20 @@ import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
 import GlbModel from './GlbModel'
-import ModelUploader from './ModelUploader'
+import Model3DTools from './Model3DTools'
 
 export default function Scene() {
   const cameraControlsRef = useRef<CameraControls | null>(null)
   const [modelPath, setModelPath] = useState<string | null>(null)
 
-  const handleModelUpload = (path: string) => {
+  const handleModelChange = (path: string) => {
+    console.log("Scene: Model path changed to:", path);
     setModelPath(path || null) // Convert empty string to null
   }
 
   return (
     <div className="flex h-full w-full relative">
-      <ModelUploader onModelUpload={handleModelUpload} />
+      <Model3DTools onModelChange={handleModelChange} />
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
 
       <Canvas 
