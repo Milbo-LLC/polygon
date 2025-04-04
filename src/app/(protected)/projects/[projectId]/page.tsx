@@ -20,5 +20,6 @@ export default function ProjectPage() {
     }
   }, [project, projectId, router]);
 
+  // FIXME: Add a proper loading state
   return <div>Loading...</div>;
 }

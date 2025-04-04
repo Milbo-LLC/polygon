@@ -27,9 +27,13 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import { socket } from "~/socket";
-
+import { useAtomValue } from "jotai";
+import { activeOrganizationIdAtom } from "../atoms";
+import { useOrganizationContext } from "~/providers/organization-provider";
 
 export default function ProjectsPage() {
+  const organization = useOrganizationContext();
+  
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
 
@@ -37,6 +41,12 @@ export default function ProjectsPage() {
   const [projectToRename, setProjectToRename] = useState<Project | null>(null);
   const [newName, setNewName] = useState("");
   const router = useRouter();
+
+  const activeOrganization = useAtomValue(activeOrganizationIdAtom);
+
+  useEffect(() => {
+    console.log('activeOrganization: ', activeOrganization);
+  }, [activeOrganization]);
 
   useEffect(() => {
     if (socket.connected) {
@@ -112,6 +122,10 @@ export default function ProjectsPage() {
       </CardHeader>
     </Card>
   );
+
+  useEffect(() => {
+    console.log('organization: ', organization);
+  }, [organization]);
 
   return (
     <>

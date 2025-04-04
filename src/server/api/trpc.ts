@@ -10,8 +10,9 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { type Session } from "next-auth";
 
-import { auth } from "~/server/auth";
+import { auth } from "~/server/auth"; 
 import { db } from "~/server/db";
 
 /**
@@ -26,13 +27,66 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
+
+interface CreateContextOptions {
+  session: Session | null;
+  headers: Headers;
+}
+
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
+  return createInnerTRPCContext({
+    session,
+    headers: opts.headers,
+  });
+};
+
+const createInnerTRPCContext = async (opts: CreateContextOptions) => {
+  const { session, headers } = opts;
+  
+  if (!session?.user) {
+    return {
+      db,
+      session: null,
+      organizationId: null,
+    };
+  }
+
+  const organizationId = headers.get("x-organization-id");
+
+  // Get user's organizations
+  const userOrganizations = await db.userOrganization.findMany({
+    where: { userId: session.user.id },
+    include: { organization: true },
+  });
+
+  if (userOrganizations.length === 0) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "No organizations found for user",
+    });
+  }
+
+  // If orgId is provided, validate it
+  if (organizationId) {
+    const hasAccess = userOrganizations.some(
+      (uo) => uo.organizationId === organizationId
+    );
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid organization access",
+      });
+    }
+  }
+
+  // Use provided org ID or default to first organization
+  const effectiveOrgId = organizationId ?? userOrganizations[0]?.organizationId;
 
   return {
     db,
     session,
-    ...opts,
+    organizationId: effectiveOrgId,
   };
 };
 
@@ -121,12 +175,18 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
-    if (!ctx.session || !ctx.session.user) {
+    if (!ctx.session?.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (!ctx.organizationId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "No organization context",
+      });
     }
     return next({
       ctx: {
-        // infers the `session` as non-nullable
+        ...ctx,
         session: { ...ctx.session, user: ctx.session.user },
       },
     });

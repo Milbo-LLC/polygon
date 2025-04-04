@@ -50,7 +50,13 @@ export const authConfig = {
     session: async ({ session, user }) => {
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
-        include: { organizations: true }
+        include: {
+          userOrganizations: {
+            include: {
+              organization: true
+            }
+          }
+        }
       });
 
       return {
@@ -58,26 +64,34 @@ export const authConfig = {
         user: {
           ...session.user,
           id: user.id,
-          organizations: dbUser?.organizations ?? [],
+          organizations: dbUser?.userOrganizations.map(uo => uo.organization) ?? [],
         },
       };
     },
     signIn: async ({ user }) => {
+      console.log('signIn: ', user);
       try {
-        const existingUser = await db.user.findUnique({
-          where: { id: user.id },
-          include: { organizations: true }
+        const existingPersonalOrganization = await db.organization.findFirst({
+          where: {
+            id: user.id,
+          },
         });
 
-        if (existingUser && existingUser.organizations?.length === 0) {
-          await db.organization.create({
+        if (user.id && !existingPersonalOrganization) {
+          console.log('creating organization');
+          const organization = await db.organization.create({
             data: {
+              id: user.id,
               name: 'Personal',
-              users: {
-                connect: { id: existingUser.id },
+              organizationUsers: {
+                create: {
+                  userId: user.id,
+                  role: 'owner',
+                },
               },
             },
           });
+          console.log('organization created: ', organization);
         }
         return true;
       } catch (error) {

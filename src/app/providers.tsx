@@ -9,6 +9,7 @@ import { useEffect, Suspense } from "react"
 import { usePostHog } from 'posthog-js/react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
+import { OrganizationProvider } from '~/providers/organization-provider';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
@@ -75,15 +76,14 @@ function SuspendedPostHogPageView() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  
 
   return (
     <SessionProvider>
       <TRPCReactProvider>
-        <PostHogProvider>
-          <PostHogIdentifier />
-          <TooltipProvider>{children}</TooltipProvider>
-        </PostHogProvider>
+          <PostHogProvider>
+            <PostHogIdentifier />
+            <TooltipProvider>{children}</TooltipProvider>
+          </PostHogProvider>
       </TRPCReactProvider>
     </SessionProvider>
   );

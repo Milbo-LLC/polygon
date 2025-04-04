@@ -6,9 +6,11 @@ import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { useState } from "react";
 import SuperJSON from "superjson";
+import { useAtom } from "jotai";
 
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
+import { activeOrganizationIdAtom } from "~/app/(protected)/atoms";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -38,6 +40,7 @@ export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
+  const [activeOrganizationId] = useAtom(activeOrganizationIdAtom);
 
   const [trpcClient] = useState(() =>
     api.createClient({
@@ -53,6 +56,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
+            if (activeOrganizationId) {
+              headers.set("x-organization-id", activeOrganizationId);
+            }
             return headers;
           },
         }),
