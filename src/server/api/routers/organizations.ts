@@ -4,7 +4,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
+import { CreateOrganizationSchema, OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
 import { parseProject } from "./projects";
 import { type MemberRoleEnum } from "~/validators/user-organizations";
 
@@ -47,6 +47,44 @@ export const organizationRouter = createTRPCRouter({
 
       if (!organization) {
         throw new Error("Organization not found");
+      }
+
+      return parseOrganization(organization);
+    }),
+
+  create: protectedProcedure
+    .input(CreateOrganizationSchema)
+    .output(OrganizationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { name, logoUrl } = input;
+
+      const organization = await ctx.db.organization.create({
+        data: {
+          name,
+          logoUrl
+        },
+        include: {
+          projects: {
+            include: {
+              documents: true
+            }
+          },
+          organizationUsers: true
+        }
+      });
+
+      await ctx.db.$transaction(async (tx) => {
+        await tx.userOrganization.create({
+          data: {
+            userId: ctx.session.user.id,
+            organizationId: organization.id,
+            role: 'owner',
+          },
+        });
+      });
+
+      if (!organization) {
+        throw new Error("Failed to create organization");
       }
 
       return parseOrganization(organization);

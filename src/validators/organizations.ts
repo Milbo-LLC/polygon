@@ -16,6 +16,13 @@ export type OrganizationBase = z.infer<typeof OrganizationBaseSchema>;
 export const OrganizationSchema = OrganizationBaseSchema;
 export type Organization = OrganizationBase;
 
+export const CreateOrganizationSchema = OrganizationBaseSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+});
+
 export const UpdateOrganizationSchema = OrganizationBaseSchema.omit({
   createdAt: true,
   updatedAt: true,

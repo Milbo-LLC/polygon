@@ -4,7 +4,7 @@ import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import SuperJSON from "superjson";
 import { useAtom } from "jotai";
 
@@ -42,7 +42,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   const [activeOrganizationId] = useAtom(activeOrganizationIdAtom);
 
-  const [trpcClient] = useState(() =>
+  const trpcClient = useMemo(() => 
     api.createClient({
       links: [
         loggerLink({
@@ -63,8 +63,8 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           },
         }),
       ],
-    })
-  );
+    }),
+  [activeOrganizationId]);
 
   return (
     <QueryClientProvider client={queryClient}>

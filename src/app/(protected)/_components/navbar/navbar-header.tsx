@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { useOrganizationContext } from "~/providers/organization-provider";
+import { useMemo } from 'react';
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -42,13 +43,15 @@ export default function NavbarHeader() {
   const user = data?.user;
   
   // Create workspace items dynamically from user organizations
-  const workspaceItems = organizations?.map(org => ({
-    id: org.organization?.id,
-    name: org.organization?.name,
-    logoUrl: org.organization?.logoUrl,
-    role: org.role,
-    isActive: org.organization?.id === organization?.id
-  })) ?? [];
+  const workspaceItems = useMemo(() => {
+    return organizations?.map(org => ({
+      id: org.organization?.id,
+      name: org.organization?.name,
+      logoUrl: org.organization?.logoUrl,
+      role: org.role,
+      isActive: org.organization?.id === organization?.id
+    })) ?? [];
+  }, [organizations, organization?.id]);
   
   // Define menu options in a structured way for easier maintenance
   const menuOptions: Record<string, MenuItem[]> = {
@@ -131,7 +134,7 @@ export default function NavbarHeader() {
                 {workspaceItems.map((workspace) => (
                   <DropdownMenuItem 
                     key={workspace.id} 
-                    onClick={() => handleOrgSwitch(workspace.id ?? '')}
+                    onClick={async () => await handleOrgSwitch(workspace.id ?? '')}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center">

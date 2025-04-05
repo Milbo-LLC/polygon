@@ -11,7 +11,8 @@ import Navbar from "./_components/navbar";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
-  "/settings"
+  "/settings",
+  "/workspaces"
 ]
 
 export function ClientLayout({ 
