@@ -6,7 +6,12 @@ import "./src/env.js";
 
 const nextConfig = {
   images: {
-    domains: ['localhost', 'polygon-public-local.s3.us-east-1.amazonaws.com', 'lh3.googleusercontent.com'],
+    domains: [
+      'localhost',
+      'polygon-public-local.s3.us-east-1.amazonaws.com',
+      'polygon-public-prod.s3.us-east-1.amazonaws.com',
+      'lh3.googleusercontent.com',
+    ],
   },
 };
 
