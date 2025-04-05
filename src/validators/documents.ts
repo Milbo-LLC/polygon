@@ -11,13 +11,11 @@ export const DocumentSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   name: z.string(),
-  state: DocumentStateSchema,
   projectId: z.string(),
+  state: z.any(), // or more specific schema for your state
 });
 
 export type Document = z.infer<typeof DocumentSchema>;
-
-
 
 export const CreateDocumentSchema = DocumentSchema.omit({
   id: true,

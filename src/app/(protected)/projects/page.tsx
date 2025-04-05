@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 import { PlusIcon, Trash2Icon, MoreVertical, Pencil } from "lucide-react";
 import { P } from "~/components/ui/typography";
 import { api } from "~/trpc/react";
-import { type Project } from "~/validators/projects";
+import { type ProjectWithDocuments } from "~/validators/projects";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -28,13 +28,13 @@ import {
 import { Input } from "~/components/ui/input";
 import { socket } from "~/socket";
 
-
 export default function ProjectsPage() {
+  
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
 
-  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
-  const [projectToRename, setProjectToRename] = useState<Project | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<ProjectWithDocuments | null>(null);
+  const [projectToRename, setProjectToRename] = useState<ProjectWithDocuments | null>(null);
   const [newName, setNewName] = useState("");
   const router = useRouter();
 
@@ -67,7 +67,7 @@ export default function ProjectsPage() {
   }, []);
 
   const createProject = api.project.create.useMutation({
-    onSuccess: async (project: Project) => {
+    onSuccess: async (project: ProjectWithDocuments) => {
       await utils.project.getAll.invalidate();
       router.push(`/projects/${project.id}/${project.documents?.[0]?.id}`);
       

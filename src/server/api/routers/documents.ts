@@ -10,9 +10,12 @@ import type { Document } from "~/validators/documents";
 
 // Helper function to parse document state
 export const parseDocument = (dbDocument: Prisma.DocumentGetPayload<object>): Document => {
+  // Destructure to remove deletedAt field, and get all other fields
+  const { deletedAt, ...documentWithoutDeletedAt } = dbDocument;
+  
   return {
-    ...dbDocument,
-    state: DocumentStateSchema.parse(dbDocument.state ?? { actions: [] })
+    ...documentWithoutDeletedAt,
+    state: DocumentStateSchema.parse(dbDocument.state ?? { actions: [] }),
   };
 };
 
@@ -81,13 +84,13 @@ export const documentRouter = createTRPCRouter({
     .input(UpdateDocumentSchema)
     .output(DocumentSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, name, state } = input;
+      const validatedState = input.state ? DocumentStateSchema.parse(input.state) : undefined;
 
       const document = await ctx.db.document.update({
-        where: { id },
+        where: { id: input.id },
         data: {
-          name,
-          state
+          name: input.name,
+          state: validatedState,
         },
       });
 

@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getGradientFromId = (id: string): string => {
-  const baseHue = parseInt(id || '0', 36) % 360;
+  const baseHue = parseInt(id ?? '0', 36) % 360;
   const secondHue = (baseHue + 60) % 360;
 
   return `linear-gradient(135deg, 

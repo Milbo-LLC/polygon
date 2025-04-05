@@ -1,7 +1,9 @@
 import { z } from "zod";
+// Import type only
 import { DocumentSchema } from "./documents";
 
-export const ProjectSchema = z.object({
+// Base schema without nested fields
+export const ProjectBaseSchema = z.object({
   id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
@@ -9,10 +11,13 @@ export const ProjectSchema = z.object({
   description: z.string().nullable(),
   organizationId: z.string(),
   userId: z.string(),
-  documents: z.array(DocumentSchema).nullable(),
 });
 
-export type Project = z.infer<typeof ProjectSchema>;
+export type ProjectBase = z.infer<typeof ProjectBaseSchema>;
+
+// For backward compatibility
+export const ProjectSchema = ProjectBaseSchema;
+export type Project = ProjectBase;
 
 export const CreateProjectSchema = ProjectSchema.omit({ 
   id: true, 
@@ -20,7 +25,6 @@ export const CreateProjectSchema = ProjectSchema.omit({
   updatedAt: true, 
   organizationId: true, 
   userId: true,
-  documents: true,
 });
 
 export const UpdateProjectSchema = ProjectSchema.omit({
@@ -30,5 +34,9 @@ export const UpdateProjectSchema = ProjectSchema.omit({
   userId: true,
 }).partial();
 
+export const ProjectWithDocumentsSchema = ProjectSchema.extend({
+  documents: z.array(DocumentSchema),
+});
 
+export type ProjectWithDocuments = z.infer<typeof ProjectWithDocumentsSchema>;
 
