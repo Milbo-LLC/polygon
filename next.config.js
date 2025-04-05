@@ -4,6 +4,10 @@
  */
 import "./src/env.js";
 
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    domains: ['localhost', 'polygon-public-local.s3.us-east-1.amazonaws.com', 'lh3.googleusercontent.com'],
+  },
+};
 
 export default nextConfig;

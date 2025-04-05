@@ -88,11 +88,14 @@ export function TeamLogoInput({
       ) : value ? (
         // Show image preview
         <div className="absolute inset-0 flex items-center justify-center">
-          <Image
-            src={value}
-            alt="Team logo preview"
-            className="max-h-full max-w-full object-contain"
-          />
+          <div className="w-full h-full relative">
+            <Image
+              src={value}
+              alt="Team logo preview"
+              fill
+              className="object-contain"
+            />
+          </div>
           <Button
             onClick={handleRemoveImage}
             variant="ghost"
