@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { UserOrganization, Organization } from "@prisma/client";
+import { type UserOrganization, type Organization } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { MemberRole } from "~/validators/user-organizations";
+import { type MemberRole } from "~/validators/user-organizations";
 import { UserOrganizationWithOrgSchema } from "~/validators/extended-schemas";
 
 type UserOrganizationWithOrganization = UserOrganization & {

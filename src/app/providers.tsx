@@ -9,7 +9,7 @@ import { useEffect, Suspense } from "react"
 import { usePostHog } from 'posthog-js/react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
-import { OrganizationProvider } from '~/providers/organization-provider';
+import { ThemeProvider } from '~/providers/theme-provider';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
@@ -82,7 +82,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <TRPCReactProvider>
           <PostHogProvider>
             <PostHogIdentifier />
-            <TooltipProvider>{children}</TooltipProvider>
+            <ThemeProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </ThemeProvider>
           </PostHogProvider>
       </TRPCReactProvider>
     </SessionProvider>

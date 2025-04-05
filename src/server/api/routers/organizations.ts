@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import { type z } from "zod";
+import { type Prisma } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { OrganizationSchema } from "~/validators/organizations";
+import { OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
 import { parseProject } from "./projects";
-import { MemberRoleEnum } from "~/validators/user-organizations";
+import { type MemberRoleEnum } from "~/validators/user-organizations";
 
 type OrganizationWithProjects = Prisma.OrganizationGetPayload<{
   include: { 
@@ -50,5 +50,34 @@ export const organizationRouter = createTRPCRouter({
       }
 
       return parseOrganization(organization);
+    }),
+  
+  update: protectedProcedure
+    .input(UpdateOrganizationSchema)
+    .output(OrganizationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, name, logoUrl } = input;
+
+      const updatedOrganization = await ctx.db.organization.update({
+        where: { id },
+        data: {
+          name,
+          logoUrl
+        },
+        include: {
+          projects: {
+            include: {
+              documents: true
+            }
+          },
+          organizationUsers: true
+        }
+      });
+
+      if (!updatedOrganization) {
+        throw new Error("Organization not found after update");
+      }
+
+      return parseOrganization(updatedOrganization);
     }),
 });

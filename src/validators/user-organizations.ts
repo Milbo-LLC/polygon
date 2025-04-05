@@ -1,6 +1,4 @@
 import { z } from "zod";
-// Import type only to avoid circular dependency
-import type { Organization } from "./organizations";
 
 export const MemberRoleEnum = z.enum(["owner", "admin", "member"]);
 

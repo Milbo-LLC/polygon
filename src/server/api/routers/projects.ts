@@ -4,23 +4,33 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { CreateProjectSchema, ProjectSchema, UpdateProjectSchema } from "~/validators/projects";
+import { CreateProjectSchema, ProjectSchema, UpdateProjectSchema, ProjectWithDocumentsSchema } from "~/validators/projects";
 import { parseDocument } from "./documents";
-import type { Project } from "~/validators/projects";
+import { DocumentSchema, type Document } from "~/validators/documents";
 
 type ProjectWithDocuments = Prisma.ProjectGetPayload<{
   include: { documents: true };
 }>;
 
-export const parseProject = (dbProject: ProjectWithDocuments): Project => ({
+// Define a type that includes Document[] for documents instead of what the database returns
+type ParsedProjectWithDocuments = Omit<ProjectWithDocuments, "documents"> & {
+  documents: Document[];
+};
+
+// Define a Zod schema for the parsed project with documents
+const ZodProjectWithDocumentsSchema = ProjectSchema.extend({
+  documents: z.array(DocumentSchema),
+});
+
+export const parseProject = (dbProject: ProjectWithDocuments): ParsedProjectWithDocuments => ({
   ...dbProject,
   documents: dbProject.documents.map(parseDocument)
-});
+} as ParsedProjectWithDocuments);
 
 export const projectRouter = createTRPCRouter({
   create: protectedProcedure
     .input(CreateProjectSchema)
-    .output(ProjectSchema)
+    .output(ProjectWithDocumentsSchema)
     .mutation(async ({ ctx, input }) => {
       const organizationId = ctx.session.user.organizations[0]?.id;
       if (!organizationId) {
@@ -60,7 +70,7 @@ export const projectRouter = createTRPCRouter({
 
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .output(ProjectSchema)
+    .output(ZodProjectWithDocumentsSchema)
     .query(async ({ ctx, input }) => {
       const { id } = input;
 
@@ -79,7 +89,7 @@ export const projectRouter = createTRPCRouter({
     }),
 
   getAll: protectedProcedure
-    .output(z.array(ProjectSchema))
+    .output(z.array(ProjectWithDocumentsSchema))
     .query(async ({ ctx }) => {
       const projects = await ctx.db.project.findMany({
         where: {
@@ -108,7 +118,7 @@ export const projectRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(UpdateProjectSchema)
-    .output(ProjectSchema)
+    .output(ProjectWithDocumentsSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, name, description } = input;
 
@@ -131,7 +141,7 @@ export const projectRouter = createTRPCRouter({
       projectId: z.string(),
       documentId: z.string(),
     }))
-    .output(ProjectSchema)
+    .output(ProjectWithDocumentsSchema)
     .mutation(async ({ ctx, input }) => {
       const { projectId, documentId } = input;
       const project = await ctx.db.project.update({

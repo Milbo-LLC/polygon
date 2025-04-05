@@ -13,6 +13,7 @@ export const DocumentSchema = z.object({
   name: z.string(),
   projectId: z.string(),
   state: z.any(), // or more specific schema for your state
+  deletedAt: z.date().optional(),
 });
 
 export type Document = z.infer<typeof DocumentSchema>;

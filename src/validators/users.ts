@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { UserOrganizationSchema } from "./user-organizations";
 
 export const UserSchema = z.object({
   id: z.string(),
@@ -8,7 +7,11 @@ export const UserSchema = z.object({
   name: z.string().nullable(),
   email: z.string().email().nullable(),
   image: z.string().nullable(),
-  userOrganizations: z.array(UserOrganizationSchema).nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;
+
+export const UpdateUserSchema = UserSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+}).partial();

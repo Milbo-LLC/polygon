@@ -2,8 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { S3Client } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
 
 type UploadState = {
   isUploading: boolean;
@@ -19,6 +17,10 @@ type UseS3UploadOptions = {
   organizationId?: string;
   subFolder?: string;  // For more specific path organization
 };
+
+type UploadResponse = {
+  fileUrl: string;
+}
 
 export function useS3Upload(options: UseS3UploadOptions = {}) {
   const {
@@ -37,12 +39,11 @@ export function useS3Upload(options: UseS3UploadOptions = {}) {
   });
 
   const uploadToS3 = async (file: File): Promise<string> => {
-    // Validate file size
+    // Validate file
     if (file.size > maxSizeInBytes) {
       throw new Error(`File size exceeds maximum allowed (${maxSizeInBytes / (1024 * 1024)}MB)`);
     }
 
-    // Validate file type
     if (!allowedFileTypes.includes(file.type)) {
       throw new Error(`File type ${file.type} is not allowed`);
     }
@@ -55,59 +56,34 @@ export function useS3Upload(options: UseS3UploadOptions = {}) {
         url: null,
       });
 
-      // Build a more specific path structure
+      // Build path
       let filePath = bucketPath;
-      
-      // Add organization ID to path if provided
       if (organizationId) {
         filePath = `organizations/${organizationId}/${filePath}`;
       }
-      
-      // Add subfolder if provided
       if (subFolder) {
         filePath = `${filePath}/${subFolder}`;
       }
-      
-      // Create a unique file name
-      const fileExtension = file.name.split('.').pop();
-      const uniqueFileName = `${filePath}/${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-      
-      // Initialize the S3 client
-      const s3Client = new S3Client({
-        region: process.env.NEXT_PUBLIC_AWS_REGION!,
-        credentials: {
-          // You should get temporary credentials from your backend
-          accessKeyId: process.env.NEXT_PUBLIC_AWS_IDENTITY_POOL_ID!,
-          secretAccessKey: '',
-          sessionToken: '',
-        },
+
+      // Create FormData for the file upload
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', filePath);
+
+      // Upload via our server API
+      const response = await fetch('/api/s3-upload', {
+        method: 'POST',
+        body: formData,
       });
 
-      // Set up the multipart upload
-      const upload = new Upload({
-        client: s3Client,
-        params: {
-          Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-          Key: uniqueFileName,
-          Body: file,
-          ContentType: file.type,
-        },
-      });
+      if (!response.ok) {
+        const errorData = await response.json() as { message?: string };
+        throw new Error(errorData.message ?? 'Upload failed');
+      }
 
-      // Handle upload progress
-      upload.on('httpUploadProgress', (progress: { loaded?: number; total?: number }) => {
-        if (progress.loaded && progress.total) {
-          const percentage = Math.round((progress.loaded / progress.total) * 100);
-          setUploadState(prev => ({ ...prev, progress: percentage }));
-        }
-      });
+      const data = await response.json() as UploadResponse;
+      const fileUrl = data.fileUrl;
 
-      // Wait for the upload to complete
-      await upload.done();
-
-      // Generate the URL for the uploaded file
-      const fileUrl = `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${uniqueFileName}`;
-      
       setUploadState({
         isUploading: false,
         progress: 100,
@@ -117,6 +93,7 @@ export function useS3Upload(options: UseS3UploadOptions = {}) {
 
       return fileUrl;
     } catch (error) {
+      console.error('Error uploading file:', error);
       const err = error instanceof Error ? error : new Error('Unknown error during upload');
       setUploadState({
         isUploading: false,

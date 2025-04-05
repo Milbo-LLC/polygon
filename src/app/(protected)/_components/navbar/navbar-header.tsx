@@ -25,7 +25,6 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { useOrganizationContext } from "~/providers/organization-provider";
-import { useRef } from 'react';
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -49,7 +48,7 @@ export default function NavbarHeader() {
     logoUrl: org.organization?.logoUrl,
     role: org.role,
     isActive: org.organization?.id === organization?.id
-  })) || [];
+  })) ?? [];
   
   // Define menu options in a structured way for easier maintenance
   const menuOptions: Record<string, MenuItem[]> = {
@@ -77,16 +76,15 @@ export default function NavbarHeader() {
       {
         label: "Sign Out",
         icon: <LogOutIcon className="mr-2 size-4 text-primary" />,
-        onClick: async () => {
-          await signOut();
-          router.push('/login');
+        onClick: () => {
+          void (async () => {
+            await signOut();
+            router.push('/login');
+          })();
         },
       },
     ],
   };
-
-  // Create a separate component or reference for the sidebar trigger
-  const sidebarTriggerRef = useRef(null);
   
   return (
     <div className="relative">
@@ -115,7 +113,7 @@ export default function NavbarHeader() {
             <Avatar className="size-6">
               <AvatarImage src={user?.image ?? ''} alt="User avatar" />
               <AvatarFallback>
-                {user?.name?.substring(0, 2).toUpperCase() || user?.email?.substring(0, 2).toUpperCase() || 'U'}
+                {user?.name?.substring(0, 2).toUpperCase() ?? user?.email?.substring(0, 2).toUpperCase() ?? 'U'}
               </AvatarFallback>
             </Avatar>
             <div className="font-medium">{user?.email}</div>

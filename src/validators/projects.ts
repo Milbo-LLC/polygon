@@ -1,6 +1,6 @@
 import { z } from "zod";
 // Import type only
-import type { Document } from "./documents";
+import { DocumentSchema } from "./documents";
 
 // Base schema without nested fields
 export const ProjectBaseSchema = z.object({
@@ -34,5 +34,9 @@ export const UpdateProjectSchema = ProjectSchema.omit({
   userId: true,
 }).partial();
 
+export const ProjectWithDocumentsSchema = ProjectSchema.extend({
+  documents: z.array(DocumentSchema),
+});
 
+export type ProjectWithDocuments = z.infer<typeof ProjectWithDocumentsSchema>;
 

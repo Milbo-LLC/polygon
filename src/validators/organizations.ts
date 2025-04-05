@@ -1,6 +1,4 @@
 import { z } from "zod";
-// Import type only
-import type { Project } from "./projects";
 
 // Base schema without nested fields
 export const OrganizationBaseSchema = z.object({
@@ -18,5 +16,8 @@ export type OrganizationBase = z.infer<typeof OrganizationBaseSchema>;
 export const OrganizationSchema = OrganizationBaseSchema;
 export type Organization = OrganizationBase;
 
-
-
+export const UpdateOrganizationSchema = OrganizationBaseSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+}).partial();

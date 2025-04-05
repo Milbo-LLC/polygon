@@ -3,14 +3,14 @@
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { activeOrganizationIdAtom } from '~/app/(protected)/atoms';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { useSession } from 'next-auth/react';
-import { Organization } from '~/validators/organizations';
-import { MemberRole } from '~/validators/user-organizations';
-import { UserOrganizationWithOrg } from '~/validators/extended-schemas';
+import { type Organization } from '~/validators/organizations';
+import { type MemberRole } from '~/validators/user-organizations';
+import { type UserOrganizationWithOrg } from '~/validators/extended-schemas';
 
 type OrganizationContextValue = 
   | ({
@@ -18,6 +18,11 @@ type OrganizationContextValue =
       organizations: Partial<UserOrganizationWithOrg>[];
       handleOrgSwitch: (organizationId: string) => Promise<void>;
       role: MemberRole | null;
+      updateOrganization: (data: {
+        id: string;
+        name?: string;
+        logoUrl?: string | null;
+      }) => Promise<Organization>;
     })
   | null;
 
@@ -46,7 +51,7 @@ export function OrganizationProvider({
     enabled: !!userId,
   });
 
-  const [activeOrganizationId, setActiveOrganizationId] = useAtom(
+  const setActiveOrganizationId = useSetAtom(
     activeOrganizationIdAtom,
   );
 
@@ -58,7 +63,7 @@ export function OrganizationProvider({
   const role = useMemo(() => {
     if (!organizationUser || !user) return null;
     return organizationUser.role;
-  }, [user, organizationUser, activeOrganizationId]);
+  }, [user, organizationUser]);
 
   // Format organizations into the correct structure
   const organizations = useMemo(() => {
@@ -68,7 +73,24 @@ export function OrganizationProvider({
     }));
   }, [userOrganizations]);
 
-  console.log('userOrganizations: ', userOrganizations);
+  const updateOrganizationMutation = api.organization.update.useMutation({
+    onSuccess: async () => {
+      await utils.organization.get.refetch();
+      toast.success("Organization updated successfully");
+    },
+    onError: (error) => {
+      toast.error(`Failed to update organization: ${error.message}`);
+    }
+  });
+
+  // Function to update the organization
+  const updateOrganization = async (data: {
+    id: string;
+    name?: string;
+    logoUrl?: string | null;
+  }) => {
+    return updateOrganizationMutation.mutateAsync(data);
+  };
 
   if (loadingOrganization || loadingUserOrganizations) {
     return <div>Loading...</div>
@@ -97,6 +119,7 @@ export function OrganizationProvider({
     <OrganizationContext.Provider
       value={{
         organization: organization ?? null,
+        updateOrganization,
         organizations,
         handleOrgSwitch,
         role,

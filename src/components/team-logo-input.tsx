@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Muted, Small } from './ui/typography';
 import { useS3Upload } from '~/hooks/use-s3-upload';
+import Image from 'next/image';
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 const ACCEPTED_IMAGE_TYPES = {
@@ -23,6 +24,7 @@ export function TeamLogoInput({
   onChange: (url?: string) => void;
   organizationId?: string;
 }) {
+  console.log('value: ', value);
   const [isDragging, setIsDragging] = useState(false);
   
   // Use the S3 upload hook
@@ -38,6 +40,8 @@ export function TeamLogoInput({
     try {
       // Upload the file to S3
       const s3Url = await uploadToS3(file);
+
+      console.log('s3Url: ', s3Url);
       // Update with the permanent S3 URL
       onChange(s3Url);
     } catch (error) {
@@ -48,7 +52,8 @@ export function TeamLogoInput({
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
-        handleFileAdd(acceptedFiles[0] as File);
+        // Wrap the async call in a void function
+        void handleFileAdd(acceptedFiles[0] as File);
       }
     },
     accept: ACCEPTED_IMAGE_TYPES,
@@ -83,7 +88,7 @@ export function TeamLogoInput({
       ) : value ? (
         // Show image preview
         <div className="absolute inset-0 flex items-center justify-center">
-          <img
+          <Image
             src={value}
             alt="Team logo preview"
             className="max-h-full max-w-full object-contain"
