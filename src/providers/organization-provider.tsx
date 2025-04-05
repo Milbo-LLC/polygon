@@ -4,7 +4,7 @@ import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { activeOrganizationIdAtom } from '~/app/(protected)/atoms';
 import { useSetAtom } from 'jotai';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { useSession } from 'next-auth/react';
@@ -57,8 +57,7 @@ export function OrganizationProvider({
 
   const { data: organizationUser } = api.userOrganization.get.useQuery();
   
-  const router = useRouter();
-  const pathname = usePathname();
+  const router = useRouter();;
 
   const role = useMemo(() => {
     if (!organizationUser || !user) return null;
