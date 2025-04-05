@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "~/server/db";
 import type { Organization } from "@prisma/client";
+import { sendWelcomeEmailServer } from "~/lib/email-server";
 
 /**
  * test
@@ -69,29 +70,63 @@ export const authConfig = {
       };
     },
     signIn: async ({ user }) => {
-      console.log('signIn: ', user);
       try {
+        // First ensure the user exists before doing anything else
+        const existingUser = await db.user.findUnique({
+          where: { id: user.id }
+        });
+
+        if (!existingUser || !user.id) {
+          return true;
+        }
+
+        // Now check if the personal organization exists
         const existingPersonalOrganization = await db.organization.findFirst({
           where: {
             id: user.id,
           },
         });
 
-        if (user.id && !existingPersonalOrganization) {
-          console.log('creating organization');
-          const organization = await db.organization.create({
-            data: {
-              id: user.id,
-              name: 'Personal',
-              organizationUsers: {
-                create: {
-                  userId: user.id,
-                  role: 'owner',
-                },
+        const welcomeEmailSent = await db.notification.findFirst({
+          where: {
+            userId: user.id,
+            type: 'welcome',
+            channel: 'email',
+          },
+        });
+
+        if (!existingPersonalOrganization) {
+          // Use a transaction to ensure all operations succeed or fail together
+          await db.$transaction(async (tx) => {
+            const organization = await tx.organization.create({
+              data: {
+                id: user.id,
+                name: 'Personal',
               },
-            },
+            });
+
+            // Create the user-organization relationship
+            await tx.userOrganization.create({
+              data: {
+                userId: user.id!,
+                organizationId: organization.id,
+                role: 'owner',
+              },
+            });
+            
+            if (user.email && user.name && !welcomeEmailSent) {
+              await sendWelcomeEmailServer(user.email, user.name);
+              await tx.notification.create({
+                data: {
+                  userId: user.id!,
+                  type: 'welcome',
+                  channel: 'email',
+                  organizationId: organization.id,
+                  sentAt: new Date(),
+                },
+              });
+            }
           });
-          console.log('organization created: ', organization);
         }
         return true;
       } catch (error) {

@@ -94,7 +94,7 @@ export default function NavbarHeader() {
       {/* The main dropdown for the entire header */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <SidebarHeader className="flex flex-row border-b items-center justify-between cursor-pointer hover:bg-accent/10">
+          <SidebarHeader className="flex flex-row border-b items-center justify-between cursor-pointer hover:bg-accent/10 px-2.5">
             {!sidebarCollapsed &&
               <div className="flex gap-2 items-center">
                 <Avatar className="size-6" variant="squared">
