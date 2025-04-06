@@ -52,7 +52,9 @@ export function OrganizationProvider({
     activeOrganizationIdAtom,
   );
 
-  const { data: organizationUser } = api.userOrganization.get.useQuery();
+  const { data: organizationUser } = api.userOrganization.get.useQuery(undefined, {
+    enabled: !!userId,
+  });
   
   const role = useMemo(() => {
     if (!organizationUser || !user) return null;
