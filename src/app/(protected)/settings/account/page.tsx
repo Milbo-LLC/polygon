@@ -6,7 +6,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { H1, Muted } from '~/components/ui/typography';
+import { Large, Muted, Small } from '~/components/ui/typography';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -72,99 +72,103 @@ export default function AccountSettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6">
-      <div className="mb-6">
-        <H1>Profile</H1>
-        <Muted>Manage your personal account settings</Muted>
+    <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col justify-center w-full max-w-3xl mx-auto py-20">
+        <div className="mb-6">
+          <Large>Profile</Large>
+          <Muted>
+            <Small>Manage your personal account settings</Small>
+          </Muted>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Details</CardTitle>
+            <CardDescription>
+              Update your personal information
+            </CardDescription>
+          </CardHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="w-full md:w-32">
+                    <FormField
+                      control={form.control}
+                      name="image"
+                      render={({ field }: { field: ControllerRenderProps<AccountFormValues, "image"> }) => (
+                        <FormItem>
+                          <FormLabel>Profile Picture</FormLabel>
+                          <FormControl>
+                            <TeamLogoInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              organizationId={session?.user?.id}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex-1 space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }: { field: ControllerRenderProps<AccountFormValues, "name"> }) => (
+                        <FormItem>
+                          <FormLabel>Full Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your name" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is the name that will be displayed to other users.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }: { field: ControllerRenderProps<AccountFormValues, "email"> }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter your email address" 
+                              type="email"
+                              disabled={true}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Email changes are currently disabled. Contact support if you need to update your email.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button 
+                  type="submit" 
+                  disabled={!form.formState.isDirty || form.formState.isSubmitting || updateUser.isPending}
+                >
+                  {updateUser.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Details</CardTitle>
-          <CardDescription>
-            Update your personal information
-          </CardDescription>
-        </CardHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className="space-y-6">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full md:w-32">
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }: { field: ControllerRenderProps<AccountFormValues, "image"> }) => (
-                      <FormItem>
-                        <FormLabel>Profile Picture</FormLabel>
-                        <FormControl>
-                          <TeamLogoInput
-                            value={field.value}
-                            onChange={field.onChange}
-                            organizationId={session?.user?.id}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex-1 space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }: { field: ControllerRenderProps<AccountFormValues, "name"> }) => (
-                      <FormItem>
-                        <FormLabel>Full Name</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter your name" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          This is the name that will be displayed to other users.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }: { field: ControllerRenderProps<AccountFormValues, "email"> }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter your email address" 
-                            type="email"
-                            disabled={true}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Email changes are currently disabled. Contact support if you need to update your email.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={!form.formState.isDirty || form.formState.isSubmitting || updateUser.isPending}
-              >
-                {updateUser.isPending ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { UserOrganizationSchema } from "./user-organizations";
 
 // Base schema without nested fields
 export const OrganizationBaseSchema = z.object({
@@ -28,3 +29,10 @@ export const UpdateOrganizationSchema = OrganizationBaseSchema.omit({
   updatedAt: true,
   deletedAt: true,
 }).partial();
+
+export const OrganizationWithUserOrganizationsSchema = OrganizationBaseSchema.extend({
+  userOrganizations: z.array(UserOrganizationSchema),
+});
+
+
+export type OrganizationWithUserOrganizations = z.infer<typeof OrganizationWithUserOrganizationsSchema>;

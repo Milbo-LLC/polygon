@@ -1,10 +1,10 @@
-import { type z } from "zod";
-import { type Prisma } from "@prisma/client";
+import { z } from "zod";
+import { type Prisma, type User } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { CreateOrganizationSchema, OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
+import { CreateOrganizationSchema, OrganizationSchema, OrganizationWithUserOrganizationsSchema, UpdateOrganizationSchema } from "~/validators/organizations";
 import { parseProject } from "./projects";
 import { type MemberRoleEnum } from "~/validators/user-organizations";
 
@@ -15,22 +15,27 @@ type OrganizationWithProjects = Prisma.OrganizationGetPayload<{
         documents: true
       }
     },
-    organizationUsers: true
+    organizationUsers: {
+      include: {
+        user: true
+      }
+    }
   };
 }>;
 
 export const parseOrganization = (dbOrganization: OrganizationWithProjects) => ({
   ...dbOrganization,
   projects: dbOrganization.projects.map(parseProject),
-  organizationUsers: dbOrganization.organizationUsers.map(user => ({
-    ...user,
-    role: user.role as z.infer<typeof MemberRoleEnum>
+  userOrganizations: dbOrganization.organizationUsers.map(userOrg => ({
+    ...userOrg,
+    user: userOrg.user,
+    role: userOrg.role as z.infer<typeof MemberRoleEnum>
   }))
 });
 
 export const organizationRouter = createTRPCRouter({
   get: protectedProcedure
-    .output(OrganizationSchema)
+    .output(OrganizationWithUserOrganizationsSchema)
     .query(async ({ ctx }) => {
       const id = ctx.organizationId
       const organization = await ctx.db.organization.findUnique({
@@ -41,9 +46,42 @@ export const organizationRouter = createTRPCRouter({
               documents: true
             }
           },
-          organizationUsers: true
+          organizationUsers: {
+            include: {
+              user: true
+            }
+          }
         }
       });
+
+      console.log('server - organization: ', organization);
+
+      if (!organization) {
+        throw new Error("Organization not found");
+      }
+
+      return parseOrganization(organization);
+    }),
+
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .output(OrganizationSchema)
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      const organization = await ctx.db.organization.findUnique({
+        where: { id }, include: {
+          projects: {
+            include: {
+              documents: true
+            }
+          },
+          organizationUsers: {
+            include: {
+              user: true
+            }
+          }
+        }
+      }); 
 
       if (!organization) {
         throw new Error("Organization not found");
@@ -69,7 +107,11 @@ export const organizationRouter = createTRPCRouter({
               documents: true
             }
           },
-          organizationUsers: true
+          organizationUsers: {
+            include: {
+              user: true
+            }
+          }
         }
       });
 
@@ -108,7 +150,11 @@ export const organizationRouter = createTRPCRouter({
               documents: true
             }
           },
-          organizationUsers: true
+          organizationUsers: {
+            include: {
+              user: true
+            }
+          }
         }
       });
 

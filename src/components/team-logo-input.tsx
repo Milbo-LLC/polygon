@@ -75,7 +75,7 @@ export function TeamLogoInput({
   return (
     <div
       {...getRootProps()}
-      className={`relative aspect-[1/1] rounded-md border-2 border-dashed overflow-hidden ${isDragging ? 'border-primary bg-primary/10' : 'border-border'}`}
+      className={`relative aspect-[1/1] size-24 rounded-md border-2 border-dashed overflow-hidden ${isDragging ? 'border-primary bg-primary/10' : 'border-border'}`}
     >
       <input {...getInputProps()} />
       
@@ -88,7 +88,7 @@ export function TeamLogoInput({
       ) : value ? (
         // Show image preview
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-full relative">
+          <div className="size-24 relative">
             <Image
               src={value}
               alt="Team logo preview"

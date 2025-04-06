@@ -133,6 +133,12 @@ export const authConfig = {
         console.error('error: ', error);
         return false;
       }
-    }
+    },
+    redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl) || url.startsWith('/')) {
+        return url;
+      }
+      return baseUrl;
+    },
   },
 } satisfies NextAuthConfig;

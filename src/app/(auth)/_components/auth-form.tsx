@@ -1,6 +1,5 @@
 "use client"
 
-
 import {
   Card,
   CardContent,
@@ -10,8 +9,20 @@ import {
 import { signIn } from "next-auth/react"
 import { FaGoogle as GoogleIcon } from "react-icons/fa"
 import { Button } from "~/components/ui/button"
+import { useSearchParams } from "next/navigation"
 
-export function AuthForm({ mode = "login" }: { mode?: "login" | "signup" }) {
+export function AuthForm({ 
+  mode = "login",
+  callbackUrl: propCallbackUrl
+}: { 
+  mode?: "login" | "signup";
+  callbackUrl?: string;
+}) {
+  const searchParams = useSearchParams();
+  // Use prop callbackUrl first, then URL param, then default
+  const urlCallbackUrl = searchParams.get('callbackUrl');
+  const callbackUrl = propCallbackUrl || urlCallbackUrl || '/projects';
+  
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl w-full">
       <Card className="flex flex-col items-center justify-center w-full h-full py-10">
@@ -21,7 +32,11 @@ export function AuthForm({ mode = "login" }: { mode?: "login" | "signup" }) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col w-full gap-4">
-          <Button variant="outline" className="w-full" onClick={() => signIn('google', { callbackUrl: '/projects' })}>
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={() => signIn('google', { callbackUrl })}
+          >
             <GoogleIcon />
             {mode === "login" ? "Login with Google" : "Sign up with Google"}
           </Button>
