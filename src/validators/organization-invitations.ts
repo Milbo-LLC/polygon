@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { OrganizationSchema } from "./organizations";
+import { UserSchema } from "./users"; 
 
 export const OrganizationInvitationSchema = z.object({
   id: z.string(),
@@ -11,6 +13,8 @@ export const OrganizationInvitationSchema = z.object({
   invitedByUserId: z.string(),
   email: z.string(),
   role: z.string(),
+  organization: OrganizationSchema,
+  invitedByUser: UserSchema,
 });
 export type OrganizationInvitation = z.infer<typeof OrganizationInvitationSchema>;
 
@@ -22,6 +26,8 @@ export const CreateOrganizationInvitationSchema = OrganizationInvitationSchema.o
   expiresAt: true,
   deletedAt: true,
   acceptedAt: true,
+  organization: true,
+  invitedByUser: true,
 });
 
 export const UpdateOrganizationInvitationSchema = OrganizationInvitationSchema.omit({

@@ -36,6 +36,10 @@ export const organizationInvitationRouter = createTRPCRouter({
         // Create the invitation
         ctx.db.organizationInvitation.create({
           data,
+          include: {
+            organization: true,
+            invitedByUser: true,
+          },
         }),
         
         // Create a notification record for tracking
@@ -82,6 +86,10 @@ export const organizationInvitationRouter = createTRPCRouter({
 
       const organizationInvitation = await ctx.db.organizationInvitation.findUnique({
         where: { id },
+        include: {
+          organization: true,
+          invitedByUser: true,
+        },
       });
 
       if (!organizationInvitation) {
@@ -94,7 +102,16 @@ export const organizationInvitationRouter = createTRPCRouter({
   getAll: protectedProcedure
     .output(z.array(OrganizationInvitationSchema))
     .query(async ({ ctx }) => {
-      const organizationInvitations = await ctx.db.organizationInvitation.findMany();
+      const organizationInvitations = await ctx.db.organizationInvitation.findMany({
+        where: {
+          deletedAt: null,
+          acceptedAt: null,
+        },
+        include: {
+          organization: true,
+          invitedByUser: true,
+        },
+      });
       return organizationInvitations;
     }),
 
@@ -107,6 +124,11 @@ export const organizationInvitationRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           deletedAt: input.deletedAt,
+          acceptedAt: input.acceptedAt,
+        },
+        include: {
+          organization: true,
+          invitedByUser: true,
         },
       });
 

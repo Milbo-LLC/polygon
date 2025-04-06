@@ -8,8 +8,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OrganizationProvider } from "~/providers/organization-provider";
 import { useSession } from "next-auth/react";
 import Navbar from "./_components/navbar";
-import { useAtomValue } from 'jotai';
-import { pendingInvitationCodeAtom } from './atoms';
+import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -20,12 +19,11 @@ const ROUTES_WITHOUT_NAVBAR = [
 export function ClientLayout({ 
   children
 }: PropsWithChildren) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const pendingInvitationCode = useAtomValue(pendingInvitationCodeAtom);
   
   // Get code from URL
   const invitationCode = searchParams.get('code');
@@ -37,17 +35,30 @@ export function ClientLayout({
   
   // Check if we're on the invitations page with a valid code
   const isInvitationPage = pathname.startsWith('/invitations');
-  const hasInvitationCode = !!invitationCode || !!pendingInvitationCode;
 
+  // Handle authentication/redirect logic
+  useEffect(() => {
+    if (status !== 'loading' && !session) {
+      // Store the current URL (with invitation code) for after login
+      if (invitationCode) {
+        const callbackUrl = `/invitations?code=${invitationCode}`;
+        router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      } else {
+        router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+      }
+    }
+  }, [session, status, router, invitationCode]);
+  
+  // Handle beta access check
   useEffect(() => {
     // Skip the beta access check and redirect for invitation pages with codes
-    if (!betaAccessEnabled && !(isInvitationPage && hasInvitationCode)) {
+    if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
       router.push('/wait-list')
     }
-  }, [betaAccessEnabled, router, isInvitationPage, hasInvitationCode])
+  }, [betaAccessEnabled, router, isInvitationPage, invitationCode])
 
   // Don't render anything during beta check, except for invitation pages with codes
-  if (!betaAccessEnabled && !(isInvitationPage && hasInvitationCode)) return null;
+  if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) return null;
   
   return (
     <OrganizationProvider userId={session?.user?.id}>

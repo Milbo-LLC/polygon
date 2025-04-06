@@ -3,6 +3,7 @@ import { type UserOrganization, type Organization, type User } from "@prisma/cli
 import {
   createTRPCRouter,
   protectedProcedure,
+  orgProtectedProcedure,
 } from "~/server/api/trpc";
 import { type MemberRole } from "~/validators/user-organizations";
 import { UserOrganizationWithOrgSchema } from "~/validators/extended-schemas";
@@ -77,7 +78,7 @@ export const userOrganizationRouter = createTRPCRouter({
       }
     }),
 
-  getAllByOrganizationId: protectedProcedure
+  getAllByOrganizationId: orgProtectedProcedure
     .output(z.array(UserOrganizationWithOrgSchema))
     .query(async ({ ctx }) => {
       try {
@@ -103,6 +104,47 @@ export const userOrganizationRouter = createTRPCRouter({
         return parsed;
       } catch (error) {
         console.error("getAll error:", error);
+        throw error;
+      }
+    }),
+
+  create: orgProtectedProcedure
+    .input(z.object({
+      userId: z.string(),
+      organizationId: z.string(),
+      role: z.string()
+    }))
+    .output(UserOrganizationWithOrgSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { userId, organizationId, role } = input;
+        
+        const existingUserOrg = await ctx.db.userOrganization.findFirst({
+          where: { 
+            userId,
+            organizationId
+          }
+        });
+        
+        if (existingUserOrg) {
+          throw new Error("User is already a member of this organization");
+        }
+        
+        const userOrganization = await ctx.db.userOrganization.create({
+          data: {
+            userId,
+            organizationId,
+            role
+          },
+          include: {
+            organization: true,
+            user: true
+          }
+        });
+        
+        return parseUserOrganization(userOrganization);
+      } catch (error) {
+        console.error("create error:", error);
         throw error;
       }
     }),

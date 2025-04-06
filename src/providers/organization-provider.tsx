@@ -4,7 +4,6 @@ import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { activeOrganizationIdAtom } from '~/app/(protected)/atoms';
 import { useSetAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { useSession } from 'next-auth/react';
@@ -44,8 +43,6 @@ export function OrganizationProvider({
     enabled: !!userId,
   });
 
-  console.log('organization: ', organization);
-
   // Fetch all organizations for the user
   const { data: userOrganizations = [], isLoading: loadingUserOrganizations } = api.userOrganization.getAll.useQuery(undefined, {
     enabled: !!userId,
@@ -57,8 +54,6 @@ export function OrganizationProvider({
 
   const { data: organizationUser } = api.userOrganization.get.useQuery();
   
-  const router = useRouter();;
-
   const role = useMemo(() => {
     if (!organizationUser || !user) return null;
     return organizationUser.role;
@@ -104,7 +99,7 @@ export function OrganizationProvider({
       await utils.userOrganization.get.refetch();
       await utils.organization.get.refetch();
 
-      router.push('/projects');
+      // router.push('/projects');
     } catch (error) {
       console.error(error);
       toast.error(

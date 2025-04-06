@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,9 +72,7 @@ export default function MembersSettingsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    console.log(organization);
-  }, [organization]);
+  
   
   const { data: invitations, refetch: refetchInvitations } = api.organizationInvitation.getAll.useQuery(
     undefined,

@@ -3,6 +3,7 @@ import { type Prisma } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
 import { CreateOrganizationSchema, OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
 import { parseProject } from "./projects";
@@ -47,7 +48,7 @@ export const organizationRouter = createTRPCRouter({
       return parseOrganization(organization);
     }),
 
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .output(OrganizationSchema)
     .query(async ({ ctx, input }) => {

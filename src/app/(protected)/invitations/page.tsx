@@ -1,52 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Building, User, Clock } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAtom } from 'jotai';
 
 import { Button } from '~/components/ui/button';
 import { H3, Muted } from '~/components/ui/typography';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { Skeleton } from '~/components/ui/skeleton';
 import { api } from '~/trpc/react';
-import { pendingInvitationCodeAtom } from '~/app/(protected)/atoms';
 import { type OrganizationInvitation } from '~/validators/organization-invitations';
 import Image from 'next/image';
+import { useOrganizationContext } from '~/providers/organization-provider';
 
 export default function AcceptInvitationPage() {
   const searchParams = useSearchParams();
-  const urlInvitationCode = searchParams.get('code');
+  const code = searchParams.get('code');
+  console.log('code: ', code);
   const router = useRouter();
   const { data: session } = useSession();
   const [accepting, setAccepting] = useState(false);
+  const utils = api.useUtils();
+  const {handleOrgSwitch} = useOrganizationContext()
   
-  // Use the Jotai atom for persisting the invitation code
-  const [pendingInvitationCode, setPendingInvitationCode] = useAtom(pendingInvitationCodeAtom);
-  
-  // Use URL code or pending code from storage
-  const invitationCode = urlInvitationCode ?? pendingInvitationCode;
-
   // Query to get invitation details
   const { data: invitation, isLoading, error } = api.organizationInvitation.get.useQuery(
-    { id: invitationCode ?? '' },
-    { enabled: !!invitationCode, retry: 1 }
+    { id: code ?? '' },
+    { enabled: !!code }
   ) as { data: OrganizationInvitation | undefined, isLoading: boolean, error: Error | null };
-
-  // Query to get organization details
-  const { data: organization } = api.organization.getById.useQuery(
-    { id: invitation?.organizationId ?? '' },
-    { enabled: !!invitation?.organizationId }
-  );
 
   // Mutation to accept invitation
   const acceptInvitation = api.organizationInvitation.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("You've successfully joined the organization!");
-      // Clear the stored invitation code when accepted
-      setPendingInvitationCode(null);
+      await utils.organizationInvitation.get.invalidate();
+      await utils.userOrganization.get.invalidate();
+      await utils.organization.get.invalidate();
+      await utils.userOrganization.getAll.invalidate();
+      await handleOrgSwitch(invitation?.organizationId ?? '');
       router.push('/projects');
     },
     onError: (error) => {
@@ -55,22 +48,13 @@ export default function AcceptInvitationPage() {
     }
   });
 
-  // Handle authentication and redirection
-  useEffect(() => {
-    // Always store the URL invitation code if it exists
-    if (urlInvitationCode) {
-      setPendingInvitationCode(urlInvitationCode);
+  // Create user organization mutation
+  const createUserOrganization = api.userOrganization.create.useMutation({
+    onError: (error) => {
+      toast.error(`Failed to create organization connection: ${error.message}`);
+      setAccepting(false);
     }
-
-    // If user is authenticated and we have a stored code but no URL code, 
-    // update the URL to include the code
-    if (session?.user && pendingInvitationCode && !urlInvitationCode) {
-      router.push(`/invitations?code=${pendingInvitationCode}`);
-    }
-    
-    // Authentication is handled by the layout component, which will redirect to login
-    // with the proper callback URL if needed
-  }, [session, urlInvitationCode, pendingInvitationCode, setPendingInvitationCode, router]);
+  });
 
   // Handle invitation acceptance
   const handleAcceptInvitation = () => {
@@ -80,7 +64,22 @@ export default function AcceptInvitationPage() {
     }
 
     setAccepting(true);
-    acceptInvitation.mutate({ id: invitation.id, acceptedAt: new Date() });
+    
+    // Create the user-organization connection first
+    createUserOrganization.mutate({
+      userId: session.user.id,
+      organizationId: invitation.organizationId,
+      role: invitation.role
+    }, {
+      onSuccess: () => {
+        // Then update the invitation as accepted
+        acceptInvitation.mutate({ id: invitation.id, acceptedAt: new Date() });
+      },
+      onError: (error) => {
+        setAccepting(false);
+        toast.error(`Failed to join organization: ${error.message}`);
+      }
+    });
   };
 
   // Handle invitation errors
@@ -103,7 +102,7 @@ export default function AcceptInvitationPage() {
   }
 
   // Handle loading state
-  if (isLoading ?? !invitation ?? !organization) {
+  if (isLoading ?? !invitation ?? !invitation?.organization) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
         <Card>
@@ -183,14 +182,14 @@ export default function AcceptInvitationPage() {
             <div>
               <H3 className="flex items-center gap-2">
                 <Building className="h-5 w-5" />
-                {organization.name}
+                {invitation.organization.name}
               </H3>
 
-              {organization.logoUrl && (
+              {invitation.organization.logoUrl && (
                 <div className="mt-4 flex justify-center relative size-24">
                   <Image
-                    src={organization.logoUrl}
-                    alt={`${organization.name} logo`}
+                    src={invitation.organization.logoUrl}
+                    alt={`${invitation.organization.name} logo`}
                     fill
                     className="rounded-lg border"
                   />
