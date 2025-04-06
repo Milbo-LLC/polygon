@@ -1,27 +1,36 @@
 "use client"
 
+import { useEffect } from "react"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { FaGoogle as GoogleIcon } from "react-icons/fa"
 import { Button } from "~/components/ui/button"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export function AuthForm({ 
   mode = "login",
-  callbackUrl: propCallbackUrl
 }: { 
   mode?: "login" | "signup";
-  callbackUrl?: string;
 }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const searchParams = useSearchParams();
-  // Use prop callbackUrl first, then URL param, then default
-  const urlCallbackUrl = searchParams.get('callbackUrl');
-  const callbackUrl = propCallbackUrl || urlCallbackUrl || '/projects';
+  
+  // Get callbackUrl from the URL params
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/projects';
+  
+  // Handle redirection after authentication
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      // If authenticated, redirect to the callback URL
+      router.push(callbackUrl);
+    }
+  }, [status, session, callbackUrl, router]);
   
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl w-full">

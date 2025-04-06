@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { ClientLayout } from "./client-layout";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
-import { type PropsWithChildren } from "react";
-import { headers } from "next/headers";
 import { getUserSession } from "~/lib/auth";
 
 export const metadata = {
@@ -11,17 +9,34 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function ProtectedLayout({children}: PropsWithChildren) {
+export default async function ProtectedLayout({
+  children,
+  searchParams,
+}: {
+  children: React.ReactNode;
+  searchParams?: Record<string, string | string[]>;
+}) {
   const session = await getUserSession();
   
-  // Get the current URL to check if it's an invitation page with a code
-  const headersList = await headers();
-  const url = headersList.get('x-url') || headersList.get('referer') || '';
-  const isInvitationPage = url.includes('/invitations');
-  const hasInvitationCode = url.includes('code=');
-
-  // Allow access to invitation page with code even without authentication
-  if (!session && !(isInvitationPage && hasInvitationCode)) {
+  // If the user is not authenticated
+  if (!session) {
+    // Check if there's an invitation code in the URL
+    const invitationCode = searchParams?.code;
+    
+    if (invitationCode) {
+      // Get the code value (handles both string and array cases)
+      const code = typeof invitationCode === 'string' 
+        ? invitationCode 
+        : Array.isArray(invitationCode) ? invitationCode[0] : '';
+      
+      if (code) {
+        // Include the invitation code in the callback URL
+        const callbackUrl = `/invitations?code=${code}`;
+        redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      }
+    }
+    
+    // Default redirect for unauthenticated users
     redirect(AUTH_REDIRECT_PATH_SIGNED_OUT);
   }
   

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sendWelcomeEmailServer, sendOrganizationInvitationEmail } from "~/lib/email-server";
+import { sendOrganizationInvitationEmail } from "~/lib/email-server";
 
 import {
   createTRPCRouter,
@@ -61,7 +61,7 @@ export const organizationInvitationRouter = createTRPCRouter({
       ]);
 
       // Send the invitation email
-      if (organization && inviter && inviter.name) {
+      if (organization?.name && inviter?.name) {
         await sendOrganizationInvitationEmail(
           input.email,
           inviter.name,

@@ -13,29 +13,31 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Skeleton } from '~/components/ui/skeleton';
 import { api } from '~/trpc/react';
 import { pendingInvitationCodeAtom } from '~/app/(protected)/atoms';
+import { type OrganizationInvitation } from '~/validators/organization-invitations';
+import Image from 'next/image';
 
 export default function AcceptInvitationPage() {
   const searchParams = useSearchParams();
   const urlInvitationCode = searchParams.get('code');
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [accepting, setAccepting] = useState(false);
   
   // Use the Jotai atom for persisting the invitation code
   const [pendingInvitationCode, setPendingInvitationCode] = useAtom(pendingInvitationCodeAtom);
   
   // Use URL code or pending code from storage
-  const invitationCode = urlInvitationCode || pendingInvitationCode;
+  const invitationCode = urlInvitationCode ?? pendingInvitationCode;
 
   // Query to get invitation details
   const { data: invitation, isLoading, error } = api.organizationInvitation.get.useQuery(
-    { id: invitationCode || '' },
+    { id: invitationCode ?? '' },
     { enabled: !!invitationCode, retry: 1 }
-  );
+  ) as { data: OrganizationInvitation | undefined, isLoading: boolean, error: Error | null };
 
   // Query to get organization details
   const { data: organization } = api.organization.getById.useQuery(
-    { id: invitation?.organizationId || '' },
+    { id: invitation?.organizationId ?? '' },
     { enabled: !!invitation?.organizationId }
   );
 
@@ -55,28 +57,24 @@ export default function AcceptInvitationPage() {
 
   // Handle authentication and redirection
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      // Store code in Jotai atom before redirecting
-      if (urlInvitationCode) {
-        setPendingInvitationCode(urlInvitationCode);
-        
-        // Use the login page with a specific callback URL that includes the code
-        router.push(`/login?callbackUrl=${encodeURIComponent(`/invitations?code=${urlInvitationCode}`)}`);
-      } else {
-        router.push('/login');
-      }
-    } else if (status === 'authenticated' && pendingInvitationCode && !urlInvitationCode) {
-      // If returning from login with a stored code but no URL code, add it to URL
-      router.push(`/invitations?code=${pendingInvitationCode}`);
-    } else if (urlInvitationCode && pendingInvitationCode && urlInvitationCode !== pendingInvitationCode) {
-      // If URL code differs from stored code, update stored code
+    // Always store the URL invitation code if it exists
+    if (urlInvitationCode) {
       setPendingInvitationCode(urlInvitationCode);
     }
-  }, [status, urlInvitationCode, pendingInvitationCode, setPendingInvitationCode, router]);
+
+    // If user is authenticated and we have a stored code but no URL code, 
+    // update the URL to include the code
+    if (session?.user && pendingInvitationCode && !urlInvitationCode) {
+      router.push(`/invitations?code=${pendingInvitationCode}`);
+    }
+    
+    // Authentication is handled by the layout component, which will redirect to login
+    // with the proper callback URL if needed
+  }, [session, urlInvitationCode, pendingInvitationCode, setPendingInvitationCode, router]);
 
   // Handle invitation acceptance
   const handleAcceptInvitation = () => {
-    if (!invitation || !session?.user) {
+    if (!(invitation && session?.user)) {
       toast.error("Missing invitation details or user not authenticated");
       return;
     }
@@ -105,7 +103,7 @@ export default function AcceptInvitationPage() {
   }
 
   // Handle loading state
-  if (isLoading || !invitation || !organization) {
+  if (isLoading ?? !invitation ?? !organization) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
         <Card>
@@ -155,7 +153,7 @@ export default function AcceptInvitationPage() {
           <CardHeader>
             <CardTitle className="text-destructive">Incorrect Account</CardTitle>
             <CardDescription>
-              This invitation was sent to {invitation.email}, but you're logged in as {session?.user?.email}.
+              This invitation was sent to {invitation.email}, but you&apos;re logged in as {session?.user?.email}.
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex gap-4">
@@ -176,7 +174,7 @@ export default function AcceptInvitationPage() {
             Organization Invitation
           </CardTitle>
           <CardDescription>
-            You've been invited to join an organization
+            You&apos;ve been invited to join an organization
           </CardDescription>
         </CardHeader>
 
@@ -189,11 +187,12 @@ export default function AcceptInvitationPage() {
               </H3>
 
               {organization.logoUrl && (
-                <div className="mt-4 flex justify-center">
-                  <img
+                <div className="mt-4 flex justify-center relative size-24">
+                  <Image
                     src={organization.logoUrl}
                     alt={`${organization.name} logo`}
-                    className="h-24 w-24 object-contain rounded-lg border"
+                    fill
+                    className="rounded-lg border"
                   />
                 </div>
               )}

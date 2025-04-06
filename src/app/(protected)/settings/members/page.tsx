@@ -16,6 +16,14 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import {
   Form,
   FormControl,
   FormField,
@@ -31,6 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Large, Muted, Small } from "~/components/ui/typography";
 import { api } from "~/trpc/react";
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useSession } from "next-auth/react";
@@ -61,22 +70,29 @@ export default function MembersSettingsPage() {
   const user = session.data?.user;
   const { organization } = useOrganizationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     console.log(organization);
   }, [organization]);
   
-    const { data: invitations, refetch: refetchInvitations } = api.organizationInvitation.getAll.useQuery(
-      undefined,
+  const { data: invitations, refetch: refetchInvitations } = api.organizationInvitation.getAll.useQuery(
+    undefined,
+    { enabled: !!organization?.id }
+  );
+
+  const { data: userOrganizations } = api.userOrganization.getAllByOrganizationId.useQuery(
+    undefined,
     { enabled: !!organization?.id }
   );
   
   const createInvitation = api.organizationInvitation.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Invitation sent successfully");
       form.reset();
-      refetchInvitations();
+      await refetchInvitations();
       setIsSubmitting(false);
+      setDialogOpen(false);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to send invitation");
@@ -85,9 +101,9 @@ export default function MembersSettingsPage() {
   });
   
   const deleteInvitation = api.organizationInvitation.update.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Invitation revoked");
-      refetchInvitations();
+      await refetchInvitations();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to revoke invitation");
@@ -129,132 +145,133 @@ export default function MembersSettingsPage() {
     });
   };
 
+  // Get active invitations (not deleted)
+  const activeInvitations = invitations?.filter(invitation => !invitation.deletedAt) ?? [];
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Members Settings</h1>
-      
-      {/* Organization Members */}
-      {organization?.userOrganizations && organization.userOrganizations.length > 0 && (
+    <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col w-full max-w-3xl mx-auto py-20">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <Large>Organization Members</Large>
+            <Muted>
+              <Small>Manage your organization&apos;s team members</Small>
+            </Muted>
+          </div>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Invite Member
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invite Team Member</DialogTitle>
+                <DialogDescription>
+                  Send an invitation to someone you want to join your organization
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="colleague@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Role</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="member">Member</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full"
+                  >
+                    Send Invitation
+                  </Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
+        
+        {/* Combined Organization Members and Pending Invitations */}
         <Card>
           <CardHeader>
-            <CardTitle>Organization Members</CardTitle>
+            <CardTitle>Team Members</CardTitle>
             <CardDescription>
-              People who are currently members of your organization
+              Active members and pending invitations
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {organization.userOrganizations.map((member: UserOrganizationType) => (
+              {/* Current Members */}
+              {userOrganizations && userOrganizations.length > 0 && userOrganizations.map((member: UserOrganizationType) => (
                 <div 
-                  key={member.userId} 
+                  key={`member-${member.userId}`} 
                   className="flex items-center justify-between rounded-lg border p-4"
                 >
                   <div className="flex items-center gap-3">
                     <User className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">{member.user?.email || "No email available"}</p>
+                      <p className="font-medium">{member.user?.email ?? "No email available"}</p>
                       <p className="text-sm text-muted-foreground">
                         Role: {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                       </p>
                     </div>
                   </div>
+                  <div className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Active</div>
                 </div>
               ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Invite Team Members</CardTitle>
-          <CardDescription>
-            Send invitations to people you want to join your organization
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="flex flex-col gap-4 md:flex-row">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="colleague@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[200px]">
-                      <FormLabel>Role</FormLabel>
-                      <Select 
-                        onValueChange={field.onChange} 
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="member">Member</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
               
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="mt-2"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Send Invitation
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      
-      {invitations && invitations.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Pending Invitations</CardTitle>
-            <CardDescription>
-              People who have been invited but haven't joined yet
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {invitations
-                .filter(invitation => !invitation.deletedAt)
-                .map((invitation) => (
-                  <div 
-                    key={invitation.id} 
-                    className="flex items-center justify-between rounded-lg border p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">{invitation.email}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Role: {invitation.role.charAt(0).toUpperCase() + invitation.role.slice(1)}
-                        </p>
-                      </div>
+              {/* Pending Invitations */}
+              {activeInvitations.length > 0 && activeInvitations.map((invitation) => (
+                <div 
+                  key={`invitation-${invitation.id}`}
+                  className="flex items-center justify-between rounded-lg border p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">{invitation.email}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Role: {invitation.role.charAt(0).toUpperCase() + invitation.role.slice(1)}
+                      </p>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">Pending</div>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -263,11 +280,20 @@ export default function MembersSettingsPage() {
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
-                ))}
+                </div>
+              ))}
+              
+              {/* No members message */}
+              {(!userOrganizations || userOrganizations.length === 0) && 
+               (!activeInvitations || activeInvitations.length === 0) && (
+                <div className="text-center py-6 text-muted-foreground">
+                  No members or pending invitations yet. Invite someone to get started.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
-      )}
+      </div>
     </div>
   );
 }

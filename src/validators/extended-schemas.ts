@@ -12,6 +12,9 @@ import {
 import { 
   DocumentSchema 
 } from "./documents";
+import { 
+  UserSchema 
+} from "./users";
 
 // Extended Project schema with Documents
 export const ProjectWithDocumentsSchema = ProjectBaseSchema.extend({
@@ -26,6 +29,7 @@ export const OrganizationWithProjectsSchema = OrganizationBaseSchema.extend({
 // Extended UserOrganization schema with Organization
 export const UserOrganizationWithOrgSchema = UserOrganizationBaseSchema.extend({
   organization: OrganizationSchema,
+  user: UserSchema
 });
 
 // Type exports

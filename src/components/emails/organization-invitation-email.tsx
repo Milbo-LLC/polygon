@@ -17,7 +17,7 @@ export const OrganizationInvitationEmail: React.FC<Readonly<OrganizationInvitati
   invitationCode,
 }) => {
   // Generate the invitation URL with the code as a query parameter
-  const invitationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invitations?code=${invitationCode}`;
+  const invitationUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/invitations?code=${invitationCode}`;
   
   return (
     <div style={{
@@ -28,7 +28,7 @@ export const OrganizationInvitationEmail: React.FC<Readonly<OrganizationInvitati
       padding: '20px',
     }}>
       <H1 className="text-center text-2xl font-bold mb-4">
-        You've been invited to join {organizationName}!
+        You&apos;ve been invited to join {organizationName}!
       </H1>
       
       <div style={{ 
@@ -75,7 +75,7 @@ export const OrganizationInvitationEmail: React.FC<Readonly<OrganizationInvitati
         color: '#666',
         textAlign: 'center'
       }}>
-        <p>If the button doesn't work, copy and paste this link into your browser:</p>
+        <p>If the button doesn&apos;t work, copy and paste this link into your browser:</p>
         <p style={{ 
           wordBreak: 'break-all', 
           color: '#4F46E5',

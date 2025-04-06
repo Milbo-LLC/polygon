@@ -1,12 +1,11 @@
 import { z } from "zod";
-import { type Prisma, type User } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { CreateOrganizationSchema, OrganizationSchema, OrganizationWithUserOrganizationsSchema, UpdateOrganizationSchema } from "~/validators/organizations";
+import { CreateOrganizationSchema, OrganizationSchema, UpdateOrganizationSchema } from "~/validators/organizations";
 import { parseProject } from "./projects";
-import { type MemberRoleEnum } from "~/validators/user-organizations";
 
 type OrganizationWithProjects = Prisma.OrganizationGetPayload<{
   include: { 
@@ -15,27 +14,17 @@ type OrganizationWithProjects = Prisma.OrganizationGetPayload<{
         documents: true
       }
     },
-    organizationUsers: {
-      include: {
-        user: true
-      }
-    }
   };
 }>;
 
 export const parseOrganization = (dbOrganization: OrganizationWithProjects) => ({
   ...dbOrganization,
   projects: dbOrganization.projects.map(parseProject),
-  userOrganizations: dbOrganization.organizationUsers.map(userOrg => ({
-    ...userOrg,
-    user: userOrg.user,
-    role: userOrg.role as z.infer<typeof MemberRoleEnum>
-  }))
 });
 
 export const organizationRouter = createTRPCRouter({
   get: protectedProcedure
-    .output(OrganizationWithUserOrganizationsSchema)
+    .output(OrganizationSchema)
     .query(async ({ ctx }) => {
       const id = ctx.organizationId
       const organization = await ctx.db.organization.findUnique({
@@ -46,11 +35,6 @@ export const organizationRouter = createTRPCRouter({
               documents: true
             }
           },
-          organizationUsers: {
-            include: {
-              user: true
-            }
-          }
         }
       });
 
@@ -73,11 +57,6 @@ export const organizationRouter = createTRPCRouter({
           projects: {
             include: {
               documents: true
-            }
-          },
-          organizationUsers: {
-            include: {
-              user: true
             }
           }
         }
@@ -105,11 +84,6 @@ export const organizationRouter = createTRPCRouter({
           projects: {
             include: {
               documents: true
-            }
-          },
-          organizationUsers: {
-            include: {
-              user: true
             }
           }
         }
@@ -148,11 +122,6 @@ export const organizationRouter = createTRPCRouter({
           projects: {
             include: {
               documents: true
-            }
-          },
-          organizationUsers: {
-            include: {
-              user: true
             }
           }
         }

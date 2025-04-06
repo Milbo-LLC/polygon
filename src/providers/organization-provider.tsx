@@ -8,13 +8,13 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { useSession } from 'next-auth/react';
-import { type Organization, type OrganizationWithUserOrganizations } from '~/validators/organizations';
+import { type Organization } from '~/validators/organizations';
 import { type MemberRole } from '~/validators/user-organizations';
 import { type UserOrganizationWithOrg } from '~/validators/extended-schemas';
 
 type OrganizationContextValue = 
   | ({
-      organization: OrganizationWithUserOrganizations | null;
+      organization: Organization | null;
       organizations: Partial<UserOrganizationWithOrg>[];
       handleOrgSwitch: (organizationId: string) => Promise<void>;
       role: MemberRole | null;
