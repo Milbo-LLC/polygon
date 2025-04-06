@@ -7,7 +7,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { H1, Muted } from '~/components/ui/typography';
+import { Large, Muted, Small } from '~/components/ui/typography';
 import { useOrganizationContext } from '~/providers/organization-provider';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -50,77 +50,81 @@ export default function WorkspaceSettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-6">
-      <div className="mb-6">
-        <H1>General</H1>
-        <Muted>Change your current workspace settings</Muted>
+    <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col justify-center w-full max-w-3xl mx-auto py-20">
+        <div className="mb-6">
+          <Large>General</Large>
+          <Muted>
+            <Small>Change your current workspace settings</Small>
+          </Muted>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Workspace Details</CardTitle>
+            <CardDescription>
+              Update your workspace information
+            </CardDescription>
+          </CardHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="w-full md:w-32">
+                    <FormField
+                      control={form.control}
+                      name="logoUrl"
+                      render={({ field }: { field: ControllerRenderProps<WorkspaceFormValues, "logoUrl"> }) => (
+                        <FormItem>
+                          <FormLabel>Logo</FormLabel>
+                          <FormControl>
+                            <TeamLogoInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              organizationId={organization?.id}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }: { field: ControllerRenderProps<WorkspaceFormValues, "name"> }) => (
+                        <FormItem>
+                          <FormLabel>Workspace Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter workspace name" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is the name that will be displayed across the application.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button 
+                  type="submit" 
+                  disabled={!form.formState.isDirty || form.formState.isSubmitting}
+                >
+                  Save Changes
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Workspace Details</CardTitle>
-          <CardDescription>
-            Update your workspace information
-          </CardDescription>
-        </CardHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className="space-y-6">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full md:w-32">
-                  <FormField
-                    control={form.control}
-                    name="logoUrl"
-                    render={({ field }: { field: ControllerRenderProps<WorkspaceFormValues, "logoUrl"> }) => (
-                      <FormItem>
-                        <FormLabel>Logo</FormLabel>
-                        <FormControl>
-                          <TeamLogoInput
-                            value={field.value}
-                            onChange={field.onChange}
-                            organizationId={organization?.id}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }: { field: ControllerRenderProps<WorkspaceFormValues, "name"> }) => (
-                      <FormItem>
-                        <FormLabel>Workspace Name</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter workspace name" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          This is the name that will be displayed across the application.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={!form.formState.isDirty || form.formState.isSubmitting}
-              >
-                Save Changes
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
     </div>
   );
 }
