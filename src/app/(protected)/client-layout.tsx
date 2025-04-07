@@ -1,7 +1,7 @@
 "use client";
 
 import "~/styles/globals.css";
-import { type PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, Suspense, useEffect } from "react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -16,9 +16,7 @@ const ROUTES_WITHOUT_NAVBAR = [
   "/workspaces"
 ]
 
-export function ClientLayout({ 
-  children
-}: PropsWithChildren) {
+function ClientLayoutContent({ children }: PropsWithChildren) {
   const { data: session, status } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
@@ -73,5 +71,19 @@ export function ClientLayout({
         </div>
       </div>
     </OrganizationProvider>
+  );
+}
+
+export function ClientLayout({ children }: PropsWithChildren) {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen w-full">
+        <p>Loading...</p>
+      </div>
+    }>
+      <ClientLayoutContent>
+        {children}
+      </ClientLayoutContent>
+    </Suspense>
   );
 }

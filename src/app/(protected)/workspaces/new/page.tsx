@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type ControllerRenderProps } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -13,6 +14,7 @@ import { api } from '~/trpc/react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { useOrganizationContext } from '~/providers/organization-provider';
+import { Skeleton } from '~/components/ui/skeleton';
 
 // Form validation schema
 const newWorkspaceSchema = z.object({
@@ -22,7 +24,7 @@ const newWorkspaceSchema = z.object({
 
 type NewWorkspaceFormValues = z.infer<typeof newWorkspaceSchema>;
 
-export default function NewWorkspacePage() {
+function WorkspaceForm() {
   const router = useRouter();
   const { handleOrgSwitch } = useOrganizationContext();
   
@@ -136,5 +138,39 @@ export default function NewWorkspacePage() {
         </Form>
       </Card>
     </div>
+  );
+}
+
+export default function NewWorkspacePage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-3xl mx-auto py-6">
+        <div className="mb-6">
+          <Skeleton className="h-9 w-64 mb-2" />
+          <Skeleton className="h-4 w-full max-w-md" />
+        </div>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-48 mb-2" />
+            <Skeleton className="h-4 w-full" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex flex-col md:flex-row gap-6">
+              <Skeleton className="h-40 w-32" />
+              <div className="flex-1 space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end space-x-4">
+            <Skeleton className="h-10 w-24" />
+            <Skeleton className="h-10 w-36" />
+          </CardFooter>
+        </Card>
+      </div>
+    }>
+      <WorkspaceForm />
+    </Suspense>
   );
 }
