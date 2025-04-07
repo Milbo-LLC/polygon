@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Building, User, Clock } from 'lucide-react';
@@ -15,7 +15,7 @@ import { type OrganizationInvitation } from '~/validators/organization-invitatio
 import Image from 'next/image';
 import { useOrganizationContext } from '~/providers/organization-provider';
 
-export default function AcceptInvitationPage() {
+function InvitationContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   console.log('code: ', code);
@@ -26,7 +26,7 @@ export default function AcceptInvitationPage() {
   const {handleOrgSwitch} = useOrganizationContext()
   
   // Query to get invitation details
-  const { data: invitation, isLoading, error } = api.organizationInvitation.get.useQuery(
+  const { data: invitation, error } = api.organizationInvitation.get.useQuery(
     { id: code ?? '' },
     { enabled: !!code }
   ) as { data: OrganizationInvitation | undefined, isLoading: boolean, error: Error | null };
@@ -101,31 +101,8 @@ export default function AcceptInvitationPage() {
     );
   }
 
-  // Handle loading state
-  if (isLoading ?? !invitation ?? !invitation?.organization) {
-    return (
-      <div className="container max-w-2xl mx-auto py-16 px-4">
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-8 w-64 mb-2" />
-            <Skeleton className="h-4 w-full" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Skeleton className="h-10 w-32" />
-          </CardFooter>
-        </Card>
-      </div>
-    );
-  }
-
   // Check if invitation is expired
-  const isExpired = invitation.expiresAt && new Date(invitation.expiresAt) < new Date();
+  const isExpired = invitation?.expiresAt && new Date(invitation.expiresAt) < new Date();
   if (isExpired) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
@@ -145,14 +122,14 @@ export default function AcceptInvitationPage() {
   }
 
   // If email doesn't match the user's email
-  if (session?.user?.email !== invitation.email) {
+  if (session?.user?.email !== invitation?.email) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive">Incorrect Account</CardTitle>
             <CardDescription>
-              This invitation was sent to {invitation.email}, but you&apos;re logged in as {session?.user?.email}.
+              This invitation was sent to {invitation?.email}, but you&apos;re logged in as {session?.user?.email}.
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex gap-4">
@@ -182,10 +159,10 @@ export default function AcceptInvitationPage() {
             <div>
               <H3 className="flex items-center gap-2">
                 <Building className="h-5 w-5" />
-                {invitation.organization.name}
+                {invitation?.organization.name}
               </H3>
 
-              {invitation.organization.logoUrl && (
+              {invitation?.organization.logoUrl && (
                 <div className="mt-4 flex justify-center relative size-24">
                   <Image
                     src={invitation.organization.logoUrl}
@@ -203,18 +180,18 @@ export default function AcceptInvitationPage() {
                 <Muted>Your Role</Muted>
               </div>
               <div className="font-medium">
-                {invitation.role.charAt(0).toUpperCase() + invitation.role.slice(1)}
+                {invitation?.role ? (invitation.role.charAt(0).toUpperCase() + invitation.role.slice(1)) : 'Member'}
               </div>
             </div>
 
-            {invitation.expiresAt && (
+            {invitation?.expiresAt && (
               <div className="border-t border-secondary pt-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <Muted>Expires</Muted>
                 </div>
                 <div className="font-medium">
-                  {new Date(invitation.expiresAt).toLocaleDateString('en-US', {
+                  {new Date(invitation?.expiresAt).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -244,5 +221,29 @@ export default function AcceptInvitationPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function AcceptInvitationPage() {
+  return (
+    <Suspense fallback={<div className="container max-w-2xl mx-auto py-16 px-4">
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-8 w-64 mb-2" />
+          <Skeleton className="h-4 w-full" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Skeleton className="h-10 w-32" />
+        </CardFooter>
+      </Card>
+    </div>}>
+      <InvitationContent />
+    </Suspense>
   );
 }

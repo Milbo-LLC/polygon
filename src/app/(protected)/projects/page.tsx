@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "~/components/ui/button";
 import { PlusIcon, Trash2Icon, MoreVertical, Pencil } from "lucide-react";
 import { P } from "~/components/ui/typography";
@@ -27,8 +27,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import { socket } from "~/socket";
+import { Skeleton } from "~/components/ui/skeleton";
 
-export default function ProjectsPage() {
+function ProjectsContent() {
   
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
@@ -222,5 +223,23 @@ export default function ProjectsPage() {
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col w-full h-full p-4 gap-4">
+        <Skeleton className="h-4 w-32 mb-2" />
+        <Skeleton className="h-4 w-40 mb-4" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-[240px]" />
+          ))}
+        </div>
+      </div>
+    }>
+      <ProjectsContent />
+    </Suspense>
   );
 }
