@@ -122,7 +122,7 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   }
 
   // Use provided org ID, user ID as personal org, or default to first organization
-  const effectiveOrgId = organizationId || session.user.id || userOrganizations[0]?.organizationId;
+  const effectiveOrgId = organizationId ?? session.user.id ?? userOrganizations[0]?.organizationId;
   
   console.log(`🔑 Using organization ID: ${effectiveOrgId} for user ${session.user.id}`);
 

@@ -64,13 +64,51 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             } else if (typeof window !== 'undefined') {
               // Get user ID from session if available
               try {
-                const session = JSON.parse(localStorage.getItem('next-auth.session-token') || '{}');
-                if (session?.user?.id) {
-                  headers.set("x-organization-id", session.user.id);
-                  console.log("Falling back to user ID for x-organization-id:", session.user.id);
+                // Parse with proper type safety
+                const sessionData = localStorage.getItem('next-auth.session-token');
+                if (sessionData) {
+                  try {
+                    type ValidSession = { user: { id: string } };
+                    
+                    // Parse using a safer approach with explicit unknown typing
+                    let rawData: unknown;
+                    try {
+                      rawData = JSON.parse(sessionData);
+                    } catch (parseError) {
+                      console.error("Error parsing session JSON:", parseError);
+                      // Continue without using the session data
+                    }
+                    
+                    // Only proceed if rawData was successfully parsed
+                    if (rawData) {
+                      // Function to validate the session structure
+                      function validateSession(data: unknown): data is ValidSession {
+                        return (
+                          typeof data === 'object' && 
+                          data !== null && 
+                          'user' in data && 
+                          typeof data.user === 'object' && 
+                          data.user !== null && 
+                          'id' in (data.user as Record<string, unknown>) &&
+                          typeof ((data.user as Record<string, unknown>).id) === 'string'
+                        );
+                      }
+                      
+                      // Validate and use the data if valid
+                      if (validateSession(rawData)) {
+                        const validSession: ValidSession = rawData;
+                        headers.set("x-organization-id", validSession.user.id);
+                        console.log("Falling back to user ID for x-organization-id:", validSession.user.id);
+                      }
+                    }
+                  } catch (parseError) {
+                    console.error("Error in session validation:", parseError);
+                    // Continue without using the session data
+                  }
                 }
               } catch (e) {
-                console.error("Failed to parse session from localStorage", e);
+                console.error("Error accessing localStorage:", e);
+                // Continue without using localStorage
               }
             }
             
