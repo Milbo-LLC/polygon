@@ -13,6 +13,10 @@ const nextConfig = {
       'lh3.googleusercontent.com',
     ],
   },
+  experimental: {
+    // This disables the strict check for Suspense boundaries with CSR
+    missingSuspenseWithCSRBailout: true
+  }
 };
 
 export default nextConfig;
