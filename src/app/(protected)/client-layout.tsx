@@ -9,6 +9,8 @@ import { OrganizationProvider } from "~/providers/organization-provider";
 import { useSession } from "next-auth/react";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
+import { useSetAtom } from "jotai";
+import { activeOrganizationIdAtom } from "~/app/(protected)/atoms";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -22,6 +24,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const setActiveOrganizationId = useSetAtom(activeOrganizationIdAtom);
   
   // Get code from URL
   const invitationCode = searchParams.get('code');
@@ -54,6 +57,14 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
       router.push('/wait-list')
     }
   }, [betaAccessEnabled, router, isInvitationPage, invitationCode])
+
+  // Force set the organization ID when the component mounts
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.id) {
+      // Set the user ID as the personal organization ID
+      setActiveOrganizationId(session.user.id);
+    }
+  }, [session, status, setActiveOrganizationId]);
 
   // Don't render anything during beta check, except for invitation pages with codes
   if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) return null;

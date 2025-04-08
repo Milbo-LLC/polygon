@@ -70,22 +70,27 @@ export const authConfig = {
       };
     },
     signIn: async ({ user }) => {
+      console.log('⭐ signIn callback triggered with user:', JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name
+      }));
+      
       try {
-        // First ensure the user exists before doing anything else
-        const existingUser = await db.user.findUnique({
-          where: { id: user.id }
-        });
-
-        if (!existingUser || !user.id) {
+        if (!user.id) {
+          console.error('❌ No user ID available during signIn callback');
           return true;
         }
 
-        // Now check if the personal organization exists
+        console.log('🔍 Checking if personal organization exists for user:', user.id);
+        // Check if the personal organization exists (don't check for existing user)
         const existingPersonalOrganization = await db.organization.findFirst({
           where: {
             id: user.id,
           },
         });
+        
+        console.log('🔍 Existing personal organization:', existingPersonalOrganization);
 
         const welcomeEmailSent = await db.notification.findFirst({
           where: {
@@ -94,44 +99,65 @@ export const authConfig = {
             channel: 'email',
           },
         });
+        
+        console.log('🔍 Welcome email sent:', welcomeEmailSent);
 
         if (!existingPersonalOrganization) {
-          // Use a transaction to ensure all operations succeed or fail together
-          await db.$transaction(async (tx) => {
-            const organization = await tx.organization.create({
-              data: {
-                id: user.id,
-                name: 'Personal',
-              },
-            });
-
-            // Create the user-organization relationship
-            await tx.userOrganization.create({
-              data: {
-                userId: user.id!,
-                organizationId: organization.id,
-                role: 'owner',
-              },
-            });
-            
-            if (user.email && user.name && !welcomeEmailSent) {
-              await sendWelcomeEmailServer(user.email, user.name);
-              await tx.notification.create({
+          console.log('🏗️ Creating personal organization for user:', user.id);
+          try {
+            // Use a transaction to ensure all operations succeed or fail together
+            await db.$transaction(async (tx) => {
+              console.log('🏗️ Creating organization record...');
+              const organization = await tx.organization.create({
                 data: {
-                  userId: user.id!,
-                  type: 'welcome',
-                  channel: 'email',
-                  organizationId: organization.id,
-                  sentAt: new Date(),
+                  id: user.id,
+                  name: 'Personal',
                 },
               });
-            }
-          });
+              console.log('✅ Organization created successfully:', organization.id);
+
+              console.log('🏗️ Creating user-organization relationship...');
+              // Create the user-organization relationship
+              const userOrg = await tx.userOrganization.create({
+                data: {
+                  userId: user.id!,
+                  organizationId: organization.id,
+                  role: 'owner',
+                },
+              });
+              console.log('✅ User-organization relationship created:', userOrg);
+              
+              if (user.email && user.name && !welcomeEmailSent) {
+                console.log('📧 Sending welcome email to:', user.email);
+                await sendWelcomeEmailServer(user.email, user.name);
+                console.log('📧 Creating notification record...');
+                await tx.notification.create({
+                  data: {
+                    userId: user.id!,
+                    type: 'welcome',
+                    channel: 'email',
+                    organizationId: organization.id,
+                    sentAt: new Date(),
+                  },
+                });
+                console.log('✅ Notification record created');
+              }
+            });
+            console.log('✅ Transaction completed successfully');
+          } catch (txError) {
+            console.error('❌ Transaction failed with error:', txError);
+            // Let's throw this to be caught by the outer try/catch
+            throw txError;
+          }
         }
+
+        console.log('✅ signIn callback completed successfully, returning true');
         return true;
       } catch (error) {
-        console.error('error: ', error);
-        return false;
+        console.error('❌ signIn callback failed with error:', error);
+        // Instead of failing the sign-in, let's still return true so the user can log in
+        // even if organization creation fails
+        return true;
       }
     },
     redirect({ url, baseUrl }) {

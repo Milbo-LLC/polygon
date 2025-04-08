@@ -52,8 +52,9 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
     };
   }
 
+  // Try to get organization ID from header
   const organizationId = headers.get("x-organization-id");
-
+  
   // Get user's organizations
   const userOrganizations = await db.userOrganization.findMany({
     where: { userId: session.user.id },
@@ -61,10 +62,49 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   });
 
   if (userOrganizations.length === 0) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "No organizations found for user",
-    });
+    console.log(`⚠️ No organizations found for user ${session.user.id}, creating personal org`);
+    
+    // Create a personal organization if none exists
+    try {
+      // Check if the personal organization exists
+      const existingPersonalOrg = await db.organization.findUnique({
+        where: { id: session.user.id },
+      });
+      
+      if (!existingPersonalOrg) {
+        // Create personal organization with the user's ID
+        const organization = await db.organization.create({
+          data: {
+            id: session.user.id,
+            name: 'Personal',
+          },
+        });
+        
+        // Create user-organization relationship
+        await db.userOrganization.create({
+          data: {
+            userId: session.user.id,
+            organizationId: organization.id,
+            role: 'owner',
+          },
+        });
+        
+        console.log(`✅ Created personal organization for user ${session.user.id}`);
+        
+        // Use this new organization as the context
+        return {
+          db,
+          session,
+          organizationId: organization.id,
+        };
+      }
+    } catch (error) {
+      console.error("❌ Error creating personal organization:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Error creating organization",
+      });
+    }
   }
 
   // If orgId is provided, validate it
@@ -73,6 +113,7 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
       (uo) => uo.organizationId === organizationId
     );
     if (!hasAccess) {
+      console.log(`⚠️ User ${session.user.id} attempted to access unauthorized org ${organizationId}`);
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Invalid organization access",
@@ -80,8 +121,10 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
     }
   }
 
-  // Use provided org ID or default to first organization
-  const effectiveOrgId = organizationId ?? userOrganizations[0]?.organizationId;
+  // Use provided org ID, user ID as personal org, or default to first organization
+  const effectiveOrgId = organizationId || session.user.id || userOrganizations[0]?.organizationId;
+  
+  console.log(`🔑 Using organization ID: ${effectiveOrgId} for user ${session.user.id}`);
 
   return {
     db,

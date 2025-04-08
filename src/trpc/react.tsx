@@ -56,9 +56,24 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
+            
+            // Always set organization ID to user ID if we're authenticated but no org ID is set
             if (activeOrganizationId) {
               headers.set("x-organization-id", activeOrganizationId);
+              console.log("Setting x-organization-id header:", activeOrganizationId);
+            } else if (typeof window !== 'undefined') {
+              // Get user ID from session if available
+              try {
+                const session = JSON.parse(localStorage.getItem('next-auth.session-token') || '{}');
+                if (session?.user?.id) {
+                  headers.set("x-organization-id", session.user.id);
+                  console.log("Falling back to user ID for x-organization-id:", session.user.id);
+                }
+              } catch (e) {
+                console.error("Failed to parse session from localStorage", e);
+              }
             }
+            
             return headers;
           },
         }),
