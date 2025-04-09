@@ -1,13 +1,12 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { SidebarTrigger } from "~/components/ui/sidebar";
-import { P, Small } from "~/components/ui/typography";
+import { Small } from "~/components/ui/typography";
 import { SidebarHeader } from "~/components/ui/sidebar";
 import { Badge } from "~/components/ui/badge";
 import { useAtomValue } from "jotai";
 import { sidebarCollapsedAtom } from "../../atoms";
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { 
   LogOutIcon, 
   UserIcon, 
@@ -26,6 +25,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useMemo } from 'react';
+import { Logo } from "~/components/ui/logo";
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -97,13 +97,14 @@ export default function NavbarHeader() {
           <SidebarHeader className="flex flex-row border-b items-center justify-between cursor-pointer hover:bg-accent/10 px-2.5">
             {!sidebarCollapsed &&
               <div className="flex gap-2 items-center">
-                <Avatar className="size-6" variant="squared">
-                  <AvatarImage src={organization?.logoUrl ?? ''} alt="Organization logo" />
-                  <AvatarFallback>
-                    <UserIcon className="size-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <P>{organization?.name}</P>
+                <Logo 
+                  id={organization?.id} 
+                  name={organization?.name ?? "Organization"}
+                  logoUrl={organization?.logoUrl}
+                  size="sm"
+                  showName={true}
+                  className="rounded"
+                />
               </div>
             }
             {/* Empty div to maintain spacing where the trigger would be */}
@@ -113,12 +114,12 @@ export default function NavbarHeader() {
         
         <DropdownMenuContent align="start" className="w-72 mx-1">
           <div className="px-2 py-1.5 text-sm flex items-center gap-2">
-            <Avatar className="size-6">
-              <AvatarImage src={user?.image ?? ''} alt="User avatar" />
-              <AvatarFallback>
-                {user?.name?.substring(0, 2).toUpperCase() ?? user?.email?.substring(0, 2).toUpperCase() ?? 'U'}
-              </AvatarFallback>
-            </Avatar>
+            <Logo 
+              id={user?.id} 
+              name={user?.name ?? "User"}
+              logoUrl={user?.image}
+              size="sm"
+            />
             <div className="font-medium">{user?.email}</div>
           </div>
           
@@ -137,14 +138,15 @@ export default function NavbarHeader() {
                     onClick={async () => await handleOrgSwitch(workspace.id ?? '')}
                     className="flex items-center justify-between"
                   >
-                    <div className="flex items-center">
-                      <Avatar className="mr-2 size-5" variant="squared">
-                        <AvatarImage src={workspace.logoUrl ?? ''} alt={`${workspace.name} logo`} />
-                        <AvatarFallback className="text-xs">
-                          {workspace.name?.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>{workspace.name}</span>
+                    <div className="flex items-center gap-2">
+                      <Logo 
+                        id={workspace.id} 
+                        name={workspace.name ?? "Workspace"}
+                        logoUrl={workspace.logoUrl}
+                        size="sm"
+                        showName={true}
+                        className="rounded"
+                      />
                     </div>
                     {workspace.isActive && <CheckIcon className="size-4 text-primary" />}
                   </DropdownMenuItem>

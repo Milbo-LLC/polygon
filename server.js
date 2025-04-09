@@ -12,6 +12,8 @@ const handler = app.getRequestHandler();
 
 // Track connected users and their cursor positions
 const documentUsers = new Map();
+// Track users in each organization
+const organizationUsers = new Map();
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
@@ -44,6 +46,46 @@ app.prepare().then(() => {
       socket.to(documentId).emit("userJoined", { userId, name });
     });
 
+    // Handle joining an organization room
+    socket.on("join-org", ({ organizationId, userId, userName, userImage }) => {
+      console.log(`User ${userName} (${userId}) joined organization ${organizationId}`);
+      
+      // Join the organization room
+      socket.join(`org:${organizationId}`);
+      
+      // Track this socket's organization
+      connectedUsers.set(socket.id, { 
+        ...connectedUsers.get(socket.id), 
+        organizationId, 
+        userId 
+      });
+      
+      // Add user to organization users list
+      if (!organizationUsers.has(organizationId)) {
+        organizationUsers.set(organizationId, new Map());
+      }
+      
+      organizationUsers.get(organizationId).set(userId, {
+        id: userId,
+        name: userName,
+        image: userImage,
+        socketId: socket.id
+      });
+      
+      // Send updated users list to all clients in this organization
+      const usersArray = Array.from(organizationUsers.get(organizationId).values());
+      io.to(`org:${organizationId}`).emit("users-update", usersArray);
+    });
+    
+    // Handle leaving an organization
+    socket.on("leave-org", ({ organizationId }) => {
+      const userInfo = connectedUsers.get(socket.id);
+      
+      if (userInfo && userInfo.organizationId === organizationId) {
+        handleUserLeavingOrg(socket, organizationId, userInfo.userId);
+      }
+    });
+
     // Handle cursor movement
     socket.on("cursorMove", ({ documentId, userId, position, name }) => {
       // Update stored position and name
@@ -66,16 +108,40 @@ app.prepare().then(() => {
     socket.on("disconnect", () => {
       const userInfo = connectedUsers.get(socket.id);
       if (userInfo) {
-        const { documentId, userId } = userInfo;
-        // Clean up user data
-        documentUsers.forEach((users, docId) => {
-          users.forEach((_, uid) => {
-            socket.to(docId).emit("userLeft", { userId: uid });
-          });
-        });
+        // Handle document disconnect
+        const { documentId, userId, organizationId } = userInfo;
+        
+        if (documentId) {
+          // Remove from document and notify others
+          if (documentUsers.has(documentId)) {
+            documentUsers.get(documentId).delete(userId);
+            socket.to(documentId).emit("userLeft", { userId });
+          }
+        }
+        
+        // Handle organization disconnect
+        if (organizationId) {
+          handleUserLeavingOrg(socket, organizationId, userId);
+        }
+        
         connectedUsers.delete(socket.id);
       }
     });
+    
+    // Helper function for handling a user leaving an organization
+    function handleUserLeavingOrg(socket, organizationId, userId) {
+      if (organizationUsers.has(organizationId)) {
+        // Remove user from the organization's user list
+        organizationUsers.get(organizationId).delete(userId);
+        
+        // Leave the organization room
+        socket.leave(`org:${organizationId}`);
+        
+        // Send updated user list to all remaining clients in this organization
+        const usersArray = Array.from(organizationUsers.get(organizationId).values());
+        io.to(`org:${organizationId}`).emit("users-update", usersArray);
+      }
+    }
   });
 
   httpServer

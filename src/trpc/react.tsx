@@ -57,59 +57,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             
-            // Always set organization ID to user ID if we're authenticated but no org ID is set
+            // Set organization ID in the header if available
             if (activeOrganizationId) {
               headers.set("x-organization-id", activeOrganizationId);
-              console.log("Setting x-organization-id header:", activeOrganizationId);
-            } else if (typeof window !== 'undefined') {
-              // Get user ID from session if available
-              try {
-                // Parse with proper type safety
-                const sessionData = localStorage.getItem('next-auth.session-token');
-                if (sessionData) {
-                  try {
-                    type ValidSession = { user: { id: string } };
-                    
-                    // Parse using a safer approach with explicit unknown typing
-                    let rawData: unknown;
-                    try {
-                      rawData = JSON.parse(sessionData);
-                    } catch (parseError) {
-                      console.error("Error parsing session JSON:", parseError);
-                      // Continue without using the session data
-                    }
-                    
-                    // Only proceed if rawData was successfully parsed
-                    if (rawData) {
-                      // Function to validate the session structure
-                      function validateSession(data: unknown): data is ValidSession {
-                        return (
-                          typeof data === 'object' && 
-                          data !== null && 
-                          'user' in data && 
-                          typeof data.user === 'object' && 
-                          data.user !== null && 
-                          'id' in (data.user as Record<string, unknown>) &&
-                          typeof ((data.user as Record<string, unknown>).id) === 'string'
-                        );
-                      }
-                      
-                      // Validate and use the data if valid
-                      if (validateSession(rawData)) {
-                        const validSession: ValidSession = rawData;
-                        headers.set("x-organization-id", validSession.user.id);
-                        console.log("Falling back to user ID for x-organization-id:", validSession.user.id);
-                      }
-                    }
-                  } catch (parseError) {
-                    console.error("Error in session validation:", parseError);
-                    // Continue without using the session data
-                  }
-                }
-              } catch (e) {
-                console.error("Error accessing localStorage:", e);
-                // Continue without using localStorage
-              }
             }
             
             return headers;

@@ -1,7 +1,7 @@
 "use client";
 
 import "~/styles/globals.css";
-import { type PropsWithChildren, Suspense, useEffect } from "react";
+import { type PropsWithChildren, Suspense, useEffect, useState } from "react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -16,9 +16,14 @@ import { activeOrganizationIdAtom } from "~/app/(protected)/atoms";
 const ROUTES_WITHOUT_NAVBAR = [
   "/settings",
   "/workspaces"
-]
+];
 
 function ClientLayoutContent({ children }: PropsWithChildren) {
+  // State to control what's rendered
+  const [isLoading, setIsLoading] = useState(true);
+  const [shouldShowNavbar, setShouldShowNavbar] = useState(false);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+  
   const { data: session, status } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
@@ -26,53 +31,69 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const searchParams = useSearchParams();
   const setActiveOrganizationId = useSetAtom(activeOrganizationIdAtom);
   
-  // Get code from URL
-  const invitationCode = searchParams.get('code');
-  
-  const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
-  
-  // Check if current path should have navbar
-  const showNavbar = !ROUTES_WITHOUT_NAVBAR.some(route => pathname.startsWith(route));
-  
-  // Check if we're on the invitations page with a valid code
-  const isInvitationPage = pathname.startsWith('/invitations');
-
-  // Handle authentication/redirect logic
+  // Do all checks in useEffect to avoid hydration mismatch
   useEffect(() => {
-    if (status !== 'loading' && !session) {
-      // Store the current URL (with invitation code) for after login
-      if (invitationCode) {
-        const callbackUrl = `/invitations?code=${invitationCode}`;
-        router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    // Check if current path should have navbar
+    const showNavbar = !ROUTES_WITHOUT_NAVBAR.some(route => pathname.startsWith(route));
+    setShouldShowNavbar(showNavbar);
+    
+    // Get invitation code if any
+    const invitationCode = searchParams.get('code');
+    const isInvitationPage = pathname.startsWith('/invitations');
+    
+    // Check beta access
+    const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
+    
+    // Handle authentication redirects
+    if (status !== 'loading') {
+      if (!session) {
+        // Redirect unauthenticated users
+        if (invitationCode) {
+          const callbackUrl = `/invitations?code=${invitationCode}`;
+          router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        } else {
+          router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+        }
       } else {
-        router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+        // Handle beta access check for authenticated users
+        if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
+          router.push('/wait-list');
+        }
+        
+        // Set user ID and organization ID
+        if (session.user?.id) {
+          setUserId(session.user.id);
+          
+          // Get the first organization from the session if available
+          const firstOrgId = session.user.organizations?.[0]?.id;
+          
+          // Set organization ID only if not already set
+          setActiveOrganizationId((currentOrgId) => {
+            if (currentOrgId) return currentOrgId;
+            return firstOrgId ?? session.user.id;
+          });
+        }
+        
+        // We're done loading
+        setIsLoading(false);
       }
     }
-  }, [session, status, router, invitationCode]);
-  
-  // Handle beta access check
-  useEffect(() => {
-    // Skip the beta access check and redirect for invitation pages with codes
-    if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
-      router.push('/wait-list')
-    }
-  }, [betaAccessEnabled, router, isInvitationPage, invitationCode])
+  }, [session, status, pathname, searchParams, router, posthog, setActiveOrganizationId]);
 
-  // Force set the organization ID when the component mounts
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      // Set the user ID as the personal organization ID
-      setActiveOrganizationId(session.user.id);
-    }
-  }, [session, status, setActiveOrganizationId]);
+  // Always render the same initial structure for both server and client
+  // Only change what's shown based on state that's updated in useEffect
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-  // Don't render anything during beta check, except for invitation pages with codes
-  if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) return null;
-  
   return (
-    <OrganizationProvider userId={session?.user?.id}>
+    <OrganizationProvider userId={userId}>
       <div className="flex max-h-screen h-screen">
-        {showNavbar && (
+        {shouldShowNavbar && (
           <div>
             <Navbar />
           </div>

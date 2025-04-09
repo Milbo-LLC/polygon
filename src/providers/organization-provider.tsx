@@ -95,13 +95,8 @@ export function OrganizationProvider({
   const handleOrgSwitch = async (organizationId: string) => {
     try {
       setActiveOrganizationId(organizationId);
-      await utils.organization.get.invalidate();
-      await utils.userOrganization.get.invalidate();
-      await utils.userOrganization.getAll.invalidate();
-      await utils.userOrganization.get.refetch();
-      await utils.organization.get.refetch();
-
-      // router.push('/projects');
+      await utils.invalidate();
+      window.location.reload();
     } catch (error) {
       console.error(error);
       toast.error(

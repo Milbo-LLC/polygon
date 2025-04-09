@@ -15,7 +15,7 @@ export const organizationInvitationRouter = createTRPCRouter({
     .input(CreateOrganizationInvitationSchema)
     .output(OrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
-      const organizationId = ctx.session.user.organizations[0]?.id;
+      const organizationId = ctx.organizationId;
       if (!organizationId) {
         throw new Error("No active organization");
       }
@@ -102,8 +102,10 @@ export const organizationInvitationRouter = createTRPCRouter({
   getAll: protectedProcedure
     .output(z.array(OrganizationInvitationSchema))
     .query(async ({ ctx }) => {
+      const organizationId = ctx.organizationId;
       const organizationInvitations = await ctx.db.organizationInvitation.findMany({
         where: {
+          organizationId,
           deletedAt: null,
           acceptedAt: null,
         },
