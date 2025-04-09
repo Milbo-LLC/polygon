@@ -26,6 +26,8 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useMemo } from 'react';
+import { getGradientFromId } from "~/lib/utils";
+import Image from "next/image";
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -97,12 +99,21 @@ export default function NavbarHeader() {
           <SidebarHeader className="flex flex-row border-b items-center justify-between cursor-pointer hover:bg-accent/10 px-2.5">
             {!sidebarCollapsed &&
               <div className="flex gap-2 items-center">
-                <Avatar className="size-6" variant="squared">
-                  <AvatarImage src={organization?.logoUrl ?? ''} alt="Organization logo" />
-                  <AvatarFallback>
-                    <UserIcon className="size-4" />
-                  </AvatarFallback>
-                </Avatar>
+                <div
+                  style={{
+                    background: organization?.logoUrl ? 'transparent' : getGradientFromId(organization?.id ?? ''),
+                  }}
+                  className="relative size-6 rounded"
+                >
+                  {organization?.logoUrl && (
+                    <Image
+                      src={organization?.logoUrl}
+                      alt={`${organization?.name ?? 'Organization'} logo`}
+                      className="size-full object-cover rounded"
+                      fill
+                    />
+                  )}
+                </div>
                 <P>{organization?.name}</P>
               </div>
             }
@@ -113,12 +124,21 @@ export default function NavbarHeader() {
         
         <DropdownMenuContent align="start" className="w-72 mx-1">
           <div className="px-2 py-1.5 text-sm flex items-center gap-2">
-            <Avatar className="size-6">
-              <AvatarImage src={user?.image ?? ''} alt="User avatar" />
-              <AvatarFallback>
-                {user?.name?.substring(0, 2).toUpperCase() ?? user?.email?.substring(0, 2).toUpperCase() ?? 'U'}
-              </AvatarFallback>
-            </Avatar>
+            <div
+              style={{
+                background: user?.image ? 'transparent' : getGradientFromId(user?.id ?? ''),
+              }}
+              className="relative size-6 rounded-full"
+            >
+              {user?.image && (
+                <Image
+                  src={user?.image ?? ''}
+                  alt={`${user?.name ?? 'User'} avatar`}
+                  className="size-full object-cover rounded-full"
+                  fill
+                />
+              )}
+            </div>
             <div className="font-medium">{user?.email}</div>
           </div>
           
@@ -137,13 +157,22 @@ export default function NavbarHeader() {
                     onClick={async () => await handleOrgSwitch(workspace.id ?? '')}
                     className="flex items-center justify-between"
                   >
-                    <div className="flex items-center">
-                      <Avatar className="mr-2 size-5" variant="squared">
-                        <AvatarImage src={workspace.logoUrl ?? ''} alt={`${workspace.name} logo`} />
-                        <AvatarFallback className="text-xs">
-                          {workspace.name?.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                    <div className="flex items-center gap-2">
+                      <div
+                        style={{
+                          background: workspace?.logoUrl ? 'transparent' : getGradientFromId(workspace?.id ?? ''),
+                        }}
+                        className="relative size-5 rounded"
+                      >
+                        {workspace?.logoUrl && (
+                          <Image
+                            src={workspace?.logoUrl}
+                            alt={`${workspace?.name ?? 'Workspace'} logo`}
+                            className="size-full object-cover rounded"
+                            fill
+                          />
+                        )}
+                      </div>
                       <span>{workspace.name}</span>
                     </div>
                     {workspace.isActive && <CheckIcon className="size-4 text-primary" />}
