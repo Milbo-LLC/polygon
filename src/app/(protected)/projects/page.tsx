@@ -159,7 +159,7 @@ function ProjectsContent() {
                   <div 
                     key={user.id} 
                     className="relative"
-                    title={user.name || "Unknown user"}
+                    title={user.name ?? "Unknown user"}
                   >
                     <Logo
                       id={user.id}
@@ -191,7 +191,7 @@ function ProjectsContent() {
                   <CardTitle className="line-clamp-1">{project.name}</CardTitle>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100">
+                      <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 absolute top-2 right-2">
                         <MoreVertical className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>

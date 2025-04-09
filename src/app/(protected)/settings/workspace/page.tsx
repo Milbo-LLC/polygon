@@ -36,10 +36,10 @@ export default function WorkspaceSettingsPage() {
   const isPersonalOrg = session?.user?.id === organization?.id;
   
   const deleteOrganization = api.organization.delete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       const personalOrg = organizations?.find(org => org.organization?.id === session?.user?.id);
       toast.success("Workspace deleted successfully");
-      handleOrgSwitch(personalOrg?.organization?.id ?? '');
+      await handleOrgSwitch(personalOrg?.organization?.id ?? '');
       router.push("/projects");
     },
     onError: (error) => {
@@ -202,9 +202,9 @@ export default function WorkspaceSettingsPage() {
             <AlertDialogFooter>
               <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  handleDeleteWorkspace();
+                  await handleDeleteWorkspace();
                 }}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 disabled={isDeleting}

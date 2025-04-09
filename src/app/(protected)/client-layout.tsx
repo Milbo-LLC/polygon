@@ -70,7 +70,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
           // Set organization ID only if not already set
           setActiveOrganizationId((currentOrgId) => {
             if (currentOrgId) return currentOrgId;
-            return firstOrgId || session.user.id;
+            return firstOrgId ?? session.user.id;
           });
         }
         

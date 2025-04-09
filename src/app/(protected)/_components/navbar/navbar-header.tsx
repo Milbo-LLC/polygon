@@ -1,13 +1,12 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { SidebarTrigger } from "~/components/ui/sidebar";
-import { P, Small } from "~/components/ui/typography";
+import { Small } from "~/components/ui/typography";
 import { SidebarHeader } from "~/components/ui/sidebar";
 import { Badge } from "~/components/ui/badge";
 import { useAtomValue } from "jotai";
 import { sidebarCollapsedAtom } from "../../atoms";
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { 
   LogOutIcon, 
   UserIcon, 
@@ -26,8 +25,6 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useMemo } from 'react';
-import { getGradientFromId } from "~/lib/utils";
-import Image from "next/image";
 import { Logo } from "~/components/ui/logo";
 
 // Define menu items structure for better maintainability
@@ -102,7 +99,7 @@ export default function NavbarHeader() {
               <div className="flex gap-2 items-center">
                 <Logo 
                   id={organization?.id} 
-                  name={organization?.name || "Organization"}
+                  name={organization?.name ?? "Organization"}
                   logoUrl={organization?.logoUrl}
                   size="sm"
                   showName={true}
@@ -119,7 +116,7 @@ export default function NavbarHeader() {
           <div className="px-2 py-1.5 text-sm flex items-center gap-2">
             <Logo 
               id={user?.id} 
-              name={user?.name || "User"}
+              name={user?.name ?? "User"}
               logoUrl={user?.image}
               size="sm"
             />
@@ -144,7 +141,7 @@ export default function NavbarHeader() {
                     <div className="flex items-center gap-2">
                       <Logo 
                         id={workspace.id} 
-                        name={workspace.name || "Workspace"}
+                        name={workspace.name ?? "Workspace"}
                         logoUrl={workspace.logoUrl}
                         size="sm"
                         showName={true}
