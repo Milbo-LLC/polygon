@@ -33,7 +33,8 @@ export const userOrganizationRouter = createTRPCRouter({
       const userOrganization = await ctx.db.userOrganization.findFirst({
         where: { 
           userId,
-          organizationId
+          organizationId,
+          deletedAt: null
         },
         include: {
           organization: true,
@@ -54,7 +55,7 @@ export const userOrganizationRouter = createTRPCRouter({
       try {
         const userId = ctx.session.user.id;
         const userOrganizations = await ctx.db.userOrganization.findMany({
-          where: { userId },
+          where: { userId, deletedAt: null },
           include: { organization: true, user: true }
         });
 
@@ -84,7 +85,7 @@ export const userOrganizationRouter = createTRPCRouter({
       try {
         const organizationId = ctx.organizationId;
         const userOrganizations = await ctx.db.userOrganization.findMany({
-          where: { organizationId },
+          where: { organizationId, deletedAt: null },
           include: { organization: true, user: true }
         });
 

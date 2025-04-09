@@ -28,6 +28,7 @@ import { useOrganizationContext } from "~/providers/organization-provider";
 import { useMemo } from 'react';
 import { getGradientFromId } from "~/lib/utils";
 import Image from "next/image";
+import { Logo } from "~/components/ui/logo";
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -99,22 +100,14 @@ export default function NavbarHeader() {
           <SidebarHeader className="flex flex-row border-b items-center justify-between cursor-pointer hover:bg-accent/10 px-2.5">
             {!sidebarCollapsed &&
               <div className="flex gap-2 items-center">
-                <div
-                  style={{
-                    background: organization?.logoUrl ? 'transparent' : getGradientFromId(organization?.id ?? ''),
-                  }}
-                  className="relative size-6 rounded"
-                >
-                  {organization?.logoUrl && (
-                    <Image
-                      src={organization?.logoUrl}
-                      alt={`${organization?.name ?? 'Organization'} logo`}
-                      className="size-full object-cover rounded"
-                      fill
-                    />
-                  )}
-                </div>
-                <P>{organization?.name}</P>
+                <Logo 
+                  id={organization?.id} 
+                  name={organization?.name || "Organization"}
+                  logoUrl={organization?.logoUrl}
+                  size="sm"
+                  showName={true}
+                  className="rounded"
+                />
               </div>
             }
             {/* Empty div to maintain spacing where the trigger would be */}
@@ -124,21 +117,12 @@ export default function NavbarHeader() {
         
         <DropdownMenuContent align="start" className="w-72 mx-1">
           <div className="px-2 py-1.5 text-sm flex items-center gap-2">
-            <div
-              style={{
-                background: user?.image ? 'transparent' : getGradientFromId(user?.id ?? ''),
-              }}
-              className="relative size-6 rounded-full"
-            >
-              {user?.image && (
-                <Image
-                  src={user?.image ?? ''}
-                  alt={`${user?.name ?? 'User'} avatar`}
-                  className="size-full object-cover rounded-full"
-                  fill
-                />
-              )}
-            </div>
+            <Logo 
+              id={user?.id} 
+              name={user?.name || "User"}
+              logoUrl={user?.image}
+              size="sm"
+            />
             <div className="font-medium">{user?.email}</div>
           </div>
           
@@ -158,22 +142,14 @@ export default function NavbarHeader() {
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
-                      <div
-                        style={{
-                          background: workspace?.logoUrl ? 'transparent' : getGradientFromId(workspace?.id ?? ''),
-                        }}
-                        className="relative size-5 rounded"
-                      >
-                        {workspace?.logoUrl && (
-                          <Image
-                            src={workspace?.logoUrl}
-                            alt={`${workspace?.name ?? 'Workspace'} logo`}
-                            className="size-full object-cover rounded"
-                            fill
-                          />
-                        )}
-                      </div>
-                      <span>{workspace.name}</span>
+                      <Logo 
+                        id={workspace.id} 
+                        name={workspace.name || "Workspace"}
+                        logoUrl={workspace.logoUrl}
+                        size="sm"
+                        showName={true}
+                        className="rounded"
+                      />
                     </div>
                     {workspace.isActive && <CheckIcon className="size-4 text-primary" />}
                   </DropdownMenuItem>

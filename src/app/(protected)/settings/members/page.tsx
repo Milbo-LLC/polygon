@@ -71,24 +71,16 @@ export default function MembersSettingsPage() {
   const { organization } = useOrganizationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  console.log('organization:', organization);
   
   const { data: invitations, refetch: refetchInvitations } = api.organizationInvitation.getAll.useQuery(
     undefined,
     { enabled: !!organization?.id }
   );
 
-  console.log('invitations:', invitations);
-
-  
-
   const { data: userOrganizations } = api.userOrganization.getAllByOrganizationId.useQuery(
     undefined,
     { enabled: !!organization?.id }
   );
-
-  console.log('userOrganizations:', userOrganizations);
   
   const createInvitation = api.organizationInvitation.create.useMutation({
     onSuccess: async () => {

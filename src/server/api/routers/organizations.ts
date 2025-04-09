@@ -134,4 +134,61 @@ export const organizationRouter = createTRPCRouter({
 
       return parseOrganization(updatedOrganization);
     }),
+    
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      
+      // Prevent deletion of personal organization (matches user ID)
+      if (id === ctx.session.user.id) {
+        throw new Error("Cannot delete personal organization");
+      }
+      
+      // Check if user has permission to delete
+      const userOrg = await ctx.db.userOrganization.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          organizationId: id,
+          role: { in: ['owner'] }, // Only owners and admins can delete
+          deletedAt: null // Make sure to check it's not already deleted
+        }
+      });
+      
+      if (!userOrg) {
+        throw new Error("You don't have permission to delete this organization");
+      }
+      
+      const now = new Date();
+      
+      // Use transaction to handle soft deletes properly
+      await ctx.db.$transaction(async (tx) => {
+
+        await tx.userOrganization.updateMany({
+          where: { 
+            organizationId: id,
+            deletedAt: null
+          },
+          data: { 
+            deletedAt: now 
+          }
+        });
+
+        await tx.organizationInvitation.deleteMany({
+          where: { organizationId: id }
+        });
+
+        await tx.organization.update({
+          where: { 
+            id,
+            deletedAt: null
+          },
+          data: { 
+            deletedAt: now 
+          }
+        });
+      });
+      
+      return { success: true };
+    }),
 });

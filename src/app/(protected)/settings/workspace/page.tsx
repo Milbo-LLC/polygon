@@ -11,6 +11,11 @@ import { Large, Muted, Small } from '~/components/ui/typography';
 import { useOrganizationContext } from '~/providers/organization-provider';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { api } from '~/trpc/react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '~/components/ui/alert-dialog';
 
 // Form validation schema
 const workspaceFormSchema = z.object({
@@ -21,7 +26,27 @@ const workspaceFormSchema = z.object({
 type WorkspaceFormValues = z.infer<typeof workspaceFormSchema>;
 
 export default function WorkspaceSettingsPage() {
-  const { organization, updateOrganization } = useOrganizationContext();
+  const { organization, organizations, updateOrganization, handleOrgSwitch } = useOrganizationContext();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+  const { data: session } = useSession();
+  
+  // Check if this is a personal organization (userId === orgId)
+  const isPersonalOrg = session?.user?.id === organization?.id;
+  
+  const deleteOrganization = api.organization.delete.useMutation({
+    onSuccess: () => {
+      const personalOrg = organizations?.find(org => org.organization?.id === session?.user?.id);
+      toast.success("Workspace deleted successfully");
+      handleOrgSwitch(personalOrg?.organization?.id ?? '');
+      router.push("/projects");
+    },
+    onError: (error) => {
+      setIsDeleting(false);
+      toast.error(error.message || "Failed to delete workspace");
+    }
+  });
   
   // Initialize form with current organization values
   const form = useForm<WorkspaceFormValues>({
@@ -48,6 +73,16 @@ export default function WorkspaceSettingsPage() {
       console.error(error);
     }
   };
+  
+  const handleDeleteWorkspace = async () => {
+    if (!organization?.id) {
+      toast.error("No workspace selected");
+      return;
+    }
+    
+    setIsDeleting(true);
+    deleteOrganization.mutate({ id: organization.id });
+  };
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -59,7 +94,7 @@ export default function WorkspaceSettingsPage() {
           </Muted>
         </div>
 
-        <Card>
+        <Card className="mb-8">
           <CardHeader>
             <CardTitle>Workspace Details</CardTitle>
             <CardDescription>
@@ -124,6 +159,61 @@ export default function WorkspaceSettingsPage() {
             </form>
           </Form>
         </Card>
+        
+        {/* Danger Zone */}
+        {!isPersonalOrg && (
+          <Card className="border-destructive/20">
+            <CardHeader>
+              <CardTitle className="text-destructive">Danger Zone</CardTitle>
+              <CardDescription>
+                Destructive actions that cannot be undone
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between border rounded-lg p-4">
+                <div>
+                  <h4 className="font-medium">Delete this workspace</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Permanently delete this workspace and all associated projects and documents.
+                  </p>
+                </div>
+                <Button 
+                  variant="destructive" 
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  Delete Workspace
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                <span className="font-semibold"> {organization?.name} </span> 
+                workspace and all associated projects and documents.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteWorkspace();
+                }}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete Workspace"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

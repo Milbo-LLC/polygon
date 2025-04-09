@@ -32,8 +32,7 @@ export const projectRouter = createTRPCRouter({
     .input(CreateProjectSchema)
     .output(ProjectWithDocumentsSchema)
     .mutation(async ({ ctx, input }) => {
-      const organizationId = ctx.session.user.organizations[0]?.id;
-      if (!organizationId) {
+      if (!ctx.organizationId) {
         throw new Error("No active organization");
       }
 
@@ -44,7 +43,7 @@ export const projectRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
-            organizationId,
+            organizationId: ctx.organizationId,
             userId: ctx.session.user.id,
           },
         });
@@ -93,7 +92,7 @@ export const projectRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const projects = await ctx.db.project.findMany({
         where: {
-          userId: ctx.session.user.id,
+          organizationId: ctx.organizationId,
           deletedAt: null
         },
         include: { documents: true },
