@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
 
 interface GridProps {
   size?: number;
@@ -14,7 +13,6 @@ export default function Grid({
   fadeDistance = 50
 }: GridProps) {
   const gridRef = useRef<THREE.GridHelper>(null);
-  const { scene } = useThree();
   
   // Create grid helper with custom material for fadeout effect
   useEffect(() => {
@@ -26,7 +24,7 @@ export default function Grid({
       if (grid.material instanceof THREE.Material) {
         // Add fadeDistance uniform to the existing shader
         if (Array.isArray(grid.material)) {
-          grid.material.forEach(mat => {
+          grid.material.forEach((mat: THREE.Material) => {
             if (mat.userData) {
               mat.userData.fadeDistance = fadeDistance;
             }

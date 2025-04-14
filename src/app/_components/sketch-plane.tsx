@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
-import { Line, Html } from '@react-three/drei'
+import { Line } from '@react-three/drei'
 import { type Dimension, type Tool } from './sketch-controls'
 
 interface SketchPlaneProps {
@@ -115,7 +115,7 @@ export default function SketchPlane({
 
   // Get snapped point from intersection
   const getSnappedPoint = (intersection: THREE.Intersection): Point3D | null => {
-    if (!intersection || !intersection.point) return null
+    if (!intersection?.point) return null
     
     const point = intersection.point
     
@@ -163,7 +163,7 @@ export default function SketchPlane({
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
     }
-  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool])
+  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension])
 
   // Handle click - toggles drawing on/off
   const handleClick = () => {
@@ -276,8 +276,8 @@ export default function SketchPlane({
       {/* Drawing plane */}
       <mesh
         ref={meshRef}
-        position={planeConfig[dimension].position as any}
-        rotation={planeConfig[dimension].rotation as any}
+        position={planeConfig[dimension].position as unknown as THREE.Vector3}
+        rotation={planeConfig[dimension].rotation as unknown as THREE.Euler}
         visible={isActive}
         onClick={handleClick}
       >

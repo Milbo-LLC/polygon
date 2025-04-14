@@ -1,15 +1,15 @@
 'use client'
 import { Canvas, useThree } from '@react-three/fiber'
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
-import { Dimension, Tool } from './sketch-controls'
+import { type Dimension, type Tool } from './sketch-controls'
 import SketchPlane from './sketch-plane'
 import ControlPanel from './control-panel'
 import { useAtom, useAtomValue } from 'jotai'
-import { canvasStateAtom, sketchStateAtom, SketchTool } from '../(protected)/atoms'
+import { canvasStateAtom, sketchStateAtom, type SketchTool } from '../(protected)/atoms'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -63,20 +63,6 @@ export default function Scene() {
     })
   }, [sketchState, setSketchState])
 
-  const setSelectedDimension = useCallback((dimension: Dimension) => {
-    setSketchState({
-      ...sketchState,
-      dimension
-    })
-  }, [sketchState, setSketchState])
-
-  // Handle dimension change
-  const handleDimensionChange = useCallback((dimension: Dimension) => {
-    console.log(`Dimension changed to: ${dimension}`);
-    setSelectedDimension(dimension);
-  }, []);
-
-
   // Disable camera controls in sketch mode
   useEffect(() => {
     if (!cameraControlsRef.current) return;
@@ -88,7 +74,7 @@ export default function Scene() {
       // Re-enable controls when not in sketch mode
       cameraControlsRef.current.enabled = true;
     }
-  }, [isSketchModeActive]);
+  }, [isSketchModeActive, cameraControlsRef]);
 
   // Handle tool change
   const handleToolChange = useCallback((tool: Tool) => {

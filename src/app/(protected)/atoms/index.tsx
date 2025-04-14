@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { Dimension, Tool } from "~/app/_components/sketch-controls";
+import { type Dimension } from "~/app/_components/sketch-controls";
 
 export const sidebarCollapsedAtom = atomWithStorage<boolean>("polygon:sidebar:collapsed", false);
 
