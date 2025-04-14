@@ -1,50 +1,38 @@
-import { Button } from "~/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
-import { useEffect } from "react"
+import { useAtom, useAtomValue } from "jotai"
+import { canvasStateAtom, sketchStateAtom } from "../(protected)/atoms"
 
 export type Dimension = 'x' | 'y' | 'z'
 export type Tool = 'pencil' | 'rectangle'
 
-interface SketchControlsProps {
-  onDimensionChange: (dimension: Dimension) => void
-  onToolChange: (tool: Tool) => void
-  onToggleSketchMode: () => void
-  isSketchModeActive: boolean
-  selectedDimension: Dimension
-}
+export default function SketchControls() {
+  const canvasState = useAtomValue(canvasStateAtom)
+  const [sketchState, setSketchState] = useAtom(sketchStateAtom)
+  const isSketchModeActive = canvasState.selectedTool === 'sketch'
 
-export default function SketchControls({
-  onDimensionChange,
-  onToolChange,
-  onToggleSketchMode,
-  isSketchModeActive,
-  selectedDimension
-}: SketchControlsProps) {
   const handleDimensionChange = (value: string) => {
-    onDimensionChange(value as Dimension)
+    const dimension = value as Dimension
+    setSketchState({
+      ...sketchState,
+      dimension
+    })
   }
 
   const handleToolChange = (value: string) => {
-    onToolChange(value as Tool)
+    const sketchTool = value as Tool
+    setSketchState({
+      ...sketchState,
+      selectedTool: sketchTool
+    })
   }
 
   return (
-    <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 bg-background/80 p-4 rounded-lg backdrop-blur-sm">
-      <div className="flex items-center justify-between gap-2">
-        <Button
-          onClick={onToggleSketchMode}
-          variant={isSketchModeActive ? "destructive" : "default"}
-          size="sm"
-        >
-          {isSketchModeActive ? "Exit Sketch Mode" : "Enter Sketch Mode"}
-        </Button>
-      </div>
-
+    <div className="absolute top-10 left-10 z-10 flex flex-col gap-2 bg-background/80 p-4 rounded-lg backdrop-blur-sm">
       {isSketchModeActive && (
         <>
           <div className="flex items-center gap-2">
             <span className="text-sm">Dimension:</span>
-            <Select value={selectedDimension} onValueChange={handleDimensionChange}>
+            <Select value={sketchState.dimension} onValueChange={handleDimensionChange}>
               <SelectTrigger className="w-24">
                 <SelectValue placeholder="Select Dimension" />
               </SelectTrigger>

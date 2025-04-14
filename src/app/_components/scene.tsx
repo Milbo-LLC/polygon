@@ -1,12 +1,15 @@
 'use client'
-import { Canvas, useThree, useFrame } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
-import SketchControls, { Dimension, Tool } from './sketch-controls'
+import { Dimension, Tool } from './sketch-controls'
 import SketchPlane from './sketch-plane'
+import ControlPanel from './control-panel'
+import { useAtom, useAtomValue } from 'jotai'
+import { canvasStateAtom, sketchStateAtom, SketchTool } from '../(protected)/atoms'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -45,12 +48,27 @@ function CameraPositioner({
 
 export default function Scene() {
   const cameraControlsRef = useRef<CameraControls | null>(null)
-  const [isSketchModeActive, setIsSketchModeActive] = useState(false)
-  const [selectedDimension, setSelectedDimension] = useState<Dimension>('z')
-  const [selectedTool, setSelectedTool] = useState<Tool>('pencil')
+  const canvasState = useAtomValue(canvasStateAtom)
+  const [sketchState, setSketchState] = useAtom(sketchStateAtom)
   
   const gridSize = 100
   const gridDivisions = 100
+
+  const isSketchModeActive = canvasState.selectedTool === 'sketch'
+
+  const setSelectedTool = useCallback((tool: SketchTool) => {
+    setSketchState({
+      ...sketchState,
+      selectedTool: tool
+    })
+  }, [sketchState, setSketchState])
+
+  const setSelectedDimension = useCallback((dimension: Dimension) => {
+    setSketchState({
+      ...sketchState,
+      dimension
+    })
+  }, [sketchState, setSketchState])
 
   // Handle dimension change
   const handleDimensionChange = useCallback((dimension: Dimension) => {
@@ -58,10 +76,6 @@ export default function Scene() {
     setSelectedDimension(dimension);
   }, []);
 
-  // Toggle sketch mode
-  const handleToggleSketchMode = useCallback(() => {
-    setIsSketchModeActive(prev => !prev);
-  }, []);
 
   // Disable camera controls in sketch mode
   useEffect(() => {
@@ -85,14 +99,15 @@ export default function Scene() {
     <div className="flex h-full w-full relative">
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
       
-      <SketchControls
+      {/* <SketchControls
         onDimensionChange={handleDimensionChange}
         onToolChange={handleToolChange}
         onToggleSketchMode={handleToggleSketchMode}
         isSketchModeActive={isSketchModeActive}
         selectedDimension={selectedDimension}
-      />
+      /> */}
 
+      <ControlPanel />
       <Canvas 
         className="flex h-full w-full" 
         camera={{ position: [5, 5, 5] }}
@@ -100,7 +115,7 @@ export default function Scene() {
       >
         {/* Camera positioner - directly manipulates the camera */}
         <CameraPositioner 
-          dimension={selectedDimension} 
+          dimension={sketchState.dimension} 
           isActive={isSketchModeActive} 
         />
         
@@ -112,9 +127,9 @@ export default function Scene() {
         
         {/* Add sketch plane with persistent drawings */}
         <SketchPlane
-          key={`sketch-${selectedDimension}`} 
-          dimension={selectedDimension}
-          tool={selectedTool}
+          key={`sketch-${sketchState.dimension}`} 
+          dimension={sketchState.dimension}
+          tool={sketchState.selectedTool}
           isActive={isSketchModeActive}
           gridSize={gridSize}
           gridDivisions={gridDivisions}
