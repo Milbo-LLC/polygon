@@ -163,7 +163,7 @@ export default function SketchPlane({
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
     }
-  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension])
+  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension, getSnappedPoint])
 
   // Handle click - toggles drawing on/off
   const handleClick = () => {
