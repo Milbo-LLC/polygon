@@ -64,8 +64,16 @@ export default function WorkspaceSettingsPage() {
         return;
       }
 
+      const updateData = {
+        ...data,
+        id: organization.id,
+        logoUrl: data.logoUrl === undefined ? null : data.logoUrl
+      };
+
       // Call your update organization function here
-      await updateOrganization({ ...data, id: organization.id });
+      await updateOrganization(updateData);
+      
+      form.reset(data);
       
       toast.success('Workspace settings updated');
     } catch (error) {
@@ -117,6 +125,10 @@ export default function WorkspaceSettingsPage() {
                               value={field.value}
                               onChange={field.onChange}
                               organizationId={organization?.id}
+                              onRemove={async () => {
+                                await form.handleSubmit(onSubmit)();
+                              }}
+                              autoSave={true}
                             />
                           </FormControl>
                           <FormMessage />

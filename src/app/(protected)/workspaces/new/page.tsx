@@ -102,6 +102,7 @@ function WorkspaceForm() {
                             <TeamLogoInput
                               value={field.value}
                               onChange={field.onChange}
+                              autoSave={false}
                             />
                           </FormControl>
                           <FormMessage />
