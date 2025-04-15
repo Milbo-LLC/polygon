@@ -67,7 +67,7 @@ export default function WorkspaceSettingsPage() {
       const updateData = {
         ...data,
         id: organization.id,
-        logoUrl: data.logoUrl === undefined ? null : data.logoUrl
+        logoUrl: data.logoUrl ?? null
       };
 
       // Call your update organization function here

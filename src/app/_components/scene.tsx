@@ -77,9 +77,9 @@ export default function Scene() {
   }, [isSketchModeActive, cameraControlsRef]);
 
   // Handle tool change
-  const handleToolChange = useCallback((tool: Tool) => {
-    setSelectedTool(tool);
-  }, []);
+  // const handleToolChange = useCallback((tool: Tool) => {
+  //   setSelectedTool(tool);
+  // }, []);
 
   return (
     <div className="flex h-full w-full relative">

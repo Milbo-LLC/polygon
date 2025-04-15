@@ -63,7 +63,7 @@ export default function AccountSettingsPage() {
       const updateData = {
         id: session.user.id,
         ...data,
-        image: data.image === undefined ? null : data.image
+        image: data.image ?? null
       };
 
       updateUser.mutate(updateData);

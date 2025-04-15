@@ -11,7 +11,7 @@ import type { Document } from "~/validators/documents";
 // Helper function to parse document state
 export const parseDocument = (dbDocument: Prisma.DocumentGetPayload<object>): Document => {
   // Destructure to remove deletedAt field, and get all other fields
-  const { deletedAt, ...documentWithoutDeletedAt } = dbDocument;
+  const { deletedAt: _, ...documentWithoutDeletedAt } = dbDocument;
   
   return {
     ...documentWithoutDeletedAt,
