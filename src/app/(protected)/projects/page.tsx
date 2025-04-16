@@ -49,7 +49,7 @@ function ProjectsContent() {
   });
   
   // Determine user's permissions
-  const userRole = userOrganization?.role || "member";
+  const userRole = userOrganization?.role ?? "member";
   const isOwnerOrAdmin = userRole === "owner" || userRole === "admin";
 
   useEffect(() => {
