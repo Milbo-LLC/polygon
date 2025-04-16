@@ -11,7 +11,7 @@ import { Large, Muted, Small } from '~/components/ui/typography';
 import { useOrganizationContext } from '~/providers/organization-provider';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { api } from '~/trpc/react';
@@ -73,7 +73,11 @@ export default function WorkspaceSettingsPage() {
       // Call your update organization function here
       await updateOrganization(updateData);
       
-      form.reset(data);
+      // Reset the form with the new values to clear the dirty state
+      form.reset({
+        name: data.name,
+        logoUrl: data.logoUrl
+      });
       
       toast.success('Workspace settings updated');
     } catch (error) {
@@ -125,10 +129,6 @@ export default function WorkspaceSettingsPage() {
                               value={field.value}
                               onChange={field.onChange}
                               organizationId={organization?.id}
-                              onRemove={async () => {
-                                await form.handleSubmit(onSubmit)();
-                              }}
-                              autoSave={true}
                             />
                           </FormControl>
                           <FormMessage />

@@ -19,14 +19,10 @@ export function TeamLogoInput({
   value,
   onChange,
   organizationId,
-  onRemove,
-  autoSave = false,
 }: {
   value?: string;
   onChange: (url?: string) => void;
   organizationId?: string;
-  onRemove?: () => Promise<void>;
-  autoSave?: boolean;
 }) {
   const [localValue, setLocalValue] = useState<string | undefined>(value);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -54,10 +50,8 @@ export function TeamLogoInput({
       // Then update parent component
       onChange(s3Url);
       
-      if (autoSave && onRemove) {
-        await onRemove();
-        toast.success('Logo updated and saved');
-      }
+      // Show notification that the image was uploaded
+      toast.success('Logo uploaded. Click Save Changes to apply.');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to upload image');
     }
@@ -81,7 +75,6 @@ export function TeamLogoInput({
   });
 
   const handleRemoveImage = async (e?: React.MouseEvent) => {
-
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -90,15 +83,14 @@ export function TeamLogoInput({
     try {
       setIsRemoving(true);
       
+      // Update local state first
       setLocalValue(undefined);
       
+      // Then update parent component
       onChange(undefined);
-      if (onRemove) {
-        await onRemove();
-        toast.success('Logo removed and saved successfully');
-      } else {
-        toast.success('Logo removed successfully');
-      }
+
+      // Show notification that the image was removed
+      toast.success('Logo removed. Click Save Changes to apply.');
     } catch (error) {
       console.error('Error removing logo:', error);
       toast.error('Failed to remove logo');
