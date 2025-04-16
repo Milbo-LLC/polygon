@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
 import { useAtom, useAtomValue } from "jotai"
-import { canvasStateAtom, sketchStateAtom } from "../(protected)/atoms"
+import { canvasStateAtom, sketchStateAtom } from "../../../(protected)/atoms"
 
 export type Dimension = 'x' | 'y' | 'z'
 export type Tool = 'pencil' | 'rectangle'

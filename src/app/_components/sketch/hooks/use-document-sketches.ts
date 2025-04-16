@@ -1,7 +1,7 @@
 import { type DrawingItem } from "~/app/(protected)/atoms"
 import { useAtom } from "jotai"
 import { documentSketchesAtom } from "~/app/(protected)/atoms"
-import { type Dimension } from "~/app/_components/sketch-controls"
+import { type Dimension } from "~/app/_components/sketch/_components/sketch-controls"
 import { useCallback } from "react"
 
 // Custom hook for document sketches

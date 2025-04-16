@@ -4,7 +4,7 @@ import { useState } from 'react'
 import * as THREE from 'three'
 import { Line } from '@react-three/drei'
 import { useAtom } from 'jotai'
-import { sketchStateAtom } from '../(protected)/atoms'
+import { sketchStateAtom } from '../../../(protected)/atoms'
 import { type Dimension } from './sketch-controls'
 
 interface PlaneSelectorProps {

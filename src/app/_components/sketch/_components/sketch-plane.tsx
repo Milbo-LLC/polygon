@@ -2,14 +2,14 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { type Dimension, type Tool } from './sketch-controls'
-import { type Point3D, type DrawingItem } from '../(protected)/atoms'
+import { type Point3D, type DrawingItem } from '../../../(protected)/atoms'
 import { useParams } from 'next/navigation'
-import { DEFAULT_LINE_COLOR } from './sketch/config/constants'
+import { DEFAULT_LINE_COLOR } from '../config/constants'
 import useDocumentSketches from '~/app/_components/sketch/hooks/use-document-sketches'
 import useGridSnapping from '~/app/_components/sketch/hooks/use-grid-snapping'
-import { PLANE_CONFIG } from './sketch/config/plane-config'
-import { ToolRenderers } from './sketch/renderers/tools-renderers'
-import { useToolHandler } from './sketch/hooks/use-tool-handler'
+import { PLANE_CONFIG } from '../config/plane-config'
+import { ToolRenderers } from '../renderers/tools-renderers'
+import { useToolHandler } from '../hooks/use-tool-handler'
 interface SketchPlaneProps {
   dimension: Dimension
   tool: Tool
@@ -33,7 +33,7 @@ export default function SketchPlane({
   const meshRef = useRef<THREE.Mesh>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [currentSketch, setCurrentSketch] = useState<DrawingItem | null>(null)
-  const { raycaster, mouse, camera } = useThree()
+  const { raycaster, pointer, camera } = useThree()
   const snapToGrid = useGridSnapping(gridSize, gridDivisions)
   
   // Get snapped point from intersection
@@ -46,7 +46,7 @@ export default function SketchPlane({
   const handleClick = useCallback(() => {
     if (!isActive || !meshRef.current) return
     
-    raycaster.setFromCamera(mouse, camera)
+    raycaster.setFromCamera(pointer, camera)
     const intersects = raycaster.intersectObject(meshRef.current)
     
     if (intersects.length > 0 && intersects[0]) {
@@ -74,7 +74,7 @@ export default function SketchPlane({
       })
     }
   }, [
-    isActive, raycaster, mouse, camera, isDrawing, currentSketch, 
+    isActive, raycaster, pointer, camera, isDrawing, currentSketch, 
     addSketch, getSnappedPoint, tool, dimension
   ])
   
@@ -101,7 +101,7 @@ export default function SketchPlane({
     if (!isActive || !isDrawing || !currentSketch || !meshRef.current) return
     
     const handlePointerMove = () => {
-      raycaster.setFromCamera(mouse, camera)
+      raycaster.setFromCamera(pointer, camera)
       const intersects = raycaster.intersectObject(meshRef.current!)
       
       if (intersects.length > 0 && intersects[0]) {
@@ -119,7 +119,7 @@ export default function SketchPlane({
     window.addEventListener('pointermove', handlePointerMove)
     return () => window.removeEventListener('pointermove', handlePointerMove)
   }, [
-    isActive, isDrawing, currentSketch, meshRef, raycaster, mouse, 
+    isActive, isDrawing, currentSketch, meshRef, raycaster, pointer, 
     camera, getSnappedPoint, tool
   ])
   
@@ -134,7 +134,6 @@ export default function SketchPlane({
   
   return (
     <>
-      {/* Drawing plane - only show when active */}
       {isActive && (
         <mesh {...activePlaneProps}>
           <planeGeometry args={[gridSize, gridSize]} />
@@ -147,13 +146,11 @@ export default function SketchPlane({
         </mesh>
       )}
 
-      {/* Render existing drawings */}
       {sketches.map(sketch => {
         const ToolRenderer = ToolRenderers[sketch.tool]
         return ToolRenderer ? ToolRenderer(sketch) : null
       })}
 
-      {/* Render current drawing */}
       {isActive && currentSketch && currentSketch.points.length >= 2 && (
         ToolRenderers[currentSketch.tool]?.(currentSketch, true)
       )}
