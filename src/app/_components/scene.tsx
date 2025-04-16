@@ -5,7 +5,7 @@ import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
-import { type Dimension, type Tool } from './sketch-controls'
+import { type Dimension } from './sketch-controls'
 import SketchPlane from './sketch-plane'
 import ControlPanel from './control-panel'
 import { useAtom, useAtomValue } from 'jotai'
@@ -56,12 +56,6 @@ export default function Scene() {
 
   const isSketchModeActive = canvasState.selectedTool === 'sketch'
 
-  const setSelectedTool = useCallback((tool: SketchTool) => {
-    setSketchState({
-      ...sketchState,
-      selectedTool: tool
-    })
-  }, [sketchState, setSketchState])
 
   // Disable camera controls in sketch mode
   useEffect(() => {

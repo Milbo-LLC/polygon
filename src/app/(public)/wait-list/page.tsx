@@ -2,8 +2,8 @@
 
 import { Button } from "~/components/ui/button";
 import { H3, P } from "~/components/ui/typography";
-import { signOut, useSession } from 'next-auth/react';
-import { AUTH_REDIRECT_PATH_SIGN_UP, AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
+import { useSession } from 'next-auth/react';
+import { AUTH_REDIRECT_PATH_SIGN_UP } from "~/constants/links";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardContent } from "~/components/ui/card";
 import { usePostHog } from "posthog-js/react";
