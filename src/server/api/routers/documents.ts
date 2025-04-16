@@ -72,6 +72,41 @@ export const documentRouter = createTRPCRouter({
     .output(z.boolean())
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
+      
+      // First, find the document and its associated project
+      const document = await ctx.db.document.findUnique({
+        where: { id, deletedAt: null },
+        include: { project: true }
+      });
+      
+      if (!document) {
+        throw new Error("Document not found");
+      }
+      
+      // Get the user's role in this organization
+      const userOrg = await ctx.db.userOrganization.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          organizationId: document.project.organizationId,
+          deletedAt: null
+        }
+      });
+      
+      if (!userOrg) {
+        throw new Error("You don't have access to this organization");
+      }
+      
+      // Check permissions:
+      // 1. Owner or Admin can delete any document
+      // 2. Members can only delete documents from projects they created
+      const isOwnerOrAdmin = userOrg.role === 'owner' || userOrg.role === 'admin';
+      const isProjectCreator = document.project.userId === ctx.session.user.id;
+      
+      if (!isOwnerOrAdmin && !isProjectCreator) {
+        throw new Error("You don't have permission to delete this document");
+      }
+      
+      // Proceed with deletion if authorized
       await ctx.db.document.update({
         where: { id },
         data: { deletedAt: new Date() }

@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { api } from '~/trpc/react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '~/components/ui/alert-dialog';
+import { LockIcon } from 'lucide-react';
 
 // Form validation schema
 const workspaceFormSchema = z.object({
@@ -26,7 +27,7 @@ const workspaceFormSchema = z.object({
 type WorkspaceFormValues = z.infer<typeof workspaceFormSchema>;
 
 export default function WorkspaceSettingsPage() {
-  const { organization, organizations, updateOrganization, handleOrgSwitch } = useOrganizationContext();
+  const { organization, organizations, updateOrganization, handleOrgSwitch, role } = useOrganizationContext();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
@@ -34,6 +35,12 @@ export default function WorkspaceSettingsPage() {
   
   // Check if this is a personal organization (userId === orgId)
   const isPersonalOrg = session?.user?.id === organization?.id;
+  
+  // Check if the user is an owner or admin of the organization
+  const canEditSettings = role === "owner" || role === "admin";
+  
+  // Only owners can delete workspaces
+  const canDeleteWorkspace = role === "owner";
   
   const deleteOrganization = api.organization.delete.useMutation({
     onSuccess: async () => {
@@ -59,6 +66,12 @@ export default function WorkspaceSettingsPage() {
 
   const onSubmit = async (data: WorkspaceFormValues) => {
     try {
+      // Check permission again before submitting
+      if (!canEditSettings) {
+        toast.error('You do not have permission to update workspace settings');
+        return;
+      }
+      
       if (!organization) {
         toast.error('No workspace selected');
         return;
@@ -87,6 +100,12 @@ export default function WorkspaceSettingsPage() {
   };
   
   const handleDeleteWorkspace = async () => {
+    // Check permission again before deleting
+    if (!canDeleteWorkspace) {
+      toast.error('You do not have permission to delete this workspace');
+      return;
+    }
+    
     if (!organization?.id) {
       toast.error("No workspace selected");
       return;
@@ -96,21 +115,73 @@ export default function WorkspaceSettingsPage() {
     deleteOrganization.mutate({ id: organization.id });
   };
 
+  // Custom method to override logo input functionality
+  const customLogoChange = (url?: string) => {
+    if (!canEditSettings) {
+      // If not owner or admin, block changes and show toast
+      toast.error('You do not have permission to update the logo');
+      return;
+    }
+    
+    // Otherwise perform normal onChange
+    form.setValue('logoUrl', url, { shouldDirty: true });
+  };
+  
+  // Create a wrapper component that captures logo input props and adds disabled state
+  const DisabledLogoWrapper = ({ 
+    value, 
+    onChange, 
+    organizationId 
+  }: { 
+    value?: string, 
+    onChange: (url?: string) => void, 
+    organizationId?: string 
+  }) => {
+    return (
+      <div className="relative">
+        <TeamLogoInput
+          value={value}
+          onChange={onChange}
+          organizationId={organizationId}
+        />
+        
+        {/* Add a disabled overlay for users without edit permissions */}
+        {!canEditSettings && (
+          <div className="absolute inset-0 bg-background/60 rounded-md flex items-center justify-center cursor-not-allowed">
+            {/* No content needed - just prevents interaction */}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
       <div className="flex flex-col justify-center w-full max-w-3xl mx-auto py-20">
         <div className="mb-6">
           <Large>General</Large>
           <Muted>
-            <Small>Change your current workspace settings</Small>
+            <Small>{canEditSettings ? "Change your current workspace settings" : "View your current workspace settings"}</Small>
           </Muted>
         </div>
+
+        {/* Permission Banner for users without edit permissions */}
+        {!canEditSettings && (
+          <Card className="mb-6 border-secondary bg-secondary/10">
+            <CardContent className="flex items-center gap-2 py-3">
+              <LockIcon className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                You have view-only access to workspace settings. Only workspace owners and admins can make changes.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Workspace Details</CardTitle>
             <CardDescription>
-              Update your workspace information
+              {canEditSettings ? "Update your workspace information" : "View your workspace information"}
             </CardDescription>
           </CardHeader>
           <Form {...form}>
@@ -125,9 +196,9 @@ export default function WorkspaceSettingsPage() {
                         <FormItem>
                           <FormLabel>Logo</FormLabel>
                           <FormControl>
-                            <TeamLogoInput
+                            <DisabledLogoWrapper
                               value={field.value}
-                              onChange={field.onChange}
+                              onChange={customLogoChange}
                               organizationId={organization?.id}
                             />
                           </FormControl>
@@ -147,6 +218,7 @@ export default function WorkspaceSettingsPage() {
                           <FormControl>
                             <Input 
                               placeholder="Enter workspace name" 
+                              disabled={!canEditSettings}
                               {...field} 
                             />
                           </FormControl>
@@ -163,7 +235,7 @@ export default function WorkspaceSettingsPage() {
               <CardFooter className="flex justify-end">
                 <Button 
                   type="submit" 
-                  disabled={!form.formState.isDirty || form.formState.isSubmitting}
+                  disabled={!canEditSettings || !form.formState.isDirty || form.formState.isSubmitting}
                 >
                   Save Changes
                 </Button>
@@ -172,8 +244,8 @@ export default function WorkspaceSettingsPage() {
           </Form>
         </Card>
         
-        {/* Danger Zone */}
-        {!isPersonalOrg && (
+        {/* Danger Zone - only shown to owners and non-personal orgs */}
+        {!isPersonalOrg && canDeleteWorkspace && (
           <Card className="border-destructive/20">
             <CardHeader>
               <CardTitle className="text-destructive">Danger Zone</CardTitle>

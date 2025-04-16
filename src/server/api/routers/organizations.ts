@@ -113,6 +113,19 @@ export const organizationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, name, logoUrl } = input;
       
+      // Check if user has permission to update the organization (must be owner or admin)
+      const userOrg = await ctx.db.userOrganization.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          organizationId: id,
+          role: { in: ['owner', 'admin'] }, // Both owners and admins can update organization details
+          deletedAt: null
+        }
+      });
+      
+      if (!userOrg) {
+        throw new Error("You don't have permission to update this organization");
+      }
 
       // Create update data object
       const updateData: Prisma.OrganizationUpdateInput = {
