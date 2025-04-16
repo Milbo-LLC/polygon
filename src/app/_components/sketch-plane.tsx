@@ -48,6 +48,9 @@ export default function SketchPlane({
   const [currentDrawing, setCurrentDrawing] = useState<DrawingItem | null>(null)
   const { raycaster, mouse, camera } = useThree()
   
+  // If dimension is null, don't render anything
+  if (!dimension) return null;
+  
   // Load initial drawings from global store for this dimension
   useEffect(() => {
     if (persistDrawings) {

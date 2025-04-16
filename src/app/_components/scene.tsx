@@ -2,12 +2,14 @@
 import { Canvas, useThree } from '@react-three/fiber'
 import { useRef, useCallback, useEffect } from 'react'
 import { CameraControls } from '@react-three/drei'
+import * as THREE from 'three'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
 import { type Dimension, type Tool } from './sketch-controls'
 import SketchPlane from './sketch-plane'
 import ControlPanel from './control-panel'
+import PlaneSelector from './plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom, type SketchTool } from '../(protected)/atoms'
 
@@ -15,33 +17,50 @@ import { canvasStateAtom, sketchStateAtom, type SketchTool } from '../(protected
 function CameraPositioner({ 
   dimension,
   isActive,
+  cameraControlsRef,
 }: { 
   dimension: Dimension;
   isActive: boolean;
+  cameraControlsRef: React.RefObject<CameraControls>;
 }) {
   const { camera } = useThree();
   
-  // Hard-coded camera positions for each dimension
+  // Update camera controls when sketch mode changes
   useEffect(() => {
-    if (!isActive) return;
+    if (!cameraControlsRef.current) return;
     
-    // Set camera position immediately based on dimension
-    if (dimension === 'x') {
-      // X dimension view (looking at YZ plane)
-      camera.position.set(100, 0, 0);
-      camera.lookAt(0, 0, 0);
-    } else if (dimension === 'y') {
-      // Y dimension view (looking at XZ plane)
-      camera.position.set(0, 100, 0);
-      camera.lookAt(0, 0, 0);
-    } else {
-      // Z dimension view (looking at XY plane)
-      camera.position.set(0, 0, 100);
-      camera.lookAt(0, 0, 0);
+    // Disable camera controls in sketch mode
+    cameraControlsRef.current.enabled = !isActive;
+    
+  }, [isActive, cameraControlsRef]);
+  
+  // Position camera when dimension changes
+  useEffect(() => {
+    if (!dimension || !isActive) return;
+    
+    // Simple positioning based on dimension - look directly at the plane
+    switch(dimension) {
+      case 'x':
+        // Look at YZ plane from positive X
+        camera.position.set(10, 0, 0);
+        camera.lookAt(0, 0, 0);
+        break;
+      case 'y':
+        // Look at XZ plane from positive Y
+        camera.position.set(0, 10, 0);
+        camera.lookAt(0, 0, 0);
+        break;
+      case 'z':
+        // Look at XY plane from positive Z
+        camera.position.set(0, 0, 10);
+        camera.lookAt(0, 0, 0);
+        break;
     }
     
+    // Force camera to update immediately
     camera.updateProjectionMatrix();
-  }, [dimension, camera, isActive]);
+    
+  }, [dimension, isActive, camera]);
   
   return null;
 }
@@ -50,6 +69,9 @@ export default function Scene() {
   const cameraControlsRef = useRef<CameraControls | null>(null)
   const canvasState = useAtomValue(canvasStateAtom)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
+  
+  // Use a ref to track previous sketch mode state
+  const prevSketchModeActiveRef = useRef<boolean>(false);
   
   const gridSize = 100
   const gridDivisions = 100
@@ -63,18 +85,21 @@ export default function Scene() {
     })
   }, [sketchState, setSketchState])
 
-  // Disable camera controls in sketch mode
+  // Reset dimension when entering sketch mode
   useEffect(() => {
-    if (!cameraControlsRef.current) return;
+    // Get previous sketch mode state
+    const prevSketchModeActive = prevSketchModeActiveRef.current;
     
-    if (isSketchModeActive) {
-      // Disable controls completely when in sketch mode
-      cameraControlsRef.current.enabled = false;
-    } else {
-      // Re-enable controls when not in sketch mode
-      cameraControlsRef.current.enabled = true;
+    // Update ref with current state for next comparison
+    prevSketchModeActiveRef.current = isSketchModeActive;
+    
+    // Reset dimension when entering sketch mode to allow selecting a new plane each time
+    if (isSketchModeActive && !prevSketchModeActive) {
+      // @ts-ignore - We know dimension should be reset to null
+      setSketchState({...sketchState, dimension: null});
     }
-  }, [isSketchModeActive, cameraControlsRef]);
+    
+  }, [isSketchModeActive, sketchState, setSketchState]);
 
   // Handle tool change
   const handleToolChange = useCallback((tool: Tool) => {
@@ -102,13 +127,20 @@ export default function Scene() {
         {/* Camera positioner - directly manipulates the camera */}
         <CameraPositioner 
           dimension={sketchState.dimension} 
-          isActive={isSketchModeActive} 
+          isActive={isSketchModeActive}
+          cameraControlsRef={cameraControlsRef}
         />
         
         <Gizmo />
         <Grid 
           size={gridSize} 
           divisions={gridDivisions} 
+        />
+        
+        {/* Plane selector - shows 3D buttons on each coordinate plane */}
+        <PlaneSelector
+          isActive={isSketchModeActive && sketchState.dimension === null}
+          gridSize={gridSize}
         />
         
         {/* Add sketch plane with persistent drawings */}
