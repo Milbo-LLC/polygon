@@ -20,7 +20,7 @@ export default function SketchControls() {
 
   return (
     <div className="absolute top-10 left-10 z-10 flex flex-col gap-2 bg-background/80 p-4 rounded-lg backdrop-blur-sm">
-      {isSketchModeActive && (
+      {isSketchModeActive && sketchState.dimension && (
         <>
           <div className="flex items-center gap-2">
             <span className="text-sm">Tool:</span>

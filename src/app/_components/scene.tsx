@@ -19,7 +19,7 @@ function CameraPositioner({
   isActive,
   cameraControlsRef,
 }: { 
-  dimension: Dimension;
+  dimension: Dimension | null;
   isActive: boolean;
   cameraControlsRef: React.RefObject<CameraControls>;
 }) {
@@ -93,9 +93,8 @@ export default function Scene() {
     // Update ref with current state for next comparison
     prevSketchModeActiveRef.current = isSketchModeActive;
     
-    // Reset dimension when entering sketch mode to allow selecting a new plane each time
+    // Always reset dimension when entering sketch mode to allow selecting a new plane
     if (isSketchModeActive && !prevSketchModeActive) {
-      // @ts-ignore - We know dimension should be reset to null
       setSketchState({...sketchState, dimension: null});
     }
     
@@ -137,18 +136,40 @@ export default function Scene() {
           divisions={gridDivisions} 
         />
         
-        {/* Plane selector - shows 3D buttons on each coordinate plane */}
+        {/* Plane selector - only show when in sketch mode and no dimension selected */}
         <PlaneSelector
           isActive={isSketchModeActive && sketchState.dimension === null}
           gridSize={gridSize}
         />
         
-        {/* Add sketch plane with persistent drawings */}
+        {/* X-plane drawings - always visible */}
         <SketchPlane
-          key={`sketch-${sketchState.dimension}`} 
-          dimension={sketchState.dimension}
+          key="sketch-x" 
+          dimension="x"
           tool={sketchState.selectedTool}
-          isActive={isSketchModeActive}
+          isActive={isSketchModeActive && sketchState.dimension === "x"}
+          gridSize={gridSize}
+          gridDivisions={gridDivisions}
+          persistDrawings={true}
+        />
+        
+        {/* Y-plane drawings - always visible */}
+        <SketchPlane
+          key="sketch-y" 
+          dimension="y"
+          tool={sketchState.selectedTool}
+          isActive={isSketchModeActive && sketchState.dimension === "y"}
+          gridSize={gridSize}
+          gridDivisions={gridDivisions}
+          persistDrawings={true}
+        />
+        
+        {/* Z-plane drawings - always visible */}
+        <SketchPlane
+          key="sketch-z" 
+          dimension="z"
+          tool={sketchState.selectedTool}
+          isActive={isSketchModeActive && sketchState.dimension === "z"}
           gridSize={gridSize}
           gridDivisions={gridDivisions}
           persistDrawings={true}

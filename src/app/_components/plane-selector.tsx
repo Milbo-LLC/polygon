@@ -17,7 +17,7 @@ export default function PlaneSelector({ isActive, gridSize }: PlaneSelectorProps
   const [hovered, setHovered] = useState<Dimension | null>(null)
 
   // Don't render if not in selection mode
-  if (!isActive || sketchState.dimension !== null) {
+  if (!isActive) {
     return null
   }
 

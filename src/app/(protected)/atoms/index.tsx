@@ -26,10 +26,10 @@ export type SketchTool = 'pencil' | 'rectangle'
 
 export type SketchState = {
   selectedTool: SketchTool
-  dimension: Dimension
+  dimension: Dimension | null
 }
 
 export const sketchStateAtom = atom<SketchState>({
   selectedTool: 'pencil',
-  dimension: 'x',
+  dimension: null,
 })
