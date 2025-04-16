@@ -2,7 +2,6 @@
 import { Canvas } from '@react-three/fiber'
 import { useRef, useEffect } from 'react'
 import { CameraControls } from '@react-three/drei'
-import * as THREE from 'three'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
@@ -12,50 +11,6 @@ import ControlPanel from './control-panel'
 import PlaneSelector from './plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
-import { globalDrawings, type Point3D } from './sketch-shared-types'
-
-// Helper function to create a Box3 that contains all sketches in all dimensions
-function createBoundingBoxForAllSketches() {
-  // Initialize with infinity values that will be replaced
-  const box = new THREE.Box3(
-    new THREE.Vector3(Infinity, Infinity, Infinity),
-    new THREE.Vector3(-Infinity, -Infinity, -Infinity)
-  );
-  
-  // Get all drawings from all dimensions
-  const allDrawingsExist = 
-    globalDrawings.x.length > 0 || 
-    globalDrawings.y.length > 0 || 
-    globalDrawings.z.length > 0;
-  
-  if (!allDrawingsExist) {
-    // If no drawings exist, return a default box around the origin
-    return new THREE.Box3(
-      new THREE.Vector3(-50, -50, -50),
-      new THREE.Vector3(50, 50, 50)
-    );
-  }
-  
-  // Function to expand box to include a point
-  const expandBoxWithPoint = (point: Point3D) => {
-    box.expandByPoint(new THREE.Vector3(Number(point.x), Number(point.y), Number(point.z)));
-  };
-  
-  // Process all drawings from all dimensions
-  for (const dimension of ['x', 'y', 'z'] as const) {
-    for (const drawing of globalDrawings[dimension]) {
-      // Each drawing has points
-      for (const point of drawing.points) {
-        expandBoxWithPoint(point);
-      }
-    }
-  }
-  
-  // Add some padding to the box
-  box.expandByScalar(10);
-  
-  return box;
-}
 
 // Camera position controller component
 function CameraPositioner({ 

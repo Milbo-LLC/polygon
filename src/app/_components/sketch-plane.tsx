@@ -3,7 +3,9 @@ import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { type Dimension, type Tool } from './sketch-controls'
-import { globalDrawings, type Point3D, type DrawingItem } from './sketch-shared-types'
+import { type Point3D, type DrawingItem, documentSketchesAtom } from '../(protected)/atoms'
+import { useAtom } from 'jotai'
+import { useParams } from 'next/navigation'
 
 interface SketchPlaneProps {
   dimension: Dimension
@@ -22,25 +24,13 @@ export default function SketchPlane({
   gridDivisions = 100,
   persistDrawings = false
 }: SketchPlaneProps) {
+  const params = useParams();
+  const documentId = params.documentId as string;
+  const [documentSketches, setDocumentSketches] = useAtom(documentSketchesAtom(documentId))
   const meshRef = useRef<THREE.Mesh>(null)
-  const [drawings, setDrawings] = useState<DrawingItem[]>([])
   const [isDrawing, setIsDrawing] = useState(false)
-  const [currentDrawing, setCurrentDrawing] = useState<DrawingItem | null>(null)
+  const [currentSketch, setCurrentSketch] = useState<DrawingItem | null>(null)
   const { raycaster, mouse, camera } = useThree()
-  
-  // Load initial drawings from global store for this dimension
-  useEffect(() => {
-    if (persistDrawings) {
-      setDrawings(globalDrawings[dimension]);
-    }
-  }, [dimension, persistDrawings]);
-  
-  // Update global store whenever drawings change
-  useEffect(() => {
-    if (persistDrawings) {
-      globalDrawings[dimension] = drawings;
-    }
-  }, [drawings, dimension, persistDrawings]);
   
   // Position and rotation based on dimension
   const planeConfig = {
@@ -156,18 +146,21 @@ export default function SketchPlane({
     
     if (intersects.length > 0 && intersects[0]) {
       // If already drawing, finish the drawing
-      if (isDrawing && currentDrawing) {
+      if (isDrawing && currentSketch) {
         // Only save drawings with at least 2 points
-        if (currentDrawing.points.length >= 2) {
-          const newDrawings = [...drawings, currentDrawing];
-          setDrawings(newDrawings);
+        if (currentSketch.points.length >= 2) {
+          const newDrawings = [...documentSketches[dimension], currentSketch];
+          setDocumentSketches({
+            ...documentSketches,
+            [dimension]: newDrawings
+          });
           if (persistDrawings) {
-            globalDrawings[dimension] = newDrawings; // Update global store
+            documentSketches[dimension] = newDrawings; // Update global store
           }
         }
         
         setIsDrawing(false)
-        setCurrentDrawing(null)
+        setCurrentSketch(null)
         return
       }
       
@@ -176,7 +169,7 @@ export default function SketchPlane({
       if (!snappedPoint) return
       
       setIsDrawing(true)
-      setCurrentDrawing({
+      setCurrentSketch({
         id: Date.now().toString(),
         tool,
         color: '#000000',
@@ -195,27 +188,26 @@ export default function SketchPlane({
         // Escape cancels current drawing
         if (isDrawing) {
           setIsDrawing(false)
-          setCurrentDrawing(null)
+          setCurrentSketch(null)
         }
       } else if (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey)) {
         // Undo last drawing
         e.preventDefault()
-        setDrawings(prev => {
-          const newDrawings = prev.slice(0, -1);
-          globalDrawings[dimension] = newDrawings; // Update global store
-          return newDrawings;
+        setDocumentSketches({
+          ...documentSketches,
+          [dimension]: documentSketches[dimension].slice(0, -1)
         })
       }
     }
     
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isActive, isDrawing, dimension]);
+  }, [isActive, isDrawing, dimension, setDocumentSketches, documentSketches]);
 
   // Update raycaster on pointer move to detect intersections
   useEffect(() => {
     const handlePointerMove = () => {
-      if (!isActive || !isDrawing || !currentDrawing || !meshRef.current) return
+      if (!isActive || !isDrawing || !currentSketch || !meshRef.current) return
       
       raycaster.setFromCamera(mouse, camera)
       const intersects = raycaster.intersectObject(meshRef.current)
@@ -226,16 +218,16 @@ export default function SketchPlane({
         
         if (tool === 'pencil') {
           // For pencil, add point to the drawing
-          setCurrentDrawing({
-            ...currentDrawing,
-            points: [...currentDrawing.points, snappedPoint]
+          setCurrentSketch({
+            ...currentSketch,
+            points: [...currentSketch.points, snappedPoint]
           })
-        } else if (tool === 'rectangle' && currentDrawing.points.length > 0) {
+        } else if (tool === 'rectangle' && currentSketch.points.length > 0) {
           // For rectangle, update the end point
-          const firstPoint = currentDrawing.points[0]
+          const firstPoint = currentSketch.points[0]
           if (firstPoint) {
-            setCurrentDrawing({
-              ...currentDrawing,
+            setCurrentSketch({
+              ...currentSketch,
               points: [firstPoint, snappedPoint]
             })
           }
@@ -249,7 +241,7 @@ export default function SketchPlane({
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
     }
-  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension, getSnappedPoint]);
+  }, [isActive, isDrawing, currentSketch, camera, mouse, raycaster, tool, dimension, getSnappedPoint, setDocumentSketches, documentSketches]);
 
   return (
     <>
@@ -273,32 +265,32 @@ export default function SketchPlane({
       )}
 
       {/* Render existing drawings - always visible */}
-      {drawings.map((drawing) => (
-        drawing.tool === 'pencil' ? (
+      {documentSketches[dimension].map((sketch) => (
+        sketch.tool === 'pencil' ? (
           <Line
-            key={drawing.id}
-            points={getLinePoints(drawing.points, drawing.dimension)}
-            color={drawing.color}
+            key={sketch.id}
+            points={getLinePoints(sketch.points, sketch.dimension)}
+            color={sketch.color}
             lineWidth={3}
           />
-        ) : drawing.tool === 'rectangle' && drawing.points.length >= 2 ? 
-          renderRectangle(drawing) : null
+        ) : sketch.tool === 'rectangle' && sketch.points.length >= 2 ? 
+            renderRectangle(sketch) : null
       ))}
 
       {/* Render current drawing - only when active */}
-      {isActive && currentDrawing && (
+      {isActive && currentSketch && (
         <>
-          {currentDrawing.tool === 'pencil' && currentDrawing.points.length >= 2 && (
+          {currentSketch.tool === 'pencil' && currentSketch.points.length >= 2 && (
             <Line
-              points={getLinePoints(currentDrawing.points, dimension)}
+              points={getLinePoints(currentSketch.points, dimension)}
               color="#ff0000"
               lineWidth={3}
             />
           )}
-          {currentDrawing.tool === 'rectangle' && currentDrawing.points.length >= 2 && 
-            currentDrawing.points[0] && currentDrawing.points[1] && (
+          {currentSketch.tool === 'rectangle' && currentSketch.points.length >= 2 && 
+            currentSketch.points[0] && currentSketch.points[1] && (
             <Line
-              points={getRectanglePoints(currentDrawing.points[0], currentDrawing.points[1], dimension)}
+              points={getRectanglePoints(currentSketch.points[0], currentSketch.points[1], dimension)}
               color="#ff0000"
               lineWidth={3}
             />
