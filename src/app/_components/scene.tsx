@@ -26,7 +26,7 @@ function CameraPositioner({
   const { camera } = useThree();
   const prevActiveRef = useRef(isActive);
   
-  // Update camera controls and reset when exiting sketch mode
+  // Update camera controls and reset when entering or exiting sketch mode
   useEffect(() => {
     if (!cameraControlsRef.current) return;
     
@@ -40,7 +40,19 @@ function CameraPositioner({
       cameraControlsRef.current.azimuthRotateSpeed = 0; 
       cameraControlsRef.current.polarRotateSpeed = 0;   
       cameraControlsRef.current.truckSpeed = 0;         
-      cameraControlsRef.current.dollySpeed = 1;         
+      cameraControlsRef.current.dollySpeed = 1;
+      
+      // Reset camera when entering sketch mode (only if dimension isn't selected yet)
+      if (!wasActive && !dimension) {
+        cameraControlsRef.current.reset(true);
+        
+        // Set to a standard viewing position
+        cameraControlsRef.current.setLookAt(
+          20, 20, 20,  // position: isometric view
+          0, 0, 0,     // target: origin
+          true         // immediate
+        );
+      }
     } else {
       // Re-enable all controls when not in sketch mode
       cameraControlsRef.current.enabled = true;
@@ -55,7 +67,7 @@ function CameraPositioner({
       }
     }
     
-  }, [isActive, cameraControlsRef]);
+  }, [isActive, cameraControlsRef, dimension]);
   
   // Position camera when dimension changes
   useEffect(() => {
