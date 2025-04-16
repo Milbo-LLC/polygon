@@ -45,6 +45,17 @@ function ProjectsContent() {
   const { organization } = useOrganizationContext();
   const { data: session } = useSession();
 
+  // Abstract the rename submission logic
+  const handleRenameSubmit = () => {
+    if (projectToRename && newName.trim()) {
+      updateProject.mutate({
+        id: projectToRename.id,
+        name: newName.trim()
+      });
+      setProjectToRename(null);
+    }
+  };
+
   useEffect(() => {
     if (socket.connected) {
       onConnect();
@@ -262,19 +273,16 @@ function ProjectsContent() {
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Project name"
             className="my-4"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleRenameSubmit();
+              }
+            }}
           />
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => {
-                if (projectToRename && newName.trim()) {
-                  updateProject.mutate({
-                    id: projectToRename.id,
-                    name: newName.trim()
-                  });
-                  setProjectToRename(null);
-                }
-              }}
+              onClick={handleRenameSubmit}
             >
               Rename
             </AlertDialogAction>
