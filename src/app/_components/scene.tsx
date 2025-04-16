@@ -24,43 +24,90 @@ function CameraPositioner({
   cameraControlsRef: React.RefObject<CameraControls>;
 }) {
   const { camera } = useThree();
+  const prevActiveRef = useRef(isActive);
   
-  // Update camera controls when sketch mode changes
+  // Update camera controls and reset when exiting sketch mode
   useEffect(() => {
     if (!cameraControlsRef.current) return;
     
-    // Disable camera controls in sketch mode
-    cameraControlsRef.current.enabled = !isActive;
+    // Check if we're entering or exiting sketch mode
+    const wasActive = prevActiveRef.current;
+    prevActiveRef.current = isActive;
+    
+    if (isActive) {
+      // In sketch mode, allow only zooming but disable other controls
+      cameraControlsRef.current.enabled = true;
+      cameraControlsRef.current.azimuthRotateSpeed = 0; 
+      cameraControlsRef.current.polarRotateSpeed = 0;   
+      cameraControlsRef.current.truckSpeed = 0;         
+      cameraControlsRef.current.dollySpeed = 1;         
+    } else {
+      // Re-enable all controls when not in sketch mode
+      cameraControlsRef.current.enabled = true;
+      cameraControlsRef.current.azimuthRotateSpeed = 1;
+      cameraControlsRef.current.polarRotateSpeed = 1;
+      cameraControlsRef.current.truckSpeed = 1;
+      cameraControlsRef.current.dollySpeed = 1;
+      
+      // If we just exited sketch mode, reset the camera view
+      if (wasActive) {
+        cameraControlsRef.current.reset(true);
+      }
+    }
     
   }, [isActive, cameraControlsRef]);
   
   // Position camera when dimension changes
   useEffect(() => {
-    if (!dimension || !isActive) return;
+    if (!dimension || !isActive || !cameraControlsRef.current) return;
     
-    // Simple positioning based on dimension - look directly at the plane
+    // Create box representing the plane to look at
+    let min, max;
+    const halfSize = 50;
+    
     switch(dimension) {
       case 'x':
-        // Look at YZ plane from positive X
-        camera.position.set(10, 0, 0);
-        camera.lookAt(0, 0, 0);
+        // YZ plane at x=0
+        min = new THREE.Vector3(0, -halfSize, -halfSize);
+        max = new THREE.Vector3(0, halfSize, halfSize);
+        cameraControlsRef.current.setLookAt(
+          halfSize, 0, 0,   // position
+          0, 0, 0,          // target
+          true              // immediate
+        );
         break;
       case 'y':
-        // Look at XZ plane from positive Y
-        camera.position.set(0, 10, 0);
-        camera.lookAt(0, 0, 0);
+        // XZ plane at y=0
+        min = new THREE.Vector3(-halfSize, 0, -halfSize);
+        max = new THREE.Vector3(halfSize, 0, halfSize);
+        cameraControlsRef.current.setLookAt(
+          0, halfSize, 0,   // position
+          0, 0, 0,          // target
+          true              // immediate
+        );
         break;
       case 'z':
-        // Look at XY plane from positive Z
-        camera.position.set(0, 0, 10);
-        camera.lookAt(0, 0, 0);
+        // XY plane at z=0
+        min = new THREE.Vector3(-halfSize, -halfSize, 0);
+        max = new THREE.Vector3(halfSize, halfSize, 0);
+        cameraControlsRef.current.setLookAt(
+          0, 0, halfSize,   // position
+          0, 0, 0,          // target
+          true              // immediate
+        );
         break;
     }
     
-    // Force camera to update immediately
-    camera.updateProjectionMatrix();
+    // Use fitToBox as backup to ensure view is appropriate
+    cameraControlsRef.current.fitToBox(
+      new THREE.Box3(min, max), 
+      true  // immediate
+    );
     
-  }, [dimension, isActive, camera]);
+    // Add an instant update to apply changes immediately
+    cameraControlsRef.current.update(0);
+    
+  }, [dimension, isActive, cameraControlsRef]);
   
   return null;
 }
@@ -120,7 +167,12 @@ export default function Scene() {
       <ControlPanel />
       <Canvas 
         className="flex h-full w-full" 
-        camera={{ position: [5, 5, 5] }}
+        camera={{ 
+          position: [5, 5, 5],
+          fov: 15, // Narrow field of view for less perspective distortion
+          near: 0.1,
+          far: 1000
+        }}
         tabIndex={0}
       >
         {/* Camera positioner - directly manipulates the camera */}
