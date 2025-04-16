@@ -10,11 +10,14 @@ import { usePostHog } from "posthog-js/react";
 import { FEATURE_FLAGS } from "~/constants/app";
 import { useEffect } from "react";
 import WaitListScene from "./components/waitlist-scene";
+import { useHandleSignout } from "~/hooks/use-handle-signout";
 
 export default function WaitListPage() {
   const router = useRouter();
   const posthog = usePostHog();
-  
+
+  const { handleSignout } = useHandleSignout();
+
   const { data: session, status } = useSession();
   const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
 
@@ -23,11 +26,6 @@ export default function WaitListPage() {
       router.push('/projects')
     }
   }, [betaAccessEnabled, router])
-
-  const handleLogout = async () => {
-    await signOut();
-    router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
-  };
 
   const handleSignUp = () => {
     router.push(AUTH_REDIRECT_PATH_SIGN_UP);
@@ -49,7 +47,7 @@ export default function WaitListPage() {
         <P className="text-sm text-muted-foreground">
           We&apos;ll notify you when you have access to the app.
         </P>
-        <Button onClick={handleLogout}>Logout</Button>
+        <Button onClick={handleSignout}>Logout</Button>
       </div>
     )
   }

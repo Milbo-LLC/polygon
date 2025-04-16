@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import { useAtomValue } from "jotai";
 import { sidebarCollapsedAtom } from "../../atoms";
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { 
   LogOutIcon, 
   UserIcon, 
@@ -26,6 +26,7 @@ import {
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useMemo } from 'react';
 import { Logo } from "~/components/ui/logo";
+import { useHandleSignout } from "~/hooks/use-handle-signout";
 
 // Define menu items structure for better maintainability
 type MenuItem = {
@@ -37,6 +38,7 @@ type MenuItem = {
 
 export default function NavbarHeader() {
   const { organization, organizations, handleOrgSwitch } = useOrganizationContext();
+  const { handleSignout } = useHandleSignout();
   const sidebarCollapsed = useAtomValue(sidebarCollapsedAtom);
   const router = useRouter();
   const { data } = useSession();
@@ -81,8 +83,7 @@ export default function NavbarHeader() {
         icon: <LogOutIcon className="mr-2 size-4 text-primary" />,
         onClick: () => {
           void (async () => {
-            await signOut();
-            router.push('/login');
+            await handleSignout();
           })();
         },
       },
