@@ -116,7 +116,7 @@ function CameraPositioner({
           
           // Set to a nice viewing angle after the fitToBox completes
           await cameraControlsRef.current.setLookAt(
-            30, 30, 30,  // position: isometric view
+            50, 50, 50,  // position: further away isometric view
             0, 0, 0,     // target: origin
             true         // immediate
           );
@@ -223,8 +223,8 @@ export default function Scene() {
       <Canvas 
         className="flex h-full w-full" 
         camera={{ 
-          position: [5, 5, 5],
-          fov: 15, // Narrow field of view for less perspective distortion
+          position: [20, 20, 20],
+          fov: 30, // Increased FOV for wider view (was 15)
           near: 0.1,
           far: 1000
         }}
