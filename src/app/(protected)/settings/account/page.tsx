@@ -68,7 +68,12 @@ export default function AccountSettingsPage() {
 
       updateUser.mutate(updateData);
       
-      form.reset(data);
+      // Reset the form with the new values to clear the dirty state
+      form.reset({
+        name: data.name,
+        email: data.email,
+        image: data.image
+      });
     } catch (error) {
       toast.error('Failed to update account settings');
       console.error(error);
@@ -108,10 +113,6 @@ export default function AccountSettingsPage() {
                               value={field.value}
                               onChange={field.onChange}
                               organizationId={session?.user?.id}
-                              onRemove={async () => {
-                                await form.handleSubmit(onSubmit)();
-                              }}
-                              autoSave={true}
                             />
                           </FormControl>
                           <FormMessage />
