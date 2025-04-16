@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { type Dimension, type Tool } from './sketch-controls'
+import { globalDrawings, type Point3D, type DrawingItem } from './sketch-shared-types'
 
 interface SketchPlaneProps {
   dimension: Dimension
@@ -12,27 +13,6 @@ interface SketchPlaneProps {
   gridDivisions: number
   persistDrawings?: boolean
 }
-
-interface Point3D {
-  x: number
-  y: number
-  z: number
-}
-
-interface DrawingItem {
-  id: string
-  tool: Tool
-  color: string
-  points: Point3D[]
-  dimension: Dimension // Track which dimension this drawing belongs to
-}
-
-// Global store to keep drawings across component rerenders
-const globalDrawings: Record<Dimension, DrawingItem[]> = {
-  x: [],
-  y: [],
-  z: []
-};
 
 export default function SketchPlane({
   dimension,
@@ -81,11 +61,11 @@ export default function SketchPlane({
     }
   }
 
-  // Snap to grid
-  const snapToGrid = (value: number): number => {
+  // Snap to grid - move before getSnappedPoint and wrap in useCallback
+  const snapToGrid = useCallback((value: number): number => {
     const cellSize = gridSize / gridDivisions
     return Math.round(value / cellSize) * cellSize
-  }
+  }, [gridSize, gridDivisions]);
   
   // Convert points for line rendering based on dimension
   const getLinePoints = (points: Point3D[], pointDimension: Dimension): [number, number, number][] => {
@@ -154,8 +134,8 @@ export default function SketchPlane({
     )
   }
   
-  // Get snapped point from intersection
-  const getSnappedPoint = (intersection: THREE.Intersection): Point3D | null => {
+  // Get snapped point from intersection - wrapped in useCallback
+  const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
     if (!intersection?.point) return null
     
     const point = intersection.point
@@ -165,7 +145,7 @@ export default function SketchPlane({
       y: snapToGrid(point.y),
       z: snapToGrid(point.z)
     }
-  }
+  }, [snapToGrid]);
 
   // Handle click - toggles drawing on/off
   const handleClick = () => {
@@ -269,7 +249,7 @@ export default function SketchPlane({
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
     }
-  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension]);
+  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension, getSnappedPoint]);
 
   return (
     <>
