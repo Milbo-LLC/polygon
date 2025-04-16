@@ -87,11 +87,10 @@ function CameraPositioner({
         cameraControlsRef.current.truckSpeed = 0;         
         cameraControlsRef.current.dollySpeed = 1;
         
-        // Reset camera when entering sketch mode (only if dimension isn't selected yet)
+        // Only reset camera when entering sketch mode if no dimension is selected yet
+        // The dimension change effect will handle camera positioning if a dimension is selected
         if (!wasActive && !dimension) {
-          await cameraControlsRef.current.reset(true);
-          
-          // Set to a standard viewing position
+          // Set to standard isometric view position
           await cameraControlsRef.current.setLookAt(
             20, 20, 20,  // position: isometric view
             0, 0, 0,     // target: origin
@@ -106,15 +105,9 @@ function CameraPositioner({
         cameraControlsRef.current.truckSpeed = 1;
         cameraControlsRef.current.dollySpeed = 1;
         
-        // If we just exited sketch mode, zoom out to show all sketches
+        // If we just exited sketch mode, go to default view
         if (wasActive) {
-          // First get a bounding box that contains all sketches
-          const sketchesBox = createBoundingBoxForAllSketches();
-          
-          // Fit camera to see all sketches
-          await cameraControlsRef.current.fitToBox(sketchesBox, true);
-          
-          // Set to a nice viewing angle after the fitToBox completes
+          // Set directly to a nice viewing angle
           await cameraControlsRef.current.setLookAt(
             50, 50, 50,  // position: further away isometric view
             0, 0, 0,     // target: origin
@@ -135,50 +128,35 @@ function CameraPositioner({
       // Store reference locally to avoid null checks throughout
       const controls = cameraControlsRef.current;
       
-      // Create box representing the plane to look at
-      let min, max;
-      const halfSize = 50;
-      
+      // Position camera directly based on the selected plane
       switch(dimension) {
         case 'x':
-          // YZ plane at x=0
-          min = new THREE.Vector3(0, -halfSize, -halfSize);
-          max = new THREE.Vector3(0, halfSize, halfSize);
+          // Position camera to look at YZ plane at x=0
           await controls.setLookAt(
-            halfSize, 0, 0,   // position
-            0, 0, 0,          // target
-            true              // immediate
+            50, 0, 0,   // position
+            0, 0, 0,    // target
+            true        // immediate
           );
           break;
         case 'y':
-          // XZ plane at y=0
-          min = new THREE.Vector3(-halfSize, 0, -halfSize);
-          max = new THREE.Vector3(halfSize, 0, halfSize);
+          // Position camera to look at XZ plane at y=0
           await controls.setLookAt(
-            0, halfSize, 0,   // position
-            0, 0, 0,          // target
-            true              // immediate
+            0, 50, 0,   // position
+            0, 0, 0,    // target
+            true        // immediate
           );
           break;
         case 'z':
-          // XY plane at z=0
-          min = new THREE.Vector3(-halfSize, -halfSize, 0);
-          max = new THREE.Vector3(halfSize, halfSize, 0);
+          // Position camera to look at XY plane at z=0
           await controls.setLookAt(
-            0, 0, halfSize,   // position
-            0, 0, 0,          // target
-            true              // immediate
+            0, 0, 50,   // position
+            0, 0, 0,    // target
+            true        // immediate
           );
           break;
       }
       
-      // Use fitToBox as backup to ensure view is appropriate
-      await controls.fitToBox(
-        new THREE.Box3(min, max), 
-        true  // immediate
-      );
-      
-      // Add an instant update to apply changes immediately
+      // Apply changes immediately
       controls.update(0);
     })();
     
