@@ -44,6 +44,13 @@ function ProjectsContent() {
   const router = useRouter();
   const { organization } = useOrganizationContext();
   const { data: session } = useSession();
+  const { data: userOrganization } = api.userOrganization.get.useQuery(undefined, {
+    enabled: !!session?.user?.id && !!organization?.id
+  });
+  
+  // Determine user's permissions
+  const userRole = userOrganization?.role || "member";
+  const isOwnerOrAdmin = userRole === "owner" || userRole === "admin";
 
   useEffect(() => {
     if (socket.connected) {
@@ -140,6 +147,15 @@ function ProjectsContent() {
     </Card>
   );
 
+  // Helper function to determine if user can delete a project
+  const canDeleteProject = (project: ProjectWithDocuments) => {
+    // Owner or admin can delete any project
+    if (isOwnerOrAdmin) return true;
+    
+    // Regular members can only delete their own projects
+    return project.userId === session?.user?.id;
+  };
+
   return (
     <>
       <div className="flex flex-col w-full h-full p-4 gap-4 justify-start">
@@ -204,20 +220,29 @@ function ProjectsContent() {
                         <Pencil className="size-4 mr-2" />
                         Rename
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setProjectToDelete(project);
-                        }}
-                      >
-                        <Trash2Icon className="size-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
+                      {canDeleteProject(project) && (
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setProjectToDelete(project);
+                          }}
+                        >
+                          <Trash2Icon className="size-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
                 <P className="text-gray-600 text-sm line-clamp-3">{project.description}</P>
+                {project.userId === session?.user?.id && (
+                  <div className="absolute bottom-2 left-2">
+                    <div className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
+                      Created by you
+                    </div>
+                  </div>
+                )}
               </CardHeader>
             </Card>
           ))}

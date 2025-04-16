@@ -20,6 +20,20 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("No active organization");
       }
 
+      // Check if user has permission to create invitations (must be owner or admin)
+      const userOrg = await ctx.db.userOrganization.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          organizationId: input.organizationId,
+          role: { in: ['owner', 'admin'] }, // Only owners and admins can send invitations
+          deletedAt: null
+        }
+      });
+      
+      if (!userOrg) {
+        throw new Error("You don't have permission to send invitations for this organization");
+      }
+
       const expiresAt = new Date(Date.now() + ONE_WEEK_IN_MS);
 
       // Create a data object with all properties explicitly typed
@@ -121,6 +135,29 @@ export const organizationInvitationRouter = createTRPCRouter({
     .input(UpdateOrganizationInvitationSchema)
     .output(OrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
+      // Fetch the invitation to get the organization ID
+      const invitation = await ctx.db.organizationInvitation.findUnique({
+        where: { id: input.id },
+        select: { organizationId: true }
+      });
+      
+      if (!invitation) {
+        throw new Error("Invitation not found");
+      }
+      
+      // Check if user has permission to update invitations (must be owner or admin)
+      const userOrg = await ctx.db.userOrganization.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          organizationId: invitation.organizationId,
+          role: { in: ['owner', 'admin'] }, // Only owners and admins can update invitations
+          deletedAt: null
+        }
+      });
+      
+      if (!userOrg) {
+        throw new Error("You don't have permission to modify invitations for this organization");
+      }
 
       const organizationInvitation = await ctx.db.organizationInvitation.update({
         where: { id: input.id },
