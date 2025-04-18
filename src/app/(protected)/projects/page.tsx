@@ -48,6 +48,14 @@ function ProjectsContent() {
     enabled: !!session?.user?.id && !!organization?.id
   });
   
+  // Fetch all users in the organization to determine if user is the only member
+  const { data: organizationUsers = [] } = api.userOrganization.getAllByOrganizationId.useQuery(undefined, {
+    enabled: !!organization?.id
+  });
+  
+  // Check if the current user is the only user in the organization
+  const isOnlyUserInOrg = organizationUsers.length === 1;
+  
   // Determine user's permissions
   const userRole = userOrganization?.role ?? "member";
   const isOwnerOrAdmin = userRole === "owner" || userRole === "admin";
@@ -131,8 +139,13 @@ function ProjectsContent() {
     }
   });
 
-  const { data: projects } = api.project.getAll.useQuery();
+  const { data: projects = [] } = api.project.getAll.useQuery();
   const utils = api.useUtils();
+
+  // Check if there are any projects not created by the current user
+  const hasProjectsFromOtherUsers = projects.some(
+    project => project.userId !== session?.user?.id
+  );
 
   const CreateProjectCard = (
     <Card
@@ -236,7 +249,13 @@ function ProjectsContent() {
                   </DropdownMenu>
                 </div>
                 <P className="text-gray-600 text-sm line-clamp-3">{project.description}</P>
-                {project.userId === session?.user?.id && (
+                {/* Show "Created by you" if:
+                    1. The project was created by the current user
+                    2. AND either of these conditions:
+                        - There are multiple users in the organization
+                        - OR there are projects from other users in the organization
+                */}
+                {project.userId === session?.user?.id && (hasProjectsFromOtherUsers || !isOnlyUserInOrg) && (
                   <div className="absolute bottom-2 left-2">
                     <div className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
                       Created by you
