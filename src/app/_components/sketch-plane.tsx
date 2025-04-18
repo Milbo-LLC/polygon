@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
-import { type Dimension, type Tool } from './sketch-controls'
+import { type Dimension, type Tool } from './sketch/_components/sketch-controls'
 
 interface SketchPlaneProps {
   dimension: Dimension
@@ -82,10 +82,10 @@ export default function SketchPlane({
   }
 
   // Snap to grid
-  const snapToGrid = (value: number): number => {
+  const snapToGrid = useCallback((value: number): number => {
     const cellSize = gridSize / gridDivisions
     return Math.round(value / cellSize) * cellSize
-  }
+  }, [gridSize, gridDivisions]);
 
   // Listen for keyboard shortcuts
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function SketchPlane({
   }, [isActive, isDrawing, dimension])
 
   // Get snapped point from intersection
-  const getSnappedPoint = (intersection: THREE.Intersection): Point3D | null => {
+  const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
     if (!intersection?.point) return null
     
     const point = intersection.point
@@ -124,9 +124,8 @@ export default function SketchPlane({
       y: snapToGrid(point.y),
       z: snapToGrid(point.z)
     }
-  }
+  }, [snapToGrid]);
 
-  // Update raycaster on pointer move to detect intersections
   useEffect(() => {
     const handlePointerMove = () => {
       if (!isActive || !isDrawing || !currentDrawing || !meshRef.current) return
@@ -139,13 +138,11 @@ export default function SketchPlane({
         if (!snappedPoint) return
         
         if (tool === 'pencil') {
-          // For pencil, add point to the drawing
           setCurrentDrawing({
             ...currentDrawing,
             points: [...currentDrawing.points, snappedPoint]
           })
         } else if (tool === 'rectangle' && currentDrawing.points.length > 0) {
-          // For rectangle, update the end point
           const firstPoint = currentDrawing.points[0]
           if (firstPoint) {
             setCurrentDrawing({
@@ -157,7 +154,6 @@ export default function SketchPlane({
       }
     }
 
-    // Add listener to the window
     window.addEventListener('pointermove', handlePointerMove)
     
     return () => {
@@ -165,7 +161,6 @@ export default function SketchPlane({
     }
   }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension, getSnappedPoint])
 
-  // Handle click - toggles drawing on/off
   const handleClick = () => {
     if (!isActive || !meshRef.current) return
     
@@ -173,14 +168,12 @@ export default function SketchPlane({
     const intersects = raycaster.intersectObject(meshRef.current)
     
     if (intersects.length > 0 && intersects[0]) {
-      // If already drawing, finish the drawing
       if (isDrawing && currentDrawing) {
-        // Only save drawings with at least 2 points
         if (currentDrawing.points.length >= 2) {
           const newDrawings = [...drawings, currentDrawing];
           setDrawings(newDrawings);
           if (persistDrawings) {
-            globalDrawings[dimension] = newDrawings; // Update global store
+            globalDrawings[dimension] = newDrawings;
           }
         }
         
@@ -199,7 +192,7 @@ export default function SketchPlane({
         tool,
         color: '#000000',
         points: [snappedPoint],
-        dimension // Track which dimension this drawing belongs to
+        dimension
       })
     }
   }
