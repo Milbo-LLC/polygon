@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
-import { type Dimension } from "~/app/_components/sketch-controls";
+import { atomFamily, atomWithStorage } from "jotai/utils";
+import { type Tool, type Dimension } from "~/app/_components/sketch/_components/sketch-controls";
 
 export const sidebarCollapsedAtom = atomWithStorage<boolean>("polygon:sidebar:collapsed", false);
 
@@ -26,10 +26,30 @@ export type SketchTool = 'pencil' | 'rectangle'
 
 export type SketchState = {
   selectedTool: SketchTool
-  dimension: Dimension
+  dimension: Dimension | null
 }
 
 export const sketchStateAtom = atom<SketchState>({
   selectedTool: 'pencil',
-  dimension: 'x',
+  dimension: null,
 })
+
+export interface Point3D {
+  x: number
+  y: number
+  z: number
+}
+
+export interface DrawingItem {
+  id: string
+  tool: Tool
+  color: string
+  points: Point3D[]
+  dimension: Dimension // Track which dimension this drawing belongs to
+}
+
+export const documentSketchesAtom = atomFamily((documentId: string) => atomWithStorage<Record<Dimension, DrawingItem[]>>(`polygon:sketch:document-${documentId}`, {
+  x: [],
+  y: [],
+  z: []
+}))

@@ -1,47 +1,121 @@
 'use client'
-import { Canvas, useThree } from '@react-three/fiber'
-import { useRef, useCallback, useEffect } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { useRef, useEffect } from 'react'
 import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
-import { type Dimension } from './sketch-controls'
-import SketchPlane from './sketch-plane'
+import { type Dimension } from './sketch/_components/sketch-controls'
+import SketchPlane from './sketch/_components/sketch-plane'
 import ControlPanel from './control-panel'
+import PlaneSelector from './sketch/_components/plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
-import { canvasStateAtom, sketchStateAtom, type SketchTool } from '../(protected)/atoms'
+import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
 
 // Camera position controller component
 function CameraPositioner({ 
   dimension,
   isActive,
+  cameraControlsRef,
 }: { 
-  dimension: Dimension;
+  dimension: Dimension | null;
   isActive: boolean;
+  cameraControlsRef: React.RefObject<CameraControls>;
 }) {
-  const { camera } = useThree();
+  const prevActiveRef = useRef(isActive);
   
-  // Hard-coded camera positions for each dimension
+  // Update camera controls and reset when entering or exiting sketch mode
   useEffect(() => {
-    if (!isActive) return;
+    // Make this an async function to properly use await
+    void (async () => {
+      if (!cameraControlsRef.current) return;
+      
+      // Check if we're entering or exiting sketch mode
+      const wasActive = prevActiveRef.current;
+      prevActiveRef.current = isActive;
+      
+      if (isActive) {
+        // In sketch mode, allow only zooming but disable other controls
+        cameraControlsRef.current.enabled = true;
+        cameraControlsRef.current.azimuthRotateSpeed = 0; 
+        cameraControlsRef.current.polarRotateSpeed = 0;   
+        cameraControlsRef.current.truckSpeed = 0;         
+        cameraControlsRef.current.dollySpeed = 1;
+        
+        // Only reset camera when entering sketch mode if no dimension is selected yet
+        // The dimension change effect will handle camera positioning if a dimension is selected
+        if (!wasActive && !dimension) {
+          // Set to standard isometric view position
+          await cameraControlsRef.current.setLookAt(
+            20, 20, 20,  // position: isometric view
+            0, 0, 0,     // target: origin
+            true         // immediate
+          );
+        }
+      } else {
+        // Re-enable all controls when not in sketch mode
+        cameraControlsRef.current.enabled = true;
+        cameraControlsRef.current.azimuthRotateSpeed = 1;
+        cameraControlsRef.current.polarRotateSpeed = 1;
+        cameraControlsRef.current.truckSpeed = 1;
+        cameraControlsRef.current.dollySpeed = 1;
+        
+        // If we just exited sketch mode, go to default view
+        if (wasActive) {
+          // Set directly to a nice viewing angle
+          await cameraControlsRef.current.setLookAt(
+            50, 50, 50,  // position: further away isometric view
+            0, 0, 0,     // target: origin
+            true         // immediate
+          );
+        }
+      }
+    })(); // Immediately invoke the async function
     
-    // Set camera position immediately based on dimension
-    if (dimension === 'x') {
-      // X dimension view (looking at YZ plane)
-      camera.position.set(100, 0, 0);
-      camera.lookAt(0, 0, 0);
-    } else if (dimension === 'y') {
-      // Y dimension view (looking at XZ plane)
-      camera.position.set(0, 100, 0);
-      camera.lookAt(0, 0, 0);
-    } else {
-      // Z dimension view (looking at XY plane)
-      camera.position.set(0, 0, 100);
-      camera.lookAt(0, 0, 0);
-    }
+  }, [isActive, cameraControlsRef, dimension]);
+  
+  // Position camera when dimension changes
+  useEffect(() => {
+    // Create an async function and immediately invoke it
+    void (async () => {
+      if (!dimension || !isActive || !cameraControlsRef.current) return;
+      
+      // Store reference locally to avoid null checks throughout
+      const controls = cameraControlsRef.current;
+      
+      // Position camera directly based on the selected plane
+      switch(dimension) {
+        case 'x':
+          // Position camera to look at YZ plane at x=0
+          await controls.setLookAt(
+            50, 0, 0,   // position
+            0, 0, 0,    // target
+            true        // immediate
+          );
+          break;
+        case 'y':
+          // Position camera to look at XZ plane at y=0
+          await controls.setLookAt(
+            0, 50, 0,   // position
+            0, 0, 0,    // target
+            true        // immediate
+          );
+          break;
+        case 'z':
+          // Position camera to look at XY plane at z=0
+          await controls.setLookAt(
+            0, 0, 50,   // position
+            0, 0, 0,    // target
+            true        // immediate
+          );
+          break;
+      }
+      
+      // Apply changes immediately
+      controls.update(0);
+    })();
     
-    camera.updateProjectionMatrix();
-  }, [dimension, camera, isActive]);
+  }, [dimension, isActive, cameraControlsRef]);
   
   return null;
 }
@@ -51,52 +125,47 @@ export default function Scene() {
   const canvasState = useAtomValue(canvasStateAtom)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
   
+  // Use a ref to track previous sketch mode state
+  const prevSketchModeActiveRef = useRef<boolean>(false);
+  
   const gridSize = 100
   const gridDivisions = 100
 
   const isSketchModeActive = canvasState.selectedTool === 'sketch'
 
-
-  // Disable camera controls in sketch mode
   useEffect(() => {
-    if (!cameraControlsRef.current) return;
+    // Get previous sketch mode state
+    const prevSketchModeActive = prevSketchModeActiveRef.current;
     
-    if (isSketchModeActive) {
-      // Disable controls completely when in sketch mode
-      cameraControlsRef.current.enabled = false;
-    } else {
-      // Re-enable controls when not in sketch mode
-      cameraControlsRef.current.enabled = true;
+    // Update ref with current state for next comparison
+    prevSketchModeActiveRef.current = isSketchModeActive;
+    
+    // Always reset dimension when entering sketch mode to allow selecting a new plane
+    if (isSketchModeActive && !prevSketchModeActive) {
+      setSketchState({...sketchState, dimension: null});
     }
-  }, [isSketchModeActive, cameraControlsRef]);
-
-  // Handle tool change
-  // const handleToolChange = useCallback((tool: Tool) => {
-  //   setSelectedTool(tool);
-  // }, []);
+    
+  }, [isSketchModeActive, sketchState, setSketchState]);
 
   return (
     <div className="flex h-full w-full relative">
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
-      
-      {/* <SketchControls
-        onDimensionChange={handleDimensionChange}
-        onToolChange={handleToolChange}
-        onToggleSketchMode={handleToggleSketchMode}
-        isSketchModeActive={isSketchModeActive}
-        selectedDimension={selectedDimension}
-      /> */}
-
       <ControlPanel />
       <Canvas 
         className="flex h-full w-full" 
-        camera={{ position: [5, 5, 5] }}
+        camera={{ 
+          position: [20, 20, 20],
+          fov: 30, // Increased FOV for wider view (was 15)
+          near: 0.1,
+          far: 1000
+        }}
         tabIndex={0}
       >
         {/* Camera positioner - directly manipulates the camera */}
         <CameraPositioner 
           dimension={sketchState.dimension} 
-          isActive={isSketchModeActive} 
+          isActive={isSketchModeActive}
+          cameraControlsRef={cameraControlsRef}
         />
         
         <Gizmo />
@@ -105,12 +174,40 @@ export default function Scene() {
           divisions={gridDivisions} 
         />
         
-        {/* Add sketch plane with persistent drawings */}
+        {/* Plane selector - only show when in sketch mode and no dimension selected */}
+        <PlaneSelector
+          isActive={isSketchModeActive && sketchState.dimension === null}
+          gridSize={gridSize}
+        />
+        
+        {/* X-plane drawings - always visible */}
         <SketchPlane
-          key={`sketch-${sketchState.dimension}`} 
-          dimension={sketchState.dimension}
+          key="sketch-x" 
+          dimension="x"
           tool={sketchState.selectedTool}
-          isActive={isSketchModeActive}
+          isActive={isSketchModeActive && sketchState.dimension === "x"}
+          gridSize={gridSize}
+          gridDivisions={gridDivisions}
+          persistDrawings={true}
+        />
+        
+        {/* Y-plane drawings - always visible */}
+        <SketchPlane
+          key="sketch-y" 
+          dimension="y"
+          tool={sketchState.selectedTool}
+          isActive={isSketchModeActive && sketchState.dimension === "y"}
+          gridSize={gridSize}
+          gridDivisions={gridDivisions}
+          persistDrawings={true}
+        />
+        
+        {/* Z-plane drawings - always visible */}
+        <SketchPlane
+          key="sketch-z" 
+          dimension="z"
+          tool={sketchState.selectedTool}
+          isActive={isSketchModeActive && sketchState.dimension === "z"}
           gridSize={gridSize}
           gridDivisions={gridDivisions}
           persistDrawings={true}

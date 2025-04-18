@@ -2,7 +2,7 @@ import { Button } from "~/components/ui/button"
 import { PencilRulerIcon } from "lucide-react"
 import { useAtom } from "jotai"
 import { canvasStateAtom } from "../(protected)/atoms"
-import SketchControls from "./sketch-controls"
+import SketchControls from "./sketch/_components/sketch-controls"
 import { Tooltip, TooltipTrigger, TooltipContent } from "~/components/ui/tooltip"
 
 export default function ControlPanel() {

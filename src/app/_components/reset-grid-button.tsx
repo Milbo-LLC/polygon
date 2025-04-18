@@ -10,6 +10,13 @@ export default function ResetGridButton({ cameraControlsRef }: ResetGridButtonPr
   const resetCamera = async () => {
     if (cameraControlsRef.current) {
       await cameraControlsRef.current.reset(true)
+      
+      // Set to a less zoomed in position after reset
+      await cameraControlsRef.current.setLookAt(
+        30, 30, 30,  // further away position
+        0, 0, 0,     // still looking at origin
+        true         // immediate
+      );
     }
   }
   
