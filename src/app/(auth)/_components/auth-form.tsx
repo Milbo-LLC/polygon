@@ -11,8 +11,6 @@ import { signIn, useSession } from "next-auth/react"
 import { FaGoogle as GoogleIcon } from "react-icons/fa"
 import { Button } from "~/components/ui/button"
 import { useRouter, useSearchParams } from "next/navigation"
-import { activeOrganizationIdAtom } from "~/app/(protected)/atoms"
-import { useSetAtom } from "jotai"
 
 export function AuthForm({ 
   mode = "login",
@@ -22,7 +20,6 @@ export function AuthForm({
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const setActiveOrganizationId = useSetAtom(activeOrganizationIdAtom);
   
   // Get callbackUrl from the URL params
   const callbackUrl = searchParams.get('callbackUrl') ?? '/projects';
@@ -30,17 +27,11 @@ export function AuthForm({
   // Handle redirection after authentication
   useEffect(() => {
     if (status === 'authenticated' && session) {
-      // If we have a session and user, ensure we have set the active organization
-      if (session.user?.id) {
-        // Set the user's ID as their personal organization ID
-        // This matches how personal orgs are created in the signIn callback
-        setActiveOrganizationId(session.user.id);
-      }
       
       // Then redirect to the callback URL
       router.push(callbackUrl);
     }
-  }, [status, session, callbackUrl, router, setActiveOrganizationId]);
+  }, [status, session, callbackUrl, router,]);
   
   return (
     <Suspense fallback={<div>Loading...</div>}>

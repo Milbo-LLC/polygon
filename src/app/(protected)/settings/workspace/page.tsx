@@ -11,7 +11,7 @@ import { Large, Muted, Small } from '~/components/ui/typography';
 import { useOrganizationContext } from '~/providers/organization-provider';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { api } from '~/trpc/react';
