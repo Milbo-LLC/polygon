@@ -112,13 +112,23 @@ export const organizationRouter = createTRPCRouter({
     .output(OrganizationSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, name, logoUrl } = input;
+      
+
+      // Create update data object
+      const updateData: Prisma.OrganizationUpdateInput = {
+        name
+      };
+      
+      // Explicitly handle logoUrl (null means remove logo)
+      if (logoUrl === null || logoUrl === undefined) {
+        updateData.logoUrl = null;
+      } else if (logoUrl) {
+        updateData.logoUrl = logoUrl;
+      }
 
       const updatedOrganization = await ctx.db.organization.update({
         where: { id },
-        data: {
-          name,
-          logoUrl
-        },
+        data: updateData,
         include: {
           projects: {
             include: {

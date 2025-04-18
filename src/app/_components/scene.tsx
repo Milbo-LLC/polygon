@@ -133,7 +133,6 @@ export default function Scene() {
 
   const isSketchModeActive = canvasState.selectedTool === 'sketch'
 
-  // Reset dimension when entering sketch mode
   useEffect(() => {
     // Get previous sketch mode state
     const prevSketchModeActive = prevSketchModeActiveRef.current;
@@ -147,7 +146,6 @@ export default function Scene() {
     }
     
   }, [isSketchModeActive, sketchState, setSketchState]);
-
 
   return (
     <div className="flex h-full w-full relative">

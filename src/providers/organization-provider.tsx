@@ -71,7 +71,12 @@ export function OrganizationProvider({
 
   const updateOrganizationMutation = api.organization.update.useMutation({
     onSuccess: async () => {
+      // Invalidate the entire organization cache
+      await utils.organization.invalidate();
+      // Also refetch the specific query
       await utils.organization.get.refetch();
+      // Invalidate user organizations to ensure all data is fresh
+      await utils.userOrganization.invalidate();
       toast.success("Organization updated successfully");
     },
     onError: (error) => {
@@ -85,7 +90,14 @@ export function OrganizationProvider({
     name?: string;
     logoUrl?: string | null;
   }) => {
-    return updateOrganizationMutation.mutateAsync(data);
+    console.log('Organization provider updating with data:', data);
+    
+    const updateData = {
+      ...data,
+      logoUrl: data.logoUrl === undefined ? null : data.logoUrl
+    };
+    
+    return updateOrganizationMutation.mutateAsync(updateData);
   };
 
   if (loadingOrganization || loadingUserOrganizations) {

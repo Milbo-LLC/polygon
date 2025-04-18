@@ -60,11 +60,15 @@ export default function AccountSettingsPage() {
         return;
       }
 
-      // Call the update mutation
-      updateUser.mutate({
+      const updateData = {
         id: session.user.id,
         ...data,
-      });
+        image: data.image ?? null
+      };
+
+      updateUser.mutate(updateData);
+      
+      form.reset(data);
     } catch (error) {
       toast.error('Failed to update account settings');
       console.error(error);
@@ -104,6 +108,10 @@ export default function AccountSettingsPage() {
                               value={field.value}
                               onChange={field.onChange}
                               organizationId={session?.user?.id}
+                              onRemove={async () => {
+                                await form.handleSubmit(onSubmit)();
+                              }}
+                              autoSave={true}
                             />
                           </FormControl>
                           <FormMessage />
