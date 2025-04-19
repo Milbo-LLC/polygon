@@ -5,7 +5,7 @@ import {
   protectedProcedure,
   orgProtectedProcedure,
 } from "~/server/api/trpc";
-import { UpdateUserOrganizationSchema, type MemberRole } from "~/validators/user-organizations";
+import { UpdateUserOrganizationSchema, type MemberRole, MemberRoleEnum } from "~/validators/user-organizations";
 import { UserOrganizationWithOrgSchema } from "~/validators/extended-schemas";
 
 type UserOrganizationWithOrganization = UserOrganization & {
@@ -269,15 +269,52 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("Only owners can remove owners or admins");
       }
 
-      // Use updateMany with specific conditions for soft delete
-      await ctx.db.userOrganization.updateMany({
-        where: {
-          userId,
-          organizationId,
-          deletedAt: null
-        },
-        data: {
-          deletedAt: new Date()
+      // Check if user's activeOrganizationId matches the organization they're being removed from
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Use transaction to ensure both operations complete together
+      await ctx.db.$transaction(async (tx) => {
+        // Soft delete the user-organization relationship
+        await tx.userOrganization.updateMany({
+          where: {
+            userId,
+            organizationId,
+            deletedAt: null
+          },
+          data: {
+            deletedAt: new Date()
+          }
+        });
+
+        // If the user's active organization is the one they're being removed from,
+        // reset it to their personal organization or another organization they belong to
+        if (targetUser?.activeOrganizationId === organizationId) {
+          // Find another active organization for this user, preferring their personal org
+          const otherUserOrgs = await tx.userOrganization.findMany({
+            where: {
+              userId,
+              organizationId: { not: organizationId },
+              deletedAt: null
+            },
+            orderBy: {
+              // Personal org (user ID == org ID) comes first
+              organizationId: 'asc'
+            },
+            take: 1
+          });
+
+          // Default to personal organization (user ID) if no other orgs, or another org if available
+          const newActiveOrgId = otherUserOrgs.length > 0 
+            ? otherUserOrgs[0]?.organizationId ?? userId
+            : userId;
+
+          // Update the user's activeOrganizationId
+          await tx.user.update({
+            where: { id: userId },
+            data: { activeOrganizationId: newActiveOrgId }
+          });
         }
       });
 
@@ -299,5 +336,77 @@ export const userOrganizationRouter = createTRPCRouter({
       }
 
       return parseUserOrganization(removedUserOrg);
+    }),
+
+  // Restore a previously deleted user organization or create a new one
+  restoreOrCreate: protectedProcedure
+    .input(z.object({
+      userId: z.string(),
+      organizationId: z.string(),
+      role: MemberRoleEnum
+    }))
+    .output(UserOrganizationWithOrgSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { userId, organizationId, role } = input;
+        
+        // Check if user already has an active membership
+        const existingActiveUserOrg = await ctx.db.userOrganization.findFirst({
+          where: { 
+            userId,
+            organizationId,
+            deletedAt: null
+          }
+        });
+        
+        if (existingActiveUserOrg) {
+          throw new Error("User is already a member of this organization");
+        }
+        
+        // Look for a soft-deleted record
+        const deletedUserOrg = await ctx.db.userOrganization.findFirst({
+          where: {
+            userId,
+            organizationId,
+            deletedAt: { not: null }
+          }
+        });
+        
+        let userOrganization;
+        
+        if (deletedUserOrg) {
+          // Restore the existing record
+          userOrganization = await ctx.db.userOrganization.update({
+            where: { id: deletedUserOrg.id },
+            data: { 
+              deletedAt: null,
+              role,
+              updatedAt: new Date()
+            },
+            include: {
+              organization: true,
+              user: true
+            }
+          });
+        } else {
+          // Create a new record
+          userOrganization = await ctx.db.userOrganization.create({
+            data: {
+              userId,
+              organizationId,
+              role
+            },
+            include: {
+              organization: true,
+              user: true
+            }
+          });
+        }
+        
+        return parseUserOrganization(userOrganization);
+      } catch (error) {
+        console.error("restoreOrCreate error:", error);
+        throw error;
+      }
     }),
 });

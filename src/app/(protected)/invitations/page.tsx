@@ -1,9 +1,9 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Building, User, Clock } from 'lucide-react';
+import { Building, User, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '~/components/ui/button';
@@ -14,6 +14,7 @@ import { api } from '~/trpc/react';
 import { type OrganizationInvitation } from '~/validators/organization-invitations';
 import Image from 'next/image';
 import { useOrganizationContext } from '~/providers/organization-provider';
+import { MemberRole } from '~/validators/user-organizations';
 
 function InvitationContent() {
   const searchParams = useSearchParams();
@@ -22,34 +23,78 @@ function InvitationContent() {
   const router = useRouter();
   const { data: session } = useSession();
   const [accepting, setAccepting] = useState(false);
+  const [invitationState, setInvitationState] = useState<'valid' | 'invalid' | 'expired' | 'wrong-email' | 'already-accepted' | 'loading'>('loading');
   const utils = api.useUtils();
-  const {handleOrgSwitch} = useOrganizationContext()
+  const {handleOrgSwitch} = useOrganizationContext();
   
   // Query to get invitation details
-  const { data: invitation, error } = api.organizationInvitation.get.useQuery(
+  const { data: invitation, error, isLoading } = api.organizationInvitation.get.useQuery(
     { id: code ?? '' },
-    { enabled: !!code }
-  ) as { data: OrganizationInvitation | undefined, isLoading: boolean, error: Error | null };
+    { 
+      enabled: !!code,
+      retry: false, // Don't retry invalid invitations
+    }
+  );
+
+  // Use useEffect to validate the invitation when data changes
+  useEffect(() => {
+    if (invitation) {
+      validateInvitation(invitation);
+    } else if (error) {
+      setInvitationState('invalid');
+    }
+  }, [invitation, error]);
+
+  const validateInvitation = (invitation: OrganizationInvitation) => {
+    if (!invitation) {
+      setInvitationState('invalid');
+      return;
+    }
+
+    // Check if already accepted
+    if (invitation.acceptedAt) {
+      setInvitationState('already-accepted');
+      return;
+    }
+    
+    // Check if invitation is expired
+    if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
+      setInvitationState('expired');
+      return;
+    }
+    
+    // Check if email matches the logged-in user
+    if (session?.user?.email !== invitation.email) {
+      setInvitationState('wrong-email');
+      return;
+    }
+
+    // If all checks pass
+    setInvitationState('valid');
+  };
 
   // Mutation to accept invitation
-  const acceptInvitation = api.organizationInvitation.update.useMutation({
-    onSuccess: async () => {
-      toast.success("You've successfully joined the organization!");
-      await utils.organizationInvitation.get.invalidate();
-      await utils.userOrganization.get.invalidate();
-      await utils.organization.get.invalidate();
-      await utils.userOrganization.getAll.invalidate();
-      await handleOrgSwitch(invitation?.organizationId ?? '');
-      router.push('/projects');
-    },
+  const acceptInvitation = api.organizationInvitation.accept.useMutation({
     onError: (error) => {
       toast.error(`Failed to join: ${error.message}`);
       setAccepting(false);
+      
+      // Only update state for errors that occur during acceptance
+      if (error.message.includes("expired")) {
+        setInvitationState('expired');
+      } else if (error.message.includes("already been accepted")) {
+        // If already accepted, redirect to dashboard
+        router.push('/projects');
+      } else if (error.message.includes("email address")) {
+        setInvitationState('wrong-email');
+      } else {
+        setInvitationState('invalid');
+      }
     }
   });
 
-  // Create user organization mutation
-  const createUserOrganization = api.userOrganization.create.useMutation({
+  // Use restoreOrCreate instead of create
+  const restoreOrCreateUserOrganization = api.userOrganization.restoreOrCreate.useMutation({
     onError: (error) => {
       toast.error(`Failed to create organization connection: ${error.message}`);
       setAccepting(false);
@@ -63,17 +108,41 @@ function InvitationContent() {
       return;
     }
 
+    // Don't try to accept if invitation isn't valid
+    if (invitationState !== 'valid') {
+      return;
+    }
+
     setAccepting(true);
+    // Add a flag to track that we're in the process of accepting
+    const isAccepting = true;
     
-    // Create the user-organization connection first
-    createUserOrganization.mutate({
+    restoreOrCreateUserOrganization.mutate({
       userId: session.user.id,
       organizationId: invitation.organizationId,
-      role: invitation.role
+      role: invitation.role as MemberRole
     }, {
       onSuccess: () => {
         // Then update the invitation as accepted
-        acceptInvitation.mutate({ id: invitation.id, acceptedAt: new Date() });
+        acceptInvitation.mutate({ 
+          id: invitation.id 
+        }, {
+          onSuccess: async () => {
+            toast.success("You've successfully joined the organization!");
+            
+            // Immediately redirect without waiting for invalidations to complete
+            router.push('/projects');
+            
+            // Do these in the background after navigation has started
+            Promise.all([
+              utils.organizationInvitation.get.invalidate(),
+              utils.userOrganization.get.invalidate(),
+              utils.organization.get.invalidate(),
+              utils.userOrganization.getAll.invalidate(),
+              handleOrgSwitch(invitation.organizationId)
+            ]).catch(console.error);
+          }
+        });
       },
       onError: (error) => {
         setAccepting(false);
@@ -82,59 +151,70 @@ function InvitationContent() {
     });
   };
 
-  // Handle invitation errors
-  if (error) {
+  console.log('invitationState: ', invitationState);
+
+  // Display appropriate error card based on invitation state
+  if (invitationState === 'invalid' || error) {
     return (
-      <div className="container max-w-2xl mx-auto py-16 px-4">
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive">Invalid Invitation</CardTitle>
-            <CardDescription>
-              This invitation is either expired, already used, or invalid.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button onClick={() => router.push('/')}>Go to Homepage</Button>
-          </CardFooter>
-        </Card>
-      </div>
+      <ErrorCard 
+        title="Invalid Invitation"
+        description="This invitation link is either expired, already used, or invalid."
+        icon={<AlertCircle className="h-6 w-6 text-destructive" />}
+      />
     );
   }
 
-  // Check if invitation is expired
-  const isExpired = invitation?.expiresAt && new Date(invitation.expiresAt) < new Date();
-  if (isExpired) {
+  if (invitationState === 'expired') {
     return (
-      <div className="container max-w-2xl mx-auto py-16 px-4">
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive">Invitation Expired</CardTitle>
-            <CardDescription>
-              This invitation has expired. Please ask the organization admin to send a new invitation.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Button onClick={() => router.push('/')}>Go to Homepage</Button>
-          </CardFooter>
-        </Card>
-      </div>
+      <ErrorCard 
+        title="Invitation Expired"
+        description="This invitation has expired. Please ask the organization admin to send a new invitation."
+        icon={<Clock className="h-6 w-6 text-destructive" />}
+      />
     );
   }
 
-  // If email doesn't match the user's email
-  if (session?.user?.email !== invitation?.email) {
+  if (invitationState === 'already-accepted') {
+    return (
+      <ErrorCard 
+        title="Already Joined"
+        description="This invitation has already been accepted. You can access the organization from your dashboard."
+        icon={<Building className="h-6 w-6 text-primary" />}
+        buttonText="Go to Dashboard"
+        buttonAction={() => router.push('/projects')}
+      />
+    );
+  }
+
+  if (invitationState === 'wrong-email') {
+    return (
+      <ErrorCard 
+        title="Incorrect Account"
+        description={`This invitation was sent to ${invitation?.email}, but you're logged in as ${session?.user?.email}.`}
+        icon={<User className="h-6 w-6 text-destructive" />}
+        secondaryButton={
+          <Button onClick={() => router.push('/auth/signout')}>Sign Out</Button>
+        }
+      />
+    );
+  }
+
+  if (isLoading || invitationState === 'loading') {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
-        <Card className="border-destructive">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-destructive">Incorrect Account</CardTitle>
-            <CardDescription>
-              This invitation was sent to {invitation?.email}, but you&apos;re logged in as {session?.user?.email}.
-            </CardDescription>
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-full" />
           </CardHeader>
-          <CardFooter className="flex gap-4">
-            <Button onClick={() => router.push('/auth/signout')}>Sign Out</Button>
-            <Button variant="outline" onClick={() => router.push('/')}>Go to Homepage</Button>
+          <CardContent>
+            <div className="space-y-4">
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Skeleton className="h-10 w-32" />
           </CardFooter>
         </Card>
       </div>
@@ -207,7 +287,7 @@ function InvitationContent() {
             className="w-full sm:w-auto"
             size="lg"
             onClick={handleAcceptInvitation}
-            disabled={accepting}
+            disabled={accepting || invitationState !== 'valid'}
           >
             {accepting ? "Joining..." : "Accept & Join Organization"}
           </Button>
@@ -217,6 +297,45 @@ function InvitationContent() {
             onClick={() => router.push('/')}
           >
             Decline
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
+
+// Reusable error card component
+function ErrorCard({ 
+  title, 
+  description, 
+  icon,
+  buttonText = "Go to Homepage",
+  buttonAction = () => window.location.href = '/',
+  secondaryButton = null
+}: { 
+  title: string; 
+  description: string; 
+  icon?: React.ReactNode;
+  buttonText?: string;
+  buttonAction?: () => void;
+  secondaryButton?: React.ReactNode;
+}) {
+  return (
+    <div className="container max-w-2xl mx-auto py-16 px-4">
+      <Card className="border-destructive">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            {icon}
+            <span>{title}</span>
+          </CardTitle>
+          <CardDescription className="text-base">
+            {description}
+          </CardDescription>
+        </CardHeader>
+        <CardFooter className="flex gap-4">
+          {secondaryButton}
+          <Button variant="outline" onClick={buttonAction}>
+            {buttonText}
           </Button>
         </CardFooter>
       </Card>
