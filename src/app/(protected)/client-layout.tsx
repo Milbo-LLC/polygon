@@ -9,8 +9,6 @@ import { OrganizationProvider } from "~/providers/organization-provider";
 import { useSession } from "next-auth/react";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
-import { useSetAtom } from "jotai";
-import { activeOrganizationIdAtom } from "~/app/(protected)/atoms";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -29,7 +27,6 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const setActiveOrganizationId = useSetAtom(activeOrganizationIdAtom);
   
   // Do all checks in useEffect to avoid hydration mismatch
   useEffect(() => {
@@ -62,26 +59,16 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
         
         // Set user ID and organization ID
         if (session.user?.id) {
+          console.log('Setting user ID and organization ID', session.user.id, session.user.activeOrganizationId);
           setUserId(session.user.id);
-          
-          // Get the first organization from the session if available
-          const firstOrgId = session.user.organizations?.[0]?.id;
-          
-          // Set organization ID only if not already set
-          setActiveOrganizationId((currentOrgId) => {
-            if (currentOrgId) return currentOrgId;
-            return firstOrgId ?? session.user.id;
-          });
         }
         
         // We're done loading
         setIsLoading(false);
       }
     }
-  }, [session, status, pathname, searchParams, router, posthog, setActiveOrganizationId]);
+  }, [session, status, pathname, searchParams, router, posthog ]);
 
-  // Always render the same initial structure for both server and client
-  // Only change what's shown based on state that's updated in useEffect
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-full">

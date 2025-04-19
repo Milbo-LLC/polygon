@@ -69,6 +69,7 @@ model User {
     userOrganizations UserOrganization[]
     notifications     Notification[]
     organizationInvitations OrganizationInvitation[]
+    activeOrganizationId String?
 }
 
 model VerificationToken {

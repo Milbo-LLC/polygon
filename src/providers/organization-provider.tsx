@@ -2,8 +2,6 @@
 
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
-import { activeOrganizationIdAtom } from '~/app/(protected)/atoms';
-import { useSetAtom } from 'jotai';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { useSession } from 'next-auth/react';
@@ -43,14 +41,9 @@ export function OrganizationProvider({
     enabled: !!userId,
   });
 
-  // Fetch all organizations for the user
   const { data: userOrganizations = [], isLoading: loadingUserOrganizations } = api.userOrganization.getAll.useQuery(undefined, {
     enabled: !!userId,
   });
-
-  const setActiveOrganizationId = useSetAtom(
-    activeOrganizationIdAtom,
-  );
 
   const { data: organizationUser } = api.userOrganization.get.useQuery(undefined, {
     enabled: !!userId,
@@ -61,7 +54,6 @@ export function OrganizationProvider({
     return organizationUser.role;
   }, [user, organizationUser]);
 
-  // Format organizations into the correct structure
   const organizations = useMemo(() => {
     return userOrganizations.map((userOrg) => ({
       organization: userOrg.organization,
@@ -84,7 +76,15 @@ export function OrganizationProvider({
     }
   });
 
-  // Function to update the organization
+  const updateUserMutation = api.user.update.useMutation({
+    onSuccess: async () => {
+      await utils.user.invalidate();
+    },
+    onError: (error) => {
+      console.error('error updating user: ', error);
+    }
+  });
+
   const updateOrganization = async (data: {
     id: string;
     name?: string;
@@ -105,8 +105,12 @@ export function OrganizationProvider({
   }
 
   const handleOrgSwitch = async (organizationId: string) => {
+    console.log('Switching to organization:', organizationId);
     try {
-      setActiveOrganizationId(organizationId);
+      await updateUserMutation.mutateAsync({
+        id: user?.id,
+        activeOrganizationId: organizationId,
+      });
       await utils.invalidate();
       window.location.reload();
     } catch (error) {

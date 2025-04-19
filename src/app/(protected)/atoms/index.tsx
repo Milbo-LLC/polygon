@@ -4,8 +4,6 @@ import { type Tool, type Dimension } from "~/app/_components/sketch/_components/
 
 export const sidebarCollapsedAtom = atomWithStorage<boolean>("polygon:sidebar:collapsed", false);
 
-export const activeOrganizationIdAtom = atomWithStorage<string | null>("polygon:activeOrganizationId", null);
-
 // Theme options: 'light', 'dark', or 'system'
 export type ThemeMode = 'light' | 'dark' | 'system';
 
