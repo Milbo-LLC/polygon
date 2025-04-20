@@ -94,7 +94,6 @@ model Organization {
 }
 
 model UserOrganization {
-    id             String    @id @default(cuid())
     createdAt      DateTime  @default(now())
     updatedAt      DateTime  @default(now()) @updatedAt
     deletedAt      DateTime?
@@ -105,8 +104,7 @@ model UserOrganization {
     user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
     organization Organization @relation(fields: [organizationId], references: [id])
 
-    @@unique([userId, organizationId, deletedAt], name: "activeUserOrganization")
-    @@index([userId, organizationId])
+    @@id(name: "id", [userId, organizationId])
 }
 
 model Project {

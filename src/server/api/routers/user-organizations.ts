@@ -375,19 +375,36 @@ export const userOrganizationRouter = createTRPCRouter({
         let userOrganization;
         
         if (deletedUserOrg) {
-          // Restore the existing record
-          userOrganization = await ctx.db.userOrganization.update({
-            where: { id: deletedUserOrg.id },
+          // Restore the existing record using updateMany which doesn't require a unique key
+          await ctx.db.userOrganization.updateMany({
+            where: { 
+              userId,
+              organizationId,
+              deletedAt: { not: null }
+            },
             data: { 
               deletedAt: null,
               role,
               updatedAt: new Date()
+            }
+          });
+          
+          // Then fetch the updated record
+          userOrganization = await ctx.db.userOrganization.findFirst({
+            where: {
+              userId,
+              organizationId,
+              deletedAt: null
             },
             include: {
               organization: true,
               user: true
             }
           });
+          
+          if (!userOrganization) {
+            throw new Error("Failed to restore user organization");
+          }
         } else {
           // Create a new record
           userOrganization = await ctx.db.userOrganization.create({
