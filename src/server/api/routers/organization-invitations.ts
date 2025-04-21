@@ -20,12 +20,11 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("No active organization");
       }
 
-      // Check if user has permission to create invitations (must be owner or admin)
       const userOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
           organizationId: input.organizationId,
-          role: { in: ['owner', 'admin'] }, // Only owners and admins can send invitations
+          role: { in: ['owner', 'admin'] },
           deletedAt: null
         }
       });
@@ -34,19 +33,18 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("You don't have permission to send invitations for this organization");
       }
 
-      // Check if the user with this email is already a member of the organization
+
       const existingUser = await ctx.db.user.findUnique({
         where: { email: input.email },
         select: { id: true }
       });
 
       if (existingUser) {
-        // User exists, check if they're already in the organization
         const existingMembership = await ctx.db.userOrganization.findFirst({
           where: {
             userId: existingUser.id,
             organizationId: input.organizationId,
-            deletedAt: null // Only check active memberships
+            deletedAt: null
           }
         });
 
@@ -55,7 +53,6 @@ export const organizationInvitationRouter = createTRPCRouter({
         }
       }
 
-      // Check for pending invitations
       const pendingInvitation = await ctx.db.organizationInvitation.findFirst({
         where: {
           email: input.email,
@@ -63,7 +60,7 @@ export const organizationInvitationRouter = createTRPCRouter({
           acceptedAt: null,
           deletedAt: null,
           expiresAt: {
-            gt: new Date() // Not expired
+            gt: new Date()
           }
         }
       });
@@ -74,7 +71,6 @@ export const organizationInvitationRouter = createTRPCRouter({
 
       const expiresAt = new Date(Date.now() + ONE_WEEK_IN_MS);
 
-      // Create a data object with all properties explicitly typed
       const data = {
         email: input.email,
         organizationId: input.organizationId,
@@ -83,9 +79,7 @@ export const organizationInvitationRouter = createTRPCRouter({
         expiresAt,
       };
 
-      // Use a transaction to ensure both actions complete or fail together
       const [organizationInvitation] = await ctx.db.$transaction([
-        // Create the invitation
         ctx.db.organizationInvitation.create({
           data,
           include: {
@@ -94,7 +88,6 @@ export const organizationInvitationRouter = createTRPCRouter({
           },
         }),
         
-        // Create a notification record for tracking
         ctx.db.notification.create({
           data: {
             userId: ctx.session.user.id,
@@ -106,7 +99,6 @@ export const organizationInvitationRouter = createTRPCRouter({
         })
       ]);
 
-      // Fetch organization and inviter details for the email
       const [organization, inviter] = await Promise.all([
         ctx.db.organization.findUnique({
           where: { id: input.organizationId },
@@ -116,7 +108,6 @@ export const organizationInvitationRouter = createTRPCRouter({
         })
       ]);
 
-      // Send the invitation email
       if (organization?.name && inviter?.name) {
         await sendOrganizationInvitationEmail(
           input.email,

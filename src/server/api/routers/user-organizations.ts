@@ -158,12 +158,10 @@ export const userOrganizationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId, organizationId, role } = input;
 
-      // Prevent setting role to owner
       if (role === "owner") {
         throw new Error("Cannot set a user's role to owner");
       }
 
-      // Check if user has permission to update
       const currentUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
@@ -177,7 +175,6 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("You don't have permission to update this user's role");
       }
 
-      // Find the user organization record to update
       const targetUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,
@@ -194,12 +191,10 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("User organization not found");
       }
 
-      // Prevent changing an owner's role
       if (targetUserOrg.role as MemberRole === "owner") {
         throw new Error("Owner roles cannot be changed");
       }
 
-      // Use updateMany with specific conditions instead of update by ID
       await ctx.db.userOrganization.updateMany({
         where: {
           userId,
@@ -211,7 +206,6 @@ export const userOrganizationRouter = createTRPCRouter({
         }
       });
 
-      // Fetch the updated record
       const updatedUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,
@@ -242,7 +236,6 @@ export const userOrganizationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId, organizationId } = input;
 
-      // Check if user has permission to remove
       const currentUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
@@ -339,7 +332,6 @@ export const userOrganizationRouter = createTRPCRouter({
       try {
         const { userId, organizationId, role } = input;
         
-        // Check if user already has an active membership
         const existingActiveUserOrg = await ctx.db.userOrganization.findFirst({
           where: { 
             userId,
@@ -352,7 +344,6 @@ export const userOrganizationRouter = createTRPCRouter({
           throw new Error("User is already a member of this organization");
         }
         
-        // Look for a soft-deleted record
         const deletedUserOrg = await ctx.db.userOrganization.findFirst({
           where: {
             userId,
@@ -364,7 +355,6 @@ export const userOrganizationRouter = createTRPCRouter({
         let userOrganization;
         
         if (deletedUserOrg) {
-          // Restore the existing record using updateMany which doesn't require a unique key
           await ctx.db.userOrganization.updateMany({
             where: { 
               userId,
@@ -378,7 +368,6 @@ export const userOrganizationRouter = createTRPCRouter({
             }
           });
           
-          // Then fetch the updated record
           userOrganization = await ctx.db.userOrganization.findFirst({
             where: {
               userId,
@@ -395,7 +384,6 @@ export const userOrganizationRouter = createTRPCRouter({
             throw new Error("Failed to restore user organization");
           }
         } else {
-          // Create a new record
           userOrganization = await ctx.db.userOrganization.create({
             data: {
               userId,

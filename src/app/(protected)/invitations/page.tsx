@@ -16,6 +16,15 @@ import Image from 'next/image';
 import { useOrganizationContext } from '~/providers/organization-provider';
 import { MemberRole } from '~/validators/user-organizations';
 
+enum InvitationState {
+  LOADING = 'loading',
+  VALID = 'valid',
+  INVALID = 'invalid',
+  EXPIRED = 'expired',
+  WRONG_EMAIL = 'wrong-email',
+  ALREADY_ACCEPTED = 'already-accepted'
+}
+
 function InvitationContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
@@ -23,67 +32,62 @@ function InvitationContent() {
   const router = useRouter();
   const { data: session } = useSession();
   const [accepting, setAccepting] = useState(false);
-  const [invitationState, setInvitationState] = useState<'valid' | 'invalid' | 'expired' | 'wrong-email' | 'already-accepted' | 'loading'>('loading');
+  const [invitationState, setInvitationState] = useState<InvitationState>(InvitationState.LOADING);
   const {handleOrgSwitch} = useOrganizationContext();
   
-  // Query to get invitation details
   const { data: invitation, error, isLoading } = api.organizationInvitation.get.useQuery(
     { id: code ?? '' },
     { 
       enabled: !!code,
-      retry: false, // Don't retry invalid invitations
+      retry: false,
     }
   );
 
-  // Use useEffect to validate the invitation when data changes
   useEffect(() => {
     if (invitation) {
       validateInvitation(invitation);
     } else if (error) {
-      setInvitationState('invalid');
+      setInvitationState(InvitationState.INVALID);
     }
   }, [invitation, error]);
 
   const validateInvitation = (invitation: OrganizationInvitation) => {
     if (!invitation) {
-      setInvitationState('invalid');
+      setInvitationState(InvitationState.INVALID);
       return;
     }
 
     if (invitation.acceptedAt) {
-      setInvitationState('already-accepted');
+      setInvitationState(InvitationState.ALREADY_ACCEPTED);
       return;
     }
     
     if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
-      setInvitationState('expired');
+      setInvitationState(InvitationState.EXPIRED);
       return;
     }
     
     if (session?.user?.email !== invitation.email) {
-      setInvitationState('wrong-email');
+      setInvitationState(InvitationState.WRONG_EMAIL);
       return;
     }
 
-    setInvitationState('valid');
+    setInvitationState(InvitationState.VALID);
   };
 
-  // Mutation to accept invitation
   const acceptInvitation = api.organizationInvitation.accept.useMutation({
     onError: (error) => {
       toast.error(`Failed to join: ${error.message}`);
       setAccepting(false);
       
-      // Only update state for errors that occur during acceptance
       if (error.message.includes("expired")) {
-        setInvitationState('expired');
+        setInvitationState(InvitationState.EXPIRED);
       } else if (error.message.includes("already been accepted")) {
-        // If already accepted, redirect to dashboard
         router.push('/projects');
       } else if (error.message.includes("email address")) {
-        setInvitationState('wrong-email');
+        setInvitationState(InvitationState.WRONG_EMAIL);
       } else {
-        setInvitationState('invalid');
+        setInvitationState(InvitationState.INVALID);
       }
     }
   });
@@ -101,7 +105,7 @@ function InvitationContent() {
       return;
     }
 
-    if (invitationState !== 'valid') {
+    if (invitationState !== InvitationState.VALID) {
       return;
     }
 
@@ -134,7 +138,7 @@ function InvitationContent() {
     });
   };
 
-  if (invitationState === 'invalid' || error) {
+  if (invitationState === InvitationState.INVALID || error) {
     return (
       <ErrorCard 
         title="Invalid Invitation"
@@ -144,7 +148,7 @@ function InvitationContent() {
     );
   }
 
-  if (invitationState === 'expired') {
+  if (invitationState === InvitationState.EXPIRED) {
     return (
       <ErrorCard 
         title="Invitation Expired"
@@ -154,7 +158,7 @@ function InvitationContent() {
     );
   }
 
-  if (invitationState === 'already-accepted') {
+  if (invitationState === InvitationState.ALREADY_ACCEPTED) {
     return (
       <ErrorCard 
         title="Already Joined"
@@ -166,7 +170,7 @@ function InvitationContent() {
     );
   }
 
-  if (invitationState === 'wrong-email') {
+  if (invitationState === InvitationState.WRONG_EMAIL) {
     return (
       <ErrorCard 
         title="Incorrect Account"
@@ -179,7 +183,7 @@ function InvitationContent() {
     );
   }
 
-  if (isLoading || invitationState === 'loading') {
+  if (isLoading || invitationState === InvitationState.LOADING) {
     return (
       <div className="container max-w-2xl mx-auto py-16 px-4">
         <Card>
@@ -267,7 +271,7 @@ function InvitationContent() {
             className="w-full sm:w-auto"
             size="lg"
             onClick={handleAcceptInvitation}
-            disabled={accepting || invitationState !== 'valid'}
+            disabled={accepting || invitationState !== InvitationState.VALID}
           >
             {accepting ? "Joining..." : "Accept & Join Organization"}
           </Button>
@@ -284,7 +288,6 @@ function InvitationContent() {
   );
 }
 
-// Reusable error card component
 function ErrorCard({ 
   title, 
   description, 
