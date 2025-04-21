@@ -24,7 +24,6 @@ function InvitationContent() {
   const { data: session } = useSession();
   const [accepting, setAccepting] = useState(false);
   const [invitationState, setInvitationState] = useState<'valid' | 'invalid' | 'expired' | 'wrong-email' | 'already-accepted' | 'loading'>('loading');
-  const utils = api.useUtils();
   const {handleOrgSwitch} = useOrganizationContext();
   
   // Query to get invitation details
@@ -51,25 +50,21 @@ function InvitationContent() {
       return;
     }
 
-    // Check if already accepted
     if (invitation.acceptedAt) {
       setInvitationState('already-accepted');
       return;
     }
     
-    // Check if invitation is expired
     if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
       setInvitationState('expired');
       return;
     }
     
-    // Check if email matches the logged-in user
     if (session?.user?.email !== invitation.email) {
       setInvitationState('wrong-email');
       return;
     }
 
-    // If all checks pass
     setInvitationState('valid');
   };
 
@@ -93,7 +88,6 @@ function InvitationContent() {
     }
   });
 
-  // Use restoreOrCreate instead of create
   const restoreOrCreateUserOrganization = api.userOrganization.restoreOrCreate.useMutation({
     onError: (error) => {
       toast.error(`Failed to create organization connection: ${error.message}`);
@@ -101,21 +95,17 @@ function InvitationContent() {
     }
   });
 
-  // Handle invitation acceptance
   const handleAcceptInvitation = () => {
     if (!(invitation && session?.user)) {
       toast.error("Missing invitation details or user not authenticated");
       return;
     }
 
-    // Don't try to accept if invitation isn't valid
     if (invitationState !== 'valid') {
       return;
     }
 
     setAccepting(true);
-    // Add a flag to track that we're in the process of accepting
-    const isAccepting = true;
     
     restoreOrCreateUserOrganization.mutate({
       userId: session.user.id,
@@ -123,24 +113,17 @@ function InvitationContent() {
       role: invitation.role as MemberRole
     }, {
       onSuccess: () => {
-        // Then update the invitation as accepted
         acceptInvitation.mutate({ 
           id: invitation.id 
         }, {
-          onSuccess: async () => {
+          onSuccess: () => {
             toast.success("You've successfully joined the organization!");
             
-            // Immediately redirect without waiting for invalidations to complete
             router.push('/projects');
-            
-            // Do these in the background after navigation has started
-            Promise.all([
-              utils.organizationInvitation.get.invalidate(),
-              utils.userOrganization.get.invalidate(),
-              utils.organization.get.invalidate(),
-              utils.userOrganization.getAll.invalidate(),
-              handleOrgSwitch(invitation.organizationId)
-            ]).catch(console.error);
+
+            void handleOrgSwitch(invitation.organizationId).catch(error => {
+              console.error("Error switching organization:", error);
+            });
           }
         });
       },
@@ -151,9 +134,6 @@ function InvitationContent() {
     });
   };
 
-  console.log('invitationState: ', invitationState);
-
-  // Display appropriate error card based on invitation state
   if (invitationState === 'invalid' || error) {
     return (
       <ErrorCard 

@@ -263,20 +263,16 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("User organization not found");
       }
 
-      // Only owners can remove other owners/admins
       if ((targetUserOrg.role === "owner" || targetUserOrg.role === "admin") 
           && currentUserOrg.role !== "owner") {
         throw new Error("Only owners can remove owners or admins");
       }
 
-      // Check if user's activeOrganizationId matches the organization they're being removed from
       const targetUser = await ctx.db.user.findUnique({
         where: { id: userId }
       });
 
-      // Use transaction to ensure both operations complete together
       await ctx.db.$transaction(async (tx) => {
-        // Soft delete the user-organization relationship
         await tx.userOrganization.updateMany({
           where: {
             userId,
@@ -288,10 +284,7 @@ export const userOrganizationRouter = createTRPCRouter({
           }
         });
 
-        // If the user's active organization is the one they're being removed from,
-        // reset it to their personal organization or another organization they belong to
         if (targetUser?.activeOrganizationId === organizationId) {
-          // Find another active organization for this user, preferring their personal org
           const otherUserOrgs = await tx.userOrganization.findMany({
             where: {
               userId,
@@ -299,18 +292,15 @@ export const userOrganizationRouter = createTRPCRouter({
               deletedAt: null
             },
             orderBy: {
-              // Personal org (user ID == org ID) comes first
               organizationId: 'asc'
             },
             take: 1
           });
 
-          // Default to personal organization (user ID) if no other orgs, or another org if available
           const newActiveOrgId = otherUserOrgs.length > 0 
             ? otherUserOrgs[0]?.organizationId ?? userId
             : userId;
 
-          // Update the user's activeOrganizationId
           await tx.user.update({
             where: { id: userId },
             data: { activeOrganizationId: newActiveOrgId }
@@ -318,7 +308,6 @@ export const userOrganizationRouter = createTRPCRouter({
         }
       });
 
-      // Return the updated record for consistency
       const removedUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,

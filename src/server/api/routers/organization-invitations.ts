@@ -173,7 +173,6 @@ export const organizationInvitationRouter = createTRPCRouter({
     .input(UpdateOrganizationInvitationSchema)
     .output(OrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
-      // Fetch the invitation to get the organization ID
       const invitation = await ctx.db.organizationInvitation.findUnique({
         where: { id: input.id },
         select: { organizationId: true }
@@ -183,12 +182,11 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("Invitation not found");
       }
       
-      // Check if user has permission to update invitations (must be owner or admin)
       const userOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
           organizationId: invitation.organizationId,
-          role: { in: ['owner', 'admin'] }, // Only owners and admins can update invitations
+          role: { in: ['owner', 'admin'] },
           deletedAt: null
         }
       });
@@ -218,7 +216,6 @@ export const organizationInvitationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
       
-      // Find the invitation
       const invitation = await ctx.db.organizationInvitation.findUnique({
         where: { id },
         include: {
@@ -231,22 +228,18 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("Invitation not found");
       }
       
-      // Check if the current user is the one who was invited
       if (invitation.email !== ctx.session.user.email) {
         throw new Error("You can only accept invitations sent to your email address");
       }
       
-      // Check if invitation is expired
       if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
         throw new Error("This invitation has expired");
       }
       
-      // Check if already accepted
       if (invitation.acceptedAt) {
         throw new Error("This invitation has already been accepted");
       }
       
-      // Update the invitation as accepted
       const updatedInvitation = await ctx.db.organizationInvitation.update({
         where: { id },
         data: { acceptedAt: new Date() },
