@@ -1,55 +1,45 @@
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-interface GridProps {
-  size?: number;
-  divisions?: number;
-  fadeDistance?: number;
-}
+export default function Grid() {
+  const { camera, scene } = useThree();
+  const majorGridRef = useRef<THREE.GridHelper | null>(null);
+  const minorGridRef = useRef<THREE.GridHelper | null>(null);
+  const [currentScale, setCurrentScale] = useState<number | null>(null);
 
-export default function Grid({ 
-  size = 100, 
-  divisions = 100,
-  fadeDistance = 50
-}: GridProps) {
-  const gridRef = useRef<THREE.GridHelper>(null);
-  
-  // Create grid helper with custom material for fadeout effect
-  useEffect(() => {
-    if (gridRef.current) {
-      // Add fade effect to the grid material
-      const grid = gridRef.current;
-      
-      // Use custom shader material to create a fade-out effect
-      if (grid.material instanceof THREE.Material) {
-        // Add fadeDistance uniform to the existing shader
-        if (Array.isArray(grid.material)) {
-          grid.material.forEach((mat: THREE.Material) => {
-            if (mat.userData) {
-              mat.userData.fadeDistance = fadeDistance;
-            }
-            mat.transparent = true;
-            mat.opacity = 0.6;
-          });
-        } else {
-          if (grid.material.userData) {
-            grid.material.userData.fadeDistance = fadeDistance;
+  useFrame(() => {
+    const distance = camera.position.length();
+    const scale = Math.pow(10, Math.floor(Math.log10(distance)));
+
+    if (scale !== currentScale) {
+      [majorGridRef, minorGridRef].forEach(ref => {
+        if (ref.current) {
+          scene.remove(ref.current);
+          ref.current.geometry.dispose();
+          if (Array.isArray(ref.current.material)) {
+            ref.current.material.forEach((m) => m.dispose());
+          } else {
+            ref.current.material.dispose();
           }
-          grid.material.transparent = true;
-          grid.material.opacity = 0.6;
         }
-      }
-    }
-  }, [fadeDistance]);
+      });
 
-  return (
-    <>
-      <gridHelper 
-        ref={gridRef}
-        args={[size, divisions, '#6f6f6f', '#3471eb']} 
-        position={[0, 0, 0]}
-      />
-      <axesHelper args={[size]} />
-    </>
-  );
+      const major = new THREE.GridHelper(scale * 10, 10, '#3471eb', '#3471eb');
+      major.material.opacity = 0.6;
+      major.material.transparent = true;
+      scene.add(major);
+      majorGridRef.current = major;
+
+      const minor = new THREE.GridHelper(scale * 10, 100, '#3471eb', '#3471eb');
+      minor.material.opacity = 0.2;
+      minor.material.transparent = true;
+      scene.add(minor);
+      minorGridRef.current = minor;
+
+      setCurrentScale(scale);
+    }
+  });
+
+  return null;
 }
