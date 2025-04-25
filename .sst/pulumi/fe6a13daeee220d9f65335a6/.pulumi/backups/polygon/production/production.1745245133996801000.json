@@ -1,0 +1,3114 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/polygon/production",
+        "latest": {
+            "manifest": {
+                "time": "2025-04-21T10:18:53.934349-04:00",
+                "magic": "77be084e65c763fde87b290a0a6ba5aaacad687cde41d20d76768df34b0db77a",
+                "version": "v3.146.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:EB6NrLiIJS0=:v1:2LWjllQMpGmzxwwB:sJkrBJZTiavn1zb3TdzUG1t23CjZJw=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack",
+                    "outputs": {
+                        "_protect": true
+                    },
+                    "created": "2025-03-31T11:45:08.548931Z",
+                    "modified": "2025-03-31T11:45:08.548931Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/runtime/stack.ts#38,23"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Cluster::MyCluster",
+                    "custom": false,
+                    "type": "sst:aws:Cluster",
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.964977Z",
+                    "modified": "2025-03-31T11:45:09.964977Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/cluster.ts#161,5"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "custom": false,
+                    "type": "sst:aws:Service",
+                    "outputs": {
+                        "_hint": "http://MyServiceLoadBa-xssdbdta-2037283921.us-east-1.elb.amazonaws.com"
+                    },
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.960919Z",
+                    "modified": "2025-03-31T11:45:09.960919Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#1608,5"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:sst:LinkRef::MyVpcLinkRef",
+                    "custom": false,
+                    "type": "sst:sst:LinkRef",
+                    "outputs": {
+                        "properties": {
+                            "type": "sst.aws.Vpc"
+                        },
+                        "target": "MyVpc"
+                    },
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.968726Z",
+                    "modified": "2025-03-31T11:45:09.968726Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/link.ts#25,7"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Bucket::MyBucket",
+                    "custom": false,
+                    "type": "sst:aws:Bucket",
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.966567Z",
+                    "modified": "2025-03-31T11:45:09.966567Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/bucket.ts#738,5"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "custom": false,
+                    "type": "sst:aws:Vpc",
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.115557Z",
+                    "modified": "2025-03-31T11:45:09.115557Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/vpc.ts#340,5"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:sst:LinkRef::MyServiceLinkRef",
+                    "custom": false,
+                    "type": "sst:sst:LinkRef",
+                    "outputs": {
+                        "properties": {
+                            "service": "MyService.production.polygon.sst",
+                            "type": "sst.aws.Service",
+                            "url": "http://MyServiceLoadBa-xssdbdta-2037283921.us-east-1.elb.amazonaws.com"
+                        },
+                        "target": "MyService"
+                    },
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.962396Z",
+                    "modified": "2025-03-31T11:45:09.962396Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/link.ts#25,7"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:sst:LinkRef::MyBucketLinkRef",
+                    "custom": false,
+                    "type": "sst:sst:LinkRef",
+                    "outputs": {
+                        "include": [
+                            {
+                                "actions": [
+                                    "s3:*"
+                                ],
+                                "resources": [
+                                    "arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde",
+                                    "arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*"
+                                ],
+                                "type": "aws.permission"
+                            }
+                        ],
+                        "properties": {
+                            "name": "polygon-production-mybucketbucket-wasvnwde",
+                            "type": "sst.aws.Bucket"
+                        },
+                        "target": "MyBucket"
+                    },
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:09.96414Z",
+                    "modified": "2025-03-31T11:45:09.96414Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/link.ts#25,7"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2",
+                    "custom": true,
+                    "id": "ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "type": "pulumi:providers:aws",
+                    "inputs": {
+                        "__internal": {},
+                        "defaultTags": "{\"tags\":{\"sst:app\":\"polygon\",\"sst:stage\":\"production\"}}",
+                        "region": "us-east-1",
+                        "skipCredentialsValidation": "false",
+                        "skipRegionValidation": "true",
+                        "version": "6.66.2"
+                    },
+                    "outputs": {
+                        "defaultTags": "{\"tags\":{\"sst:app\":\"polygon\",\"sst:stage\":\"production\"}}",
+                        "region": "us-east-1",
+                        "skipCredentialsValidation": "false",
+                        "skipRegionValidation": "true",
+                        "version": "6.66.2"
+                    },
+                    "created": "2025-03-31T11:45:09.959856Z",
+                    "modified": "2025-03-31T11:45:09.959856Z"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Cluster$sst:sst:Version::MyClusterVersion",
+                    "custom": false,
+                    "type": "sst:sst:Version",
+                    "outputs": {
+                        "target": "MyCluster",
+                        "version": 2
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Cluster::MyCluster",
+                    "created": "2025-03-31T11:45:10.114012Z",
+                    "modified": "2025-03-31T11:45:10.114012Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/component.ts#417,7"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                    "custom": true,
+                    "id": "arn:aws:ecs:us-east-1:385192180425:cluster/polygon-production-MyClusterCluster-basendrt",
+                    "type": "aws:ecs/cluster:Cluster",
+                    "inputs": {
+                        "__defaults": [],
+                        "name": "polygon-production-MyClusterCluster-basendrt",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:ref:version": "2.0",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:ref:version": "2.0",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:ecs:us-east-1:385192180425:cluster/polygon-production-MyClusterCluster-basendrt",
+                        "configuration": null,
+                        "id": "arn:aws:ecs:us-east-1:385192180425:cluster/polygon-production-MyClusterCluster-basendrt",
+                        "name": "polygon-production-MyClusterCluster-basendrt",
+                        "serviceConnectDefaults": null,
+                        "settings": [
+                            {
+                                "name": "containerInsights",
+                                "value": "disabled"
+                            }
+                        ],
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:ref:version": "2.0",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:ref:version": "2.0",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Cluster::MyCluster",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "name": [],
+                        "tags": []
+                    },
+                    "created": "2025-03-31T11:45:20.791329Z",
+                    "modified": "2025-03-31T11:45:20.791329Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/cluster.ts#242,14",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$sst:sst:Version::MyVpcVersion",
+                    "custom": false,
+                    "type": "sst:sst:Version",
+                    "outputs": {
+                        "target": "MyVpc",
+                        "version": 2
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "created": "2025-03-31T11:45:09.967855Z",
+                    "modified": "2025-03-31T11:45:09.967855Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/component.ts#417,7"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket",
+                    "custom": true,
+                    "id": "polygon-production-mybucketbucket-wasvnwde",
+                    "type": "aws:s3/bucketV2:BucketV2",
+                    "inputs": {
+                        "__defaults": [],
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "forceDestroy": true,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":1200000000000,\"delete\":3600000000000,\"read\":1200000000000,\"update\":1200000000000}}",
+                        "accelerationStatus": "",
+                        "acl": null,
+                        "arn": "arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde",
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "bucketDomainName": "polygon-production-mybucketbucket-wasvnwde.s3.amazonaws.com",
+                        "bucketPrefix": "",
+                        "bucketRegionalDomainName": "polygon-production-mybucketbucket-wasvnwde.s3.us-east-1.amazonaws.com",
+                        "corsRules": [],
+                        "forceDestroy": true,
+                        "grants": [
+                            {
+                                "id": "81d6673e274992e1d37a36b55471009c3719918be5852c54a37cf89716d9dce5",
+                                "permissions": [
+                                    "FULL_CONTROL"
+                                ],
+                                "type": "CanonicalUser",
+                                "uri": ""
+                            }
+                        ],
+                        "hostedZoneId": "Z3AQBSTGFYJSTF",
+                        "id": "polygon-production-mybucketbucket-wasvnwde",
+                        "lifecycleRules": [],
+                        "loggings": [],
+                        "objectLockConfiguration": null,
+                        "objectLockEnabled": false,
+                        "policy": "",
+                        "region": "us-east-1",
+                        "replicationConfigurations": [],
+                        "requestPayer": "BucketOwner",
+                        "serverSideEncryptionConfigurations": [
+                            {
+                                "rules": [
+                                    {
+                                        "applyServerSideEncryptionByDefaults": [
+                                            {
+                                                "kmsMasterKeyId": "",
+                                                "sseAlgorithm": "AES256"
+                                            }
+                                        ],
+                                        "bucketKeyEnabled": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "versionings": [
+                            {
+                                "enabled": false,
+                                "mfaDelete": false
+                            }
+                        ],
+                        "websiteDomain": null,
+                        "websiteEndpoint": null,
+                        "websites": []
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Bucket::MyBucket",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "bucket": [],
+                        "forceDestroy": []
+                    },
+                    "retainOnDelete": true,
+                    "created": "2025-03-31T11:45:11.557699Z",
+                    "modified": "2025-03-31T11:45:11.557699Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/bucket.ts#794,14",
+                    "ignoreChanges": [
+                        "bucket"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc",
+                    "custom": true,
+                    "id": "vpc-03d37e93f273840a5",
+                    "type": "aws:ec2/vpc:Vpc",
+                    "inputs": {
+                        "__defaults": [],
+                        "cidrBlock": "10.0.0.0/16",
+                        "enableDnsHostnames": true,
+                        "enableDnsSupport": true,
+                        "tags": {
+                            "Name": "polygon-production-MyVpc VPC",
+                            "sst:app": "polygon",
+                            "sst:component-version": "2",
+                            "sst:ref-version": "2",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpc VPC",
+                            "sst:app": "polygon",
+                            "sst:component-version": "2",
+                            "sst:ref-version": "2",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "__meta": "{\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:vpc/vpc-03d37e93f273840a5",
+                        "assignGeneratedIpv6CidrBlock": false,
+                        "cidrBlock": "10.0.0.0/16",
+                        "defaultNetworkAclId": "acl-016ea98e4bc39c4d9",
+                        "defaultRouteTableId": "rtb-0794030b3a01e7494",
+                        "defaultSecurityGroupId": "sg-028f20a018a5c91e5",
+                        "dhcpOptionsId": "dopt-5f56d638",
+                        "enableDnsHostnames": true,
+                        "enableDnsSupport": true,
+                        "enableNetworkAddressUsageMetrics": false,
+                        "id": "vpc-03d37e93f273840a5",
+                        "instanceTenancy": "default",
+                        "ipv4IpamPoolId": null,
+                        "ipv4NetmaskLength": null,
+                        "ipv6AssociationId": "",
+                        "ipv6CidrBlock": "",
+                        "ipv6CidrBlockNetworkBorderGroup": "",
+                        "ipv6IpamPoolId": "",
+                        "ipv6NetmaskLength": 0,
+                        "mainRouteTableId": "rtb-0794030b3a01e7494",
+                        "ownerId": "385192180425",
+                        "tags": {
+                            "Name": "polygon-production-MyVpc VPC",
+                            "sst:app": "polygon",
+                            "sst:component-version": "2",
+                            "sst:ref-version": "2",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpc VPC",
+                            "sst:app": "polygon",
+                            "sst:component-version": "2",
+                            "sst:ref-version": "2",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "cidrBlock": [],
+                        "enableDnsHostnames": [],
+                        "enableDnsSupport": [],
+                        "tags": []
+                    },
+                    "created": "2025-03-31T11:45:22.10914Z",
+                    "modified": "2025-03-31T11:45:22.10914Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/vpc.ts#707,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceExecutionRole",
+                    "custom": true,
+                    "id": "polygon-production-MyServiceExecutionRole-nzsoacad",
+                    "type": "aws:iam/role:Role",
+                    "inputs": {
+                        "__defaults": [
+                            "forceDetachPolicies",
+                            "maxSessionDuration",
+                            "path"
+                        ],
+                        "assumeRolePolicy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"},\"Sid\":\"AllowAssumeRole\"}],\"Version\":\"2012-10-17\"}",
+                        "forceDetachPolicies": false,
+                        "inlinePolicies": [
+                            {
+                                "__defaults": [],
+                                "name": "inline",
+                                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"ReadSsmAndSecrets\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:GetParameters\",\n        \"ssm:GetParameterHistory\",\n        \"ssm:GetParameter\",\n        \"secretsmanager:GetSecretValue\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+                            }
+                        ],
+                        "managedPolicyArns": [
+                            "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+                        ],
+                        "maxSessionDuration": 3600,
+                        "name": "polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "path": "/",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "assumeRolePolicy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"},\"Sid\":\"AllowAssumeRole\"}],\"Version\":\"2012-10-17\"}",
+                        "createDate": "2025-03-31T11:45:12Z",
+                        "description": "",
+                        "forceDetachPolicies": false,
+                        "id": "polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "inlinePolicies": [
+                            {
+                                "name": "inline",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ssm:GetParameters\",\"ssm:GetParameterHistory\",\"ssm:GetParameter\",\"secretsmanager:GetSecretValue\"],\"Effect\":\"Allow\",\"Resource\":\"*\",\"Sid\":\"ReadSsmAndSecrets\"}]}"
+                            }
+                        ],
+                        "managedPolicyArns": [
+                            "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+                        ],
+                        "maxSessionDuration": 3600,
+                        "name": "polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "namePrefix": "",
+                        "path": "/",
+                        "permissionsBoundary": "",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "uniqueId": "AROAVTLZ6HLE4S2DCPXTW"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "assumeRolePolicy": [],
+                        "inlinePolicies": [],
+                        "managedPolicyArns": [],
+                        "name": []
+                    },
+                    "created": "2025-03-31T11:45:12.940322Z",
+                    "modified": "2025-03-31T11:45:12.940322Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/fargate.ts#897,10",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:sst:DevCommand::MyServiceDev",
+                    "custom": false,
+                    "type": "sst:sst:DevCommand",
+                    "outputs": {
+                        "_dev": {
+                            "autostart": true,
+                            "aws": {
+                                "role": "arn:aws:iam::385192180425:role/polygon-production-MyServiceTaskRole-eetxfskk"
+                            },
+                            "command": "npm run dev",
+                            "directory": ".",
+                            "environment": {
+                                "AWS_REGION": "us-east-1",
+                                "DATABASE_URL": "aws:secretsmanager:polygon-production:DATABASE_URL",
+                                "GOOGLE_CLIENT_ID": "aws:secretsmanager:polygon-production:GOOGLE_CLIENT_ID",
+                                "GOOGLE_CLIENT_SECRET": "aws:secretsmanager:polygon-production:GOOGLE_CLIENT_SECRET",
+                                "NEXTAUTH_SECRET": "aws:secretsmanager:polygon-production:NEXTAUTH_SECRET",
+                                "NEXTAUTH_URL": "aws:secretsmanager:polygon-production:NEXTAUTH_URL",
+                                "NEXT_PUBLIC_POSTHOG_HOST": "aws:secretsmanager:polygon-production:NEXT_PUBLIC_POSTHOG_HOST",
+                                "NEXT_PUBLIC_POSTHOG_KEY": "aws:secretsmanager:polygon-production:NEXT_PUBLIC_POSTHOG_KEY"
+                            },
+                            "links": [
+                                "MyBucket"
+                            ],
+                            "title": "MyService"
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::pulumi:pulumi:Stack::polygon-production",
+                    "created": "2025-03-31T11:45:20.840707Z",
+                    "modified": "2025-03-31T11:45:20.840707Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/experimental/dev-command.ts#105,5"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:cloudwatch/logGroup:LogGroup::MyServiceLogGroupMyService",
+                    "custom": true,
+                    "id": "/sst/cluster/polygon-production-MyClusterCluster-basendrt/MyService/MyService",
+                    "type": "aws:cloudwatch/logGroup:LogGroup",
+                    "inputs": {
+                        "__defaults": [
+                            "skipDestroy"
+                        ],
+                        "name": "/sst/cluster/polygon-production-MyClusterCluster-basendrt/MyService/MyService",
+                        "retentionInDays": 30,
+                        "skipDestroy": false,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:logs:us-east-1:385192180425:log-group:/sst/cluster/polygon-production-MyClusterCluster-basendrt/MyService/MyService",
+                        "id": "/sst/cluster/polygon-production-MyClusterCluster-basendrt/MyService/MyService",
+                        "kmsKeyId": "",
+                        "logGroupClass": "STANDARD",
+                        "name": "/sst/cluster/polygon-production-MyClusterCluster-basendrt/MyService/MyService",
+                        "namePrefix": "",
+                        "retentionInDays": 30,
+                        "skipDestroy": false,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "name": [],
+                        "retentionInDays": []
+                    },
+                    "created": "2025-03-31T11:45:21.245316Z",
+                    "modified": "2025-03-31T11:45:21.245316Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/cloudwatch/logGroup.ts#139,9",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/clusterCapacityProviders:ClusterCapacityProviders::MyClusterCapacityProviders",
+                    "custom": true,
+                    "id": "polygon-production-MyClusterCluster-basendrt",
+                    "type": "aws:ecs/clusterCapacityProviders:ClusterCapacityProviders",
+                    "inputs": {
+                        "__defaults": [],
+                        "capacityProviders": [
+                            "FARGATE",
+                            "FARGATE_SPOT"
+                        ],
+                        "clusterName": "polygon-production-MyClusterCluster-basendrt"
+                    },
+                    "outputs": {
+                        "capacityProviders": [
+                            "FARGATE",
+                            "FARGATE_SPOT"
+                        ],
+                        "clusterName": "polygon-production-MyClusterCluster-basendrt",
+                        "defaultCapacityProviderStrategies": [],
+                        "id": "polygon-production-MyClusterCluster-basendrt"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Cluster::MyCluster",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "capacityProviders": [],
+                        "clusterName": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:31.208021Z",
+                    "modified": "2025-03-31T11:45:31.208021Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/cluster.ts#281,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPublicAccessBlock:BucketPublicAccessBlock::MyBucketPublicAccessBlock",
+                    "custom": true,
+                    "id": "polygon-production-mybucketbucket-wasvnwde",
+                    "type": "aws:s3/bucketPublicAccessBlock:BucketPublicAccessBlock",
+                    "inputs": {
+                        "__defaults": [],
+                        "blockPublicAcls": true,
+                        "blockPublicPolicy": false,
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "ignorePublicAcls": true,
+                        "restrictPublicBuckets": false
+                    },
+                    "outputs": {
+                        "blockPublicAcls": true,
+                        "blockPublicPolicy": false,
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "id": "polygon-production-mybucketbucket-wasvnwde",
+                        "ignorePublicAcls": true,
+                        "restrictPublicBuckets": false
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Bucket::MyBucket",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "blockPublicAcls": [],
+                        "blockPublicPolicy": [],
+                        "bucket": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                        ],
+                        "ignorePublicAcls": [],
+                        "restrictPublicBuckets": []
+                    },
+                    "created": "2025-03-31T11:45:11.875554Z",
+                    "modified": "2025-03-31T11:45:11.875554Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/bucket.ts#829,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketCorsConfigurationV2:BucketCorsConfigurationV2::MyBucketCors",
+                    "custom": true,
+                    "id": "polygon-production-mybucketbucket-wasvnwde",
+                    "type": "aws:s3/bucketCorsConfigurationV2:BucketCorsConfigurationV2",
+                    "inputs": {
+                        "__defaults": [],
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "corsRules": [
+                            {
+                                "__defaults": [],
+                                "allowedHeaders": [
+                                    "*"
+                                ],
+                                "allowedMethods": [
+                                    "DELETE",
+                                    "GET",
+                                    "HEAD",
+                                    "POST",
+                                    "PUT"
+                                ],
+                                "allowedOrigins": [
+                                    "*"
+                                ],
+                                "maxAgeSeconds": 0
+                            }
+                        ]
+                    },
+                    "outputs": {
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "corsRules": [
+                            {
+                                "allowedHeaders": [
+                                    "*"
+                                ],
+                                "allowedMethods": [
+                                    "DELETE",
+                                    "GET",
+                                    "HEAD",
+                                    "POST",
+                                    "PUT"
+                                ],
+                                "allowedOrigins": [
+                                    "*"
+                                ],
+                                "exposeHeaders": [],
+                                "id": "",
+                                "maxAgeSeconds": 0
+                            }
+                        ],
+                        "expectedBucketOwner": "",
+                        "id": "polygon-production-mybucketbucket-wasvnwde"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Bucket::MyBucket",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "bucket": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                        ],
+                        "corsRules": []
+                    },
+                    "created": "2025-03-31T11:45:11.8184Z",
+                    "modified": "2025-03-31T11:45:11.8184Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/s3/bucketCorsConfigurationV2.ts#132,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/targetGroup:TargetGroup::MyServiceTargetMyServiceHTTP3000",
+                    "custom": true,
+                    "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                    "type": "aws:lb/targetGroup:TargetGroup",
+                    "inputs": {
+                        "__defaults": [
+                            "lambdaMultiValueHeadersEnabled",
+                            "proxyProtocolV2",
+                            "slowStart"
+                        ],
+                        "lambdaMultiValueHeadersEnabled": false,
+                        "namePrefix": "HTTP",
+                        "port": 3000,
+                        "protocol": "HTTP",
+                        "proxyProtocolV2": false,
+                        "slowStart": 0,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "targetType": "ip",
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                        "arnSuffix": "targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                        "connectionTermination": null,
+                        "deregistrationDelay": 300,
+                        "healthCheck": {
+                            "enabled": true,
+                            "healthyThreshold": 5,
+                            "interval": 30,
+                            "matcher": "200",
+                            "path": "/",
+                            "port": "traffic-port",
+                            "protocol": "HTTP",
+                            "timeout": 5,
+                            "unhealthyThreshold": 2
+                        },
+                        "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                        "ipAddressType": "ipv4",
+                        "lambdaMultiValueHeadersEnabled": false,
+                        "loadBalancerArns": [],
+                        "loadBalancingAlgorithmType": "round_robin",
+                        "loadBalancingAnomalyMitigation": "off",
+                        "loadBalancingCrossZoneEnabled": "use_load_balancer_configuration",
+                        "name": "HTTP20250331114522158700000002",
+                        "namePrefix": "HTTP",
+                        "port": 3000,
+                        "preserveClientIp": null,
+                        "protocol": "HTTP",
+                        "protocolVersion": "HTTP1",
+                        "proxyProtocolV2": false,
+                        "slowStart": 0,
+                        "stickiness": {
+                            "cookieDuration": 86400,
+                            "cookieName": "",
+                            "enabled": false,
+                            "type": "lb_cookie"
+                        },
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "targetFailovers": [],
+                        "targetGroupHealth": {
+                            "dnsFailover": {
+                                "minimumHealthyTargetsCount": "1",
+                                "minimumHealthyTargetsPercentage": "off"
+                            },
+                            "unhealthyStateRouting": {
+                                "minimumHealthyTargetsCount": 1,
+                                "minimumHealthyTargetsPercentage": "off"
+                            }
+                        },
+                        "targetHealthStates": [],
+                        "targetType": "ip",
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "namePrefix": [],
+                        "port": [],
+                        "protocol": [],
+                        "targetType": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:23.251906Z",
+                    "modified": "2025-03-31T11:45:23.251906Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/lb/targetGroup.ts#349,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:ec2/securityGroup:SecurityGroup::MyServiceLoadBalancerSecurityGroup",
+                    "custom": true,
+                    "id": "sg-0495bdd95d9ec2aab",
+                    "type": "aws:ec2/securityGroup:SecurityGroup",
+                    "inputs": {
+                        "__defaults": [
+                            "name",
+                            "revokeRulesOnDelete"
+                        ],
+                        "description": "Managed by SST",
+                        "egress": [
+                            {
+                                "__defaults": [
+                                    "self"
+                                ],
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "fromPort": 0,
+                                "protocol": "-1",
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "ingress": [
+                            {
+                                "__defaults": [
+                                    "self"
+                                ],
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "fromPort": 0,
+                                "protocol": "-1",
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "name": "MyServiceLoadBalancerSecurityGroup-bcb4d15",
+                        "revokeRulesOnDelete": false,
+                        "tags": {
+                            "Name": "polygon-production-MyServiceLoadBalancerSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyServiceLoadBalancerSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":900000000000},\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:security-group/sg-0495bdd95d9ec2aab",
+                        "description": "Managed by SST",
+                        "egress": [
+                            {
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "description": "",
+                                "fromPort": 0,
+                                "ipv6CidrBlocks": [],
+                                "prefixListIds": [],
+                                "protocol": "-1",
+                                "securityGroups": [],
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "id": "sg-0495bdd95d9ec2aab",
+                        "ingress": [
+                            {
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "description": "",
+                                "fromPort": 0,
+                                "ipv6CidrBlocks": [],
+                                "prefixListIds": [],
+                                "protocol": "-1",
+                                "securityGroups": [],
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "name": "MyServiceLoadBalancerSecurityGroup-bcb4d15",
+                        "namePrefix": "",
+                        "ownerId": "385192180425",
+                        "revokeRulesOnDelete": false,
+                        "tags": {
+                            "Name": "polygon-production-MyServiceLoadBalancerSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyServiceLoadBalancerSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "description": [],
+                        "egress": [],
+                        "ingress": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:24.883217Z",
+                    "modified": "2025-03-31T11:45:24.883217Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#1904,29"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/defaultSecurityGroup:DefaultSecurityGroup::MyVpcSecurityGroup",
+                    "custom": true,
+                    "id": "sg-028f20a018a5c91e5",
+                    "type": "aws:ec2/defaultSecurityGroup:DefaultSecurityGroup",
+                    "inputs": {
+                        "__defaults": [
+                            "revokeRulesOnDelete"
+                        ],
+                        "egress": [
+                            {
+                                "__defaults": [
+                                    "self"
+                                ],
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "fromPort": 0,
+                                "protocol": "-1",
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "ingress": [
+                            {
+                                "__defaults": [
+                                    "self"
+                                ],
+                                "cidrBlocks": [
+                                    "10.0.0.0/16"
+                                ],
+                                "fromPort": 0,
+                                "protocol": "-1",
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "revokeRulesOnDelete": false,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:security-group/sg-028f20a018a5c91e5",
+                        "description": "default VPC security group",
+                        "egress": [
+                            {
+                                "cidrBlocks": [
+                                    "0.0.0.0/0"
+                                ],
+                                "description": "",
+                                "fromPort": 0,
+                                "ipv6CidrBlocks": [],
+                                "prefixListIds": [],
+                                "protocol": "-1",
+                                "securityGroups": [],
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "id": "sg-028f20a018a5c91e5",
+                        "ingress": [
+                            {
+                                "cidrBlocks": [
+                                    "10.0.0.0/16"
+                                ],
+                                "description": "",
+                                "fromPort": 0,
+                                "ipv6CidrBlocks": [],
+                                "prefixListIds": [],
+                                "protocol": "-1",
+                                "securityGroups": [],
+                                "self": false,
+                                "toPort": 0
+                            }
+                        ],
+                        "name": "default",
+                        "namePrefix": "",
+                        "ownerId": "385192180425",
+                        "revokeRulesOnDelete": false,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcSecurityGroup",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "egress": [],
+                        "ingress": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:24.681716Z",
+                    "modified": "2025-03-31T11:45:24.681716Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/vpc.ts#780,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/internetGateway:InternetGateway::MyVpcInternetGateway",
+                    "custom": true,
+                    "id": "igw-0ef18ff8e8c8719b3",
+                    "type": "aws:ec2/internetGateway:InternetGateway",
+                    "inputs": {
+                        "__defaults": [],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcInternetGateway",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcInternetGateway",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":1200000000000,\"delete\":1200000000000,\"update\":1200000000000}}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:internet-gateway/igw-0ef18ff8e8c8719b3",
+                        "id": "igw-0ef18ff8e8c8719b3",
+                        "ownerId": "385192180425",
+                        "tags": {
+                            "Name": "polygon-production-MyVpcInternetGateway",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcInternetGateway",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:22.782521Z",
+                    "modified": "2025-03-31T11:45:22.782521Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/vpc.ts#767,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:servicediscovery/privateDnsNamespace:PrivateDnsNamespace::MyVpcCloudmapNamespace",
+                    "custom": true,
+                    "id": "ns-uspuu5cslf4lbwih",
+                    "type": "aws:servicediscovery/privateDnsNamespace:PrivateDnsNamespace",
+                    "inputs": {
+                        "__defaults": [],
+                        "name": "sst",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpc": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:servicediscovery:us-east-1:385192180425:namespace/ns-uspuu5cslf4lbwih",
+                        "description": "",
+                        "hostedZone": "Z08965801SVVND556QI4F",
+                        "id": "ns-uspuu5cslf4lbwih",
+                        "name": "sst",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpc": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "name": [],
+                        "vpc": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:05.950519Z",
+                    "modified": "2025-03-31T11:46:05.950519Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/vpc.ts#1182,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceTaskRole",
+                    "custom": true,
+                    "id": "polygon-production-MyServiceTaskRole-eetxfskk",
+                    "type": "aws:iam/role:Role",
+                    "inputs": {
+                        "__defaults": [
+                            "forceDetachPolicies",
+                            "maxSessionDuration",
+                            "path"
+                        ],
+                        "assumeRolePolicy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"},\"Sid\":\"AllowAssumeRole\"}],\"Version\":\"2012-10-17\"}",
+                        "forceDetachPolicies": false,
+                        "inlinePolicies": [
+                            {
+                                "__defaults": [],
+                                "name": "inline",
+                                "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:*\",\n      \"Resource\": [\n        \"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\",\n        \"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde\"\n      ]\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssmmessages:OpenDataChannel\",\n        \"ssmmessages:OpenControlChannel\",\n        \"ssmmessages:CreateDataChannel\",\n        \"ssmmessages:CreateControlChannel\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+                            }
+                        ],
+                        "maxSessionDuration": 3600,
+                        "name": "polygon-production-MyServiceTaskRole-eetxfskk",
+                        "path": "/",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceTaskRole-eetxfskk",
+                        "assumeRolePolicy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"},\"Sid\":\"AllowAssumeRole\"}],\"Version\":\"2012-10-17\"}",
+                        "createDate": "2025-03-31T11:45:12Z",
+                        "description": "",
+                        "forceDetachPolicies": false,
+                        "id": "polygon-production-MyServiceTaskRole-eetxfskk",
+                        "inlinePolicies": [
+                            {
+                                "name": "inline",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"s3:*\",\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\",\"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde\"]},{\"Action\":[\"ssmmessages:OpenDataChannel\",\"ssmmessages:OpenControlChannel\",\"ssmmessages:CreateDataChannel\",\"ssmmessages:CreateControlChannel\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}"
+                            }
+                        ],
+                        "managedPolicyArns": [],
+                        "maxSessionDuration": 3600,
+                        "name": "polygon-production-MyServiceTaskRole-eetxfskk",
+                        "namePrefix": "",
+                        "path": "/",
+                        "permissionsBoundary": "",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "uniqueId": "AROAVTLZ6HLEVROSEES3F"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "assumeRolePolicy": [],
+                        "inlinePolicies": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                        ],
+                        "name": []
+                    },
+                    "created": "2025-03-31T11:45:12.944908Z",
+                    "modified": "2025-03-31T11:45:12.944908Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/fargate.ts#865,10",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPolicy:BucketPolicy::MyBucketPolicy",
+                    "custom": true,
+                    "id": "polygon-production-mybucketbucket-wasvnwde",
+                    "type": "aws:s3/bucketPolicy:BucketPolicy",
+                    "inputs": {
+                        "__defaults": [],
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:GetObject\",\n      \"Resource\": \"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\",\n      \"Principal\": \"*\"\n    },\n    {\n      \"Effect\": \"Deny\",\n      \"Action\": \"s3:*\",\n      \"Resource\": [\n        \"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\",\n        \"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde\"\n      ],\n      \"Principal\": \"*\",\n      \"Condition\": {\n        \"Bool\": {\n          \"aws:SecureTransport\": \"false\"\n        }\n      }\n    }\n  ]\n}"
+                    },
+                    "outputs": {
+                        "bucket": "polygon-production-mybucketbucket-wasvnwde",
+                        "id": "polygon-production-mybucketbucket-wasvnwde",
+                        "policy": "{\"Statement\":[{\"Action\":\"s3:GetObject\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Resource\":\"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\"},{\"Action\":\"s3:*\",\"Condition\":{\"Bool\":{\"aws:SecureTransport\":\"false\"}},\"Effect\":\"Deny\",\"Principal\":\"*\",\"Resource\":[\"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde/*\",\"arn:aws:s3:::polygon-production-mybucketbucket-wasvnwde\"]}],\"Version\":\"2012-10-17\"}"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Bucket::MyBucket",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPublicAccessBlock:BucketPublicAccessBlock::MyBucketPublicAccessBlock",
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "bucket": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                        ],
+                        "policy": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:12.121262Z",
+                    "modified": "2025-03-31T11:45:12.121262Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/s3/bucketPolicy.ts#117,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:servicediscovery/service:Service::MyServiceCloudmapService",
+                    "custom": true,
+                    "id": "srv-tbuahrs7rerhndkp",
+                    "type": "aws:servicediscovery/service:Service",
+                    "inputs": {
+                        "__defaults": [],
+                        "dnsConfig": {
+                            "__defaults": [
+                                "routingPolicy"
+                            ],
+                            "dnsRecords": [
+                                {
+                                    "__defaults": [],
+                                    "ttl": 60,
+                                    "type": "A"
+                                }
+                            ],
+                            "namespaceId": "ns-uspuu5cslf4lbwih",
+                            "routingPolicy": "MULTIVALUE"
+                        },
+                        "forceDestroy": true,
+                        "name": "MyService.production.polygon",
+                        "namespaceId": "ns-uspuu5cslf4lbwih",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:servicediscovery:us-east-1:385192180425:service/srv-tbuahrs7rerhndkp",
+                        "description": "",
+                        "dnsConfig": {
+                            "dnsRecords": [
+                                {
+                                    "ttl": 60,
+                                    "type": "A"
+                                }
+                            ],
+                            "namespaceId": "ns-uspuu5cslf4lbwih",
+                            "routingPolicy": "MULTIVALUE"
+                        },
+                        "forceDestroy": true,
+                        "healthCheckConfig": null,
+                        "healthCheckCustomConfig": null,
+                        "id": "srv-tbuahrs7rerhndkp",
+                        "name": "MyService.production.polygon",
+                        "namespaceId": "ns-uspuu5cslf4lbwih",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "type": "DNS_HTTP"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:servicediscovery/privateDnsNamespace:PrivateDnsNamespace::MyVpcCloudmapNamespace"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "dnsConfig": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:servicediscovery/privateDnsNamespace:PrivateDnsNamespace::MyVpcCloudmapNamespace"
+                        ],
+                        "forceDestroy": [],
+                        "name": [],
+                        "namespaceId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:servicediscovery/privateDnsNamespace:PrivateDnsNamespace::MyVpcCloudmapNamespace"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:59.066827Z",
+                    "modified": "2025-03-31T11:46:59.066827Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#2125,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable2",
+                    "custom": true,
+                    "id": "rtb-000771fa8a984f843",
+                    "type": "aws:ec2/routeTable:RouteTable",
+                    "inputs": {
+                        "__defaults": [],
+                        "routes": [
+                            {
+                                "__defaults": [],
+                                "cidrBlock": "0.0.0.0/0",
+                                "gatewayId": "igw-0ef18ff8e8c8719b3"
+                            }
+                        ],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:route-table/rtb-000771fa8a984f843",
+                        "id": "rtb-000771fa8a984f843",
+                        "ownerId": "385192180425",
+                        "propagatingVgws": [],
+                        "routes": [
+                            {
+                                "carrierGatewayId": "",
+                                "cidrBlock": "0.0.0.0/0",
+                                "coreNetworkArn": "",
+                                "destinationPrefixListId": "",
+                                "egressOnlyGatewayId": "",
+                                "gatewayId": "igw-0ef18ff8e8c8719b3",
+                                "ipv6CidrBlock": "",
+                                "localGatewayId": "",
+                                "natGatewayId": "",
+                                "networkInterfaceId": "",
+                                "transitGatewayId": "",
+                                "vpcEndpointId": "",
+                                "vpcPeeringConnectionId": ""
+                            }
+                        ],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/internetGateway:InternetGateway::MyVpcInternetGateway",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routes": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/internetGateway:InternetGateway::MyVpcInternetGateway"
+                        ],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:59.929161Z",
+                    "modified": "2025-03-31T11:46:59.929161Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTable.ts#218,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2",
+                    "custom": true,
+                    "id": "subnet-03961725e776462c2",
+                    "type": "aws:ec2/subnet:Subnet",
+                    "inputs": {
+                        "__defaults": [
+                            "assignIpv6AddressOnCreation",
+                            "enableDns64",
+                            "enableResourceNameDnsARecordOnLaunch",
+                            "enableResourceNameDnsAaaaRecordOnLaunch",
+                            "ipv6Native"
+                        ],
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1b",
+                        "cidrBlock": "10.0.8.0/22",
+                        "enableDns64": false,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "ipv6Native": false,
+                        "mapPublicIpOnLaunch": true,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:subnet/subnet-03961725e776462c2",
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1b",
+                        "availabilityZoneId": "use1-az4",
+                        "cidrBlock": "10.0.8.0/22",
+                        "customerOwnedIpv4Pool": "",
+                        "enableDns64": false,
+                        "enableLniAtDeviceIndex": 0,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "id": "subnet-03961725e776462c2",
+                        "ipv6CidrBlock": "",
+                        "ipv6CidrBlockAssociationId": "",
+                        "ipv6Native": false,
+                        "mapCustomerOwnedIpOnLaunch": false,
+                        "mapPublicIpOnLaunch": true,
+                        "outpostArn": "",
+                        "ownerId": "385192180425",
+                        "privateDnsHostnameTypeOnLaunch": "ip-name",
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "availabilityZone": [],
+                        "cidrBlock": [],
+                        "mapPublicIpOnLaunch": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:33.265443Z",
+                    "modified": "2025-03-31T11:45:33.265443Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/subnet.ts#238,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable1",
+                    "custom": true,
+                    "id": "rtb-068af24d1430c019b",
+                    "type": "aws:ec2/routeTable:RouteTable",
+                    "inputs": {
+                        "__defaults": [],
+                        "routes": [],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:route-table/rtb-068af24d1430c019b",
+                        "id": "rtb-068af24d1430c019b",
+                        "ownerId": "385192180425",
+                        "propagatingVgws": [],
+                        "routes": [],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routes": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:22.828738Z",
+                    "modified": "2025-03-31T11:45:22.828738Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTable.ts#218,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable1",
+                    "custom": true,
+                    "id": "rtb-0d85259d0465e57a4",
+                    "type": "aws:ec2/routeTable:RouteTable",
+                    "inputs": {
+                        "__defaults": [],
+                        "routes": [
+                            {
+                                "__defaults": [],
+                                "cidrBlock": "0.0.0.0/0",
+                                "gatewayId": "igw-0ef18ff8e8c8719b3"
+                            }
+                        ],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:route-table/rtb-0d85259d0465e57a4",
+                        "id": "rtb-0d85259d0465e57a4",
+                        "ownerId": "385192180425",
+                        "propagatingVgws": [],
+                        "routes": [
+                            {
+                                "carrierGatewayId": "",
+                                "cidrBlock": "0.0.0.0/0",
+                                "coreNetworkArn": "",
+                                "destinationPrefixListId": "",
+                                "egressOnlyGatewayId": "",
+                                "gatewayId": "igw-0ef18ff8e8c8719b3",
+                                "ipv6CidrBlock": "",
+                                "localGatewayId": "",
+                                "natGatewayId": "",
+                                "networkInterfaceId": "",
+                                "transitGatewayId": "",
+                                "vpcEndpointId": "",
+                                "vpcPeeringConnectionId": ""
+                            }
+                        ],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicRouteTable1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/internetGateway:InternetGateway::MyVpcInternetGateway",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routes": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/internetGateway:InternetGateway::MyVpcInternetGateway"
+                        ],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:59.991975Z",
+                    "modified": "2025-03-31T11:46:59.991975Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTable.ts#218,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable2",
+                    "custom": true,
+                    "id": "rtb-0673a7e4c5bad7f07",
+                    "type": "aws:ec2/routeTable:RouteTable",
+                    "inputs": {
+                        "__defaults": [],
+                        "routes": [],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:route-table/rtb-0673a7e4c5bad7f07",
+                        "id": "rtb-0673a7e4c5bad7f07",
+                        "ownerId": "385192180425",
+                        "propagatingVgws": [],
+                        "routes": [],
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateRouteTable2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routes": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:22.866159Z",
+                    "modified": "2025-03-31T11:45:22.866159Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTable.ts#218,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1",
+                    "custom": true,
+                    "id": "subnet-00632609851c9485b",
+                    "type": "aws:ec2/subnet:Subnet",
+                    "inputs": {
+                        "__defaults": [
+                            "assignIpv6AddressOnCreation",
+                            "enableDns64",
+                            "enableResourceNameDnsARecordOnLaunch",
+                            "enableResourceNameDnsAaaaRecordOnLaunch",
+                            "ipv6Native"
+                        ],
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1a",
+                        "cidrBlock": "10.0.0.0/22",
+                        "enableDns64": false,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "ipv6Native": false,
+                        "mapPublicIpOnLaunch": true,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:subnet/subnet-00632609851c9485b",
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1a",
+                        "availabilityZoneId": "use1-az2",
+                        "cidrBlock": "10.0.0.0/22",
+                        "customerOwnedIpv4Pool": "",
+                        "enableDns64": false,
+                        "enableLniAtDeviceIndex": 0,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "id": "subnet-00632609851c9485b",
+                        "ipv6CidrBlock": "",
+                        "ipv6CidrBlockAssociationId": "",
+                        "ipv6Native": false,
+                        "mapCustomerOwnedIpOnLaunch": false,
+                        "mapPublicIpOnLaunch": true,
+                        "outpostArn": "",
+                        "ownerId": "385192180425",
+                        "privateDnsHostnameTypeOnLaunch": "ip-name",
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPublicSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPublicSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "availabilityZone": [],
+                        "cidrBlock": [],
+                        "mapPublicIpOnLaunch": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:33.346086Z",
+                    "modified": "2025-03-31T11:45:33.346086Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/subnet.ts#238,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet2",
+                    "custom": true,
+                    "id": "subnet-04edd0966701196de",
+                    "type": "aws:ec2/subnet:Subnet",
+                    "inputs": {
+                        "__defaults": [
+                            "assignIpv6AddressOnCreation",
+                            "enableDns64",
+                            "enableResourceNameDnsARecordOnLaunch",
+                            "enableResourceNameDnsAaaaRecordOnLaunch",
+                            "ipv6Native",
+                            "mapPublicIpOnLaunch"
+                        ],
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1b",
+                        "cidrBlock": "10.0.12.0/22",
+                        "enableDns64": false,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "ipv6Native": false,
+                        "mapPublicIpOnLaunch": false,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:subnet/subnet-04edd0966701196de",
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1b",
+                        "availabilityZoneId": "use1-az4",
+                        "cidrBlock": "10.0.12.0/22",
+                        "customerOwnedIpv4Pool": "",
+                        "enableDns64": false,
+                        "enableLniAtDeviceIndex": 0,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "id": "subnet-04edd0966701196de",
+                        "ipv6CidrBlock": "",
+                        "ipv6CidrBlockAssociationId": "",
+                        "ipv6Native": false,
+                        "mapCustomerOwnedIpOnLaunch": false,
+                        "mapPublicIpOnLaunch": false,
+                        "outpostArn": "",
+                        "ownerId": "385192180425",
+                        "privateDnsHostnameTypeOnLaunch": "ip-name",
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet2",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "availabilityZone": [],
+                        "cidrBlock": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:23.263942Z",
+                    "modified": "2025-03-31T11:45:23.263942Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/subnet.ts#238,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet1",
+                    "custom": true,
+                    "id": "subnet-01738cd0a265559d1",
+                    "type": "aws:ec2/subnet:Subnet",
+                    "inputs": {
+                        "__defaults": [
+                            "assignIpv6AddressOnCreation",
+                            "enableDns64",
+                            "enableResourceNameDnsARecordOnLaunch",
+                            "enableResourceNameDnsAaaaRecordOnLaunch",
+                            "ipv6Native",
+                            "mapPublicIpOnLaunch"
+                        ],
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1a",
+                        "cidrBlock": "10.0.4.0/22",
+                        "enableDns64": false,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "ipv6Native": false,
+                        "mapPublicIpOnLaunch": false,
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ec2:us-east-1:385192180425:subnet/subnet-01738cd0a265559d1",
+                        "assignIpv6AddressOnCreation": false,
+                        "availabilityZone": "us-east-1a",
+                        "availabilityZoneId": "use1-az2",
+                        "cidrBlock": "10.0.4.0/22",
+                        "customerOwnedIpv4Pool": "",
+                        "enableDns64": false,
+                        "enableLniAtDeviceIndex": 0,
+                        "enableResourceNameDnsARecordOnLaunch": false,
+                        "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                        "id": "subnet-01738cd0a265559d1",
+                        "ipv6CidrBlock": "",
+                        "ipv6CidrBlockAssociationId": "",
+                        "ipv6Native": false,
+                        "mapCustomerOwnedIpOnLaunch": false,
+                        "mapPublicIpOnLaunch": false,
+                        "outpostArn": "",
+                        "ownerId": "385192180425",
+                        "privateDnsHostnameTypeOnLaunch": "ip-name",
+                        "tags": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "Name": "polygon-production-MyVpcPrivateSubnet1",
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "availabilityZone": [],
+                        "cidrBlock": [],
+                        "tags": [],
+                        "vpcId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/vpc:Vpc::MyVpcVpc"
+                        ]
+                    },
+                    "created": "2025-03-31T11:45:22.879455Z",
+                    "modified": "2025-03-31T11:45:22.879455Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/subnet.ts#238,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTableAssociation:RouteTableAssociation::MyVpcPublicRouteTableAssociation2",
+                    "custom": true,
+                    "id": "rtbassoc-0f20ba6a3651eff98",
+                    "type": "aws:ec2/routeTableAssociation:RouteTableAssociation",
+                    "inputs": {
+                        "__defaults": [],
+                        "routeTableId": "rtb-000771fa8a984f843",
+                        "subnetId": "subnet-03961725e776462c2"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "gatewayId": "",
+                        "id": "rtbassoc-0f20ba6a3651eff98",
+                        "routeTableId": "rtb-000771fa8a984f843",
+                        "subnetId": "subnet-03961725e776462c2"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable2",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routeTableId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable2"
+                        ],
+                        "subnetId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2"
+                        ]
+                    },
+                    "created": "2025-03-31T11:47:00.388255Z",
+                    "modified": "2025-03-31T11:47:00.388255Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTableAssociation.ts#117,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::MyServiceLoadBalancer",
+                    "custom": true,
+                    "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:loadbalancer/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                    "type": "aws:lb/loadBalancer:LoadBalancer",
+                    "inputs": {
+                        "__defaults": [
+                            "clientKeepAlive",
+                            "desyncMitigationMode",
+                            "dnsRecordClientRoutingPolicy",
+                            "dropInvalidHeaderFields",
+                            "enableDeletionProtection",
+                            "enableHttp2",
+                            "enableTlsVersionAndCipherSuiteHeaders",
+                            "enableWafFailOpen",
+                            "enableXffClientPort",
+                            "enableZonalShift",
+                            "idleTimeout",
+                            "preserveHostHeader",
+                            "xffHeaderProcessingMode"
+                        ],
+                        "clientKeepAlive": 3600,
+                        "desyncMitigationMode": "defensive",
+                        "dnsRecordClientRoutingPolicy": "any_availability_zone",
+                        "dropInvalidHeaderFields": false,
+                        "enableCrossZoneLoadBalancing": true,
+                        "enableDeletionProtection": false,
+                        "enableHttp2": true,
+                        "enableTlsVersionAndCipherSuiteHeaders": false,
+                        "enableWafFailOpen": false,
+                        "enableXffClientPort": false,
+                        "enableZonalShift": false,
+                        "idleTimeout": 60,
+                        "internal": false,
+                        "loadBalancerType": "application",
+                        "name": "MyServiceLoadBa-xssdbdta",
+                        "preserveHostHeader": false,
+                        "securityGroups": [
+                            "sg-0495bdd95d9ec2aab"
+                        ],
+                        "subnets": [
+                            "subnet-00632609851c9485b",
+                            "subnet-03961725e776462c2"
+                        ],
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "xffHeaderProcessingMode": "append"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":600000000000,\"update\":600000000000}}",
+                        "accessLogs": {
+                            "bucket": "",
+                            "enabled": false,
+                            "prefix": ""
+                        },
+                        "arn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:loadbalancer/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                        "arnSuffix": "app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                        "clientKeepAlive": 3600,
+                        "connectionLogs": {
+                            "bucket": "",
+                            "enabled": false,
+                            "prefix": ""
+                        },
+                        "customerOwnedIpv4Pool": "",
+                        "desyncMitigationMode": "defensive",
+                        "dnsName": "MyServiceLoadBa-xssdbdta-2037283921.us-east-1.elb.amazonaws.com",
+                        "dnsRecordClientRoutingPolicy": null,
+                        "dropInvalidHeaderFields": false,
+                        "enableCrossZoneLoadBalancing": true,
+                        "enableDeletionProtection": false,
+                        "enableHttp2": true,
+                        "enableTlsVersionAndCipherSuiteHeaders": false,
+                        "enableWafFailOpen": false,
+                        "enableXffClientPort": false,
+                        "enableZonalShift": false,
+                        "enforceSecurityGroupInboundRulesOnPrivateLinkTraffic": "",
+                        "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:loadbalancer/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                        "idleTimeout": 60,
+                        "internal": false,
+                        "ipAddressType": "ipv4",
+                        "loadBalancerType": "application",
+                        "name": "MyServiceLoadBa-xssdbdta",
+                        "namePrefix": "",
+                        "preserveHostHeader": false,
+                        "securityGroups": [
+                            "sg-0495bdd95d9ec2aab"
+                        ],
+                        "subnetMappings": [
+                            {
+                                "allocationId": "",
+                                "ipv6Address": "",
+                                "outpostId": "",
+                                "privateIpv4Address": "",
+                                "subnetId": "subnet-00632609851c9485b"
+                            },
+                            {
+                                "allocationId": "",
+                                "ipv6Address": "",
+                                "outpostId": "",
+                                "privateIpv4Address": "",
+                                "subnetId": "subnet-03961725e776462c2"
+                            }
+                        ],
+                        "subnets": [
+                            "subnet-00632609851c9485b",
+                            "subnet-03961725e776462c2"
+                        ],
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "vpcId": "vpc-03d37e93f273840a5",
+                        "xffHeaderProcessingMode": "append",
+                        "zoneId": "Z35SXDOTRQ7X7K"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:ec2/securityGroup:SecurityGroup::MyServiceLoadBalancerSecurityGroup",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2",
+                        "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "enableCrossZoneLoadBalancing": [],
+                        "internal": [],
+                        "loadBalancerType": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "name": [],
+                        "securityGroups": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:ec2/securityGroup:SecurityGroup::MyServiceLoadBalancerSecurityGroup"
+                        ],
+                        "subnets": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1",
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2"
+                        ]
+                    },
+                    "created": "2025-03-31T11:50:02.215317Z",
+                    "modified": "2025-03-31T11:50:02.215317Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#1932,14",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTableAssociation:RouteTableAssociation::MyVpcPublicRouteTableAssociation1",
+                    "custom": true,
+                    "id": "rtbassoc-05ec9fa3b8b91d7dd",
+                    "type": "aws:ec2/routeTableAssociation:RouteTableAssociation",
+                    "inputs": {
+                        "__defaults": [],
+                        "routeTableId": "rtb-0d85259d0465e57a4",
+                        "subnetId": "subnet-00632609851c9485b"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "gatewayId": "",
+                        "id": "rtbassoc-05ec9fa3b8b91d7dd",
+                        "routeTableId": "rtb-0d85259d0465e57a4",
+                        "subnetId": "subnet-00632609851c9485b"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable1",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routeTableId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPublicRouteTable1"
+                        ],
+                        "subnetId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1"
+                        ]
+                    },
+                    "created": "2025-03-31T11:47:00.444803Z",
+                    "modified": "2025-03-31T11:47:00.444803Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTableAssociation.ts#117,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTableAssociation:RouteTableAssociation::MyVpcPrivateRouteTableAssociation2",
+                    "custom": true,
+                    "id": "rtbassoc-07c0c34a43c4f9b2c",
+                    "type": "aws:ec2/routeTableAssociation:RouteTableAssociation",
+                    "inputs": {
+                        "__defaults": [],
+                        "routeTableId": "rtb-0673a7e4c5bad7f07",
+                        "subnetId": "subnet-04edd0966701196de"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "gatewayId": "",
+                        "id": "rtbassoc-07c0c34a43c4f9b2c",
+                        "routeTableId": "rtb-0673a7e4c5bad7f07",
+                        "subnetId": "subnet-04edd0966701196de"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable2",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet2"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routeTableId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable2"
+                        ],
+                        "subnetId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet2"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:59.416303Z",
+                    "modified": "2025-03-31T11:46:59.416303Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTableAssociation.ts#117,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTableAssociation:RouteTableAssociation::MyVpcPrivateRouteTableAssociation1",
+                    "custom": true,
+                    "id": "rtbassoc-002b7ef26aaf140ca",
+                    "type": "aws:ec2/routeTableAssociation:RouteTableAssociation",
+                    "inputs": {
+                        "__defaults": [],
+                        "routeTableId": "rtb-068af24d1430c019b",
+                        "subnetId": "subnet-01738cd0a265559d1"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                        "gatewayId": "",
+                        "id": "rtbassoc-002b7ef26aaf140ca",
+                        "routeTableId": "rtb-068af24d1430c019b",
+                        "subnetId": "subnet-01738cd0a265559d1"
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Vpc::MyVpc",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable1",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet1"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "routeTableId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/routeTable:RouteTable::MyVpcPrivateRouteTable1"
+                        ],
+                        "subnetId": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPrivateSubnet1"
+                        ]
+                    },
+                    "created": "2025-03-31T11:46:59.397491Z",
+                    "modified": "2025-03-31T11:46:59.397491Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ec2/routeTableAssociation.ts#117,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/listener:Listener::MyServiceListenerHTTP80",
+                    "custom": true,
+                    "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:listener/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6/dfc8bb269403583d",
+                    "type": "aws:lb/listener:Listener",
+                    "inputs": {
+                        "__defaults": [],
+                        "defaultActions": [
+                            {
+                                "__defaults": [],
+                                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                                "type": "forward"
+                            }
+                        ],
+                        "loadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:loadbalancer/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                        "port": 80,
+                        "protocol": "HTTP",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"update\":300000000000}}",
+                        "alpnPolicy": null,
+                        "arn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:listener/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6/dfc8bb269403583d",
+                        "certificateArn": null,
+                        "defaultActions": [
+                            {
+                                "authenticateCognito": null,
+                                "authenticateOidc": null,
+                                "fixedResponse": null,
+                                "forward": null,
+                                "order": 1,
+                                "redirect": null,
+                                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c",
+                                "type": "forward"
+                            }
+                        ],
+                        "id": "arn:aws:elasticloadbalancing:us-east-1:385192180425:listener/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6/dfc8bb269403583d",
+                        "loadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:loadbalancer/app/MyServiceLoadBa-xssdbdta/e32f73cd569147b6",
+                        "mutualAuthentication": null,
+                        "port": 80,
+                        "protocol": "HTTP",
+                        "sslPolicy": "",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tcpIdleTimeoutSeconds": null
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/targetGroup:TargetGroup::MyServiceTargetMyServiceHTTP3000",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::MyServiceLoadBalancer"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "defaultActions": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/targetGroup:TargetGroup::MyServiceTargetMyServiceHTTP3000"
+                        ],
+                        "loadBalancerArn": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::MyServiceLoadBalancer"
+                        ],
+                        "port": [],
+                        "protocol": []
+                    },
+                    "created": "2025-03-31T11:50:40.369693Z",
+                    "modified": "2025-03-31T11:50:40.369693Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/lb/listener.ts#359,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::pulumi:providers:docker-build::default_0_0_8",
+                    "custom": true,
+                    "id": "169e5602-8ae3-4180-a47b-3f0d9fe7fa51",
+                    "type": "pulumi:providers:docker-build",
+                    "inputs": {
+                        "__internal": {},
+                        "host": ""
+                    },
+                    "outputs": {
+                        "host": ""
+                    },
+                    "created": "2025-03-31T11:45:21.974912Z",
+                    "modified": "2025-03-31T11:45:21.974912Z"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$docker-build:index:Image::MyServiceImageMyService",
+                    "custom": true,
+                    "id": "sha256:d7df4a87a422403fbe8190556b5d70983edbba1bc628627f53da4fdae7b9f02b",
+                    "type": "docker-build:index:Image",
+                    "inputs": {
+                        "buildArgs": {
+                            "SST_RESOURCE_App": "{\"name\":\"polygon\",\"stage\":\"production\"}",
+                            "SST_RESOURCE_MyBucket": "{\"name\":\"polygon-production-mybucketbucket-wasvnwde\",\"type\":\"sst:aws:Bucket\"}"
+                        },
+                        "buildOnPreview": true,
+                        "cacheFrom": [
+                            {
+                                "disabled": false,
+                                "raw": "",
+                                "registry": {
+                                    "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                }
+                            }
+                        ],
+                        "cacheTo": [
+                            {
+                                "disabled": false,
+                                "raw": "",
+                                "registry": {
+                                    "compression": "gzip",
+                                    "compressionLevel": 0,
+                                    "forceCompression": false,
+                                    "ignoreError": false,
+                                    "imageManifest": true,
+                                    "mode": "max",
+                                    "ociMediaTypes": true,
+                                    "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                }
+                            }
+                        ],
+                        "context": {
+                            "location": "/Users/noahmilberger/Documents/milbo/polygon"
+                        },
+                        "dockerfile": {
+                            "inline": "",
+                            "location": "/Users/noahmilberger/Documents/milbo/polygon/Dockerfile"
+                        },
+                        "exec": false,
+                        "load": false,
+                        "network": "default",
+                        "noCache": false,
+                        "platforms": [
+                            "linux/amd64"
+                        ],
+                        "pull": false,
+                        "push": true,
+                        "registries": [
+                            {
+                                "address": "https://385192180425.dkr.ecr.us-east-1.amazonaws.com",
+                                "password": {
+                                    "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                    "ciphertext": "v1:HCaXdvObj9SAx4cf:C1AN18UrqLE4X/Oazagb6D9sdKi+fJEaYSRkCJf5JUp6XE9f35NOHfewxGJw32+neEKs8579fGZlqJF4qpdijh14CVo9n9vVKJEx3O2YYHOBFtaLnT1OLF9SWUTQWXr3NPX09Wa/rncy0Rhs0FCJRZnEBNo7VyAQh5Jql/VMUC34/Pk66w7yra4eIStR7fNbVEw2B72/P99P1lZGfYqw/jvzvAFpvqKAr7IP9W/lr3mJpd725Y+AZez+1x24PtbkHnhM0o9no6v/jwrBFpWLhucwVUOIpJi9Yn/4FvQkzJVZ+UtymyqSICEq2u94OKJjiLGdkYvd5HRPvk6kZvkEB8muAjx2r74+4i7j5Q/WfNBQJIOi/+alWBnzgnwrK0coOXlUUwDPEZDfuC2KtIdTM892ZpxKtXV1bu093rEqJGKfagqIu+JVB2Ya4R4ZFM6C4puVlWJ6g8WEdZfQafXZx7d8VKiufHY2T68yy+vXZiCNB4iA+LYTJCfC5ern9Z7SOJctZb36nQklks9WhhzGqRYaluwEHTmGSdY0yj+lgKe4lZenoS78h1G2kJTv8MP2e9Oi3qB7P08ATBZ3zDK56yQ6qIILTI7lPkdm9WZ0OtlCqOJ9chAEDlnUWWgJ+wRDtVqu/tmEczuZsfbX1V90s0Q26KY+7G7zVb3wbvspT5XUFt66+oTBYl0LUoacGw3oWPFykHzk51Yd1Fn4pD+OBzlFd9BuIrD1v/stxQyksSDGY/q3wjIsmJRzsckaS6P23VOv+TSZoOIpY+l5ziwtTQpIjidZ9Cq8NoC/A+HI3pXgpwUCUuFOCGZ6zQ1n2d0Uc++uvo7HnNnoKctUBi7OxMAxiuOGh0xTvl6Zh0sIWjOHdeLQti6rrgRMNZcZ5av5y7URKqNNbscI/nV1vKMGjBmdE6k4gjKiFVZfY4hp8SrZavgiyaZo9XLN7OXnIODMUkrzH71NLvbbBUx5idpAU1fW1n6DgqwmaXaH24+NV+c5l/LF5Ewn4W6wWEHiBKDhRPy02y4eikMJlhctbIiQe/5zgLWkUN+mIHAgygcl8vnTcW2JPdDioXmnd4u1OKZStVKGulTKR4mHaCyhBK+MI4SK+YRvh0mbU51XCmr7mh5UhoAdhF8k+EXlr8bt/mstUzhpghtA1nVev7rnj4pwNF2UZvBMFwQyeC/yNQWZPWSO3iSSVx0TExMHnz5tS0WPi1XkI+cqEbCpCWYS51P43tm5mMmjGKxI1jwqtF/7OGTJVBfVG1IjFVJG/1B7kob2l2/vj6YJ/OBGbFeBKpLSNxeeqdL5teQNkh7aIs/tStR6SNvHUMLtPEk1rBjNJsuUXI/i3Ikao4Gs9PvvZOgGXu3JGhXAJ5NOIID4UGvmZuh4kGpfUHTCjry81sMIKiV0SbJLVVfwQQuozB/2vQjCUge0TTMFAC5n+xTZlibrM0URTjaZXV+kMPxfGyCVzxeHvUazKFWi3Ab0eABcNDvCY19tqrGiLcy/+fwuxGms97JyXSI/br8+YisT6rjtJrucF4gQL5SdCFuSisz7qkgBPEwR+bKKGXX5sUHeELirOb4Ng0ni5aXdWdt8bIiMuA1CpbbhmQ7HiDJwGzWQaH78djul/o9K2i3BEmGUAp96F+UkfgTjGQgMnTR6drneCJxBjLlLvxR2jFzxSrIJ+trs9cj6hILQIdY5MQgFr7VyT0LBHlSiokqxTl5qpA+aYwijL7WynWCroEfAQCFz4edAb5jw+EaZs4hvsra5wyLQDypXVFs+ydQfhBgbesRnigTlGTtNMhGod5xTEtJHA2d5dobpNw88nmWy5nzQfsS0vEzV/uzRCnNqUMXStRyQ1E5PiHezxentkLHckh2WHLMJ35UODQDlAPw5fEIHjFr5tacHhbHVFuyRh8yuPaCovuzeafRCjOo8vzFtRGMirk/e07EyZk4L1YFwvA4CKTEZ0BnFT1sfes51geAnpTyW+QcpV1S5Gy1BTw2/0MkAz4EeVHUoyjMpxv1cFaym2uzabmz4wjBlppJ53JWTWKT2PutcJUxn/g999X3gZvLtnsRLYULlOHuqFUMS3immOYlNPWbA6tPInC0PY6qyPVPhSJ9FVU6qJ+iOs7gysIgUSP3qxRGRX+ECuE/us2gYl01Qr7aZOLdcPMOxV9GaY+u0rwdnrVLRNsD0GXatGYJH/BE+tyztne7mCqjLGpyNBD3mwi+A0aprhGJjRVAiBD78ppTNbJ2IPJlqkrZMWcDTG7pOG8WdaZJxjnkSCvrPsjzz42Bu+DUsL5keSTmYivscOuK+ri5P9wKyRQLX/XNaIBhMVWNl6tg5XoOgrolBNrIS3zeuHBJe4rpinU5YFVj4wZnqn43RoadnlmVVC84vBlE="
+                                },
+                                "username": "AWS"
+                            }
+                        ],
+                        "tags": [
+                            "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService"
+                        ],
+                        "target": ""
+                    },
+                    "outputs": {
+                        "buildArgs": {
+                            "SST_RESOURCE_App": "{\"name\":\"polygon\",\"stage\":\"production\"}",
+                            "SST_RESOURCE_MyBucket": "{\"name\":\"polygon-production-mybucketbucket-wasvnwde\",\"type\":\"sst:aws:Bucket\"}"
+                        },
+                        "buildOnPreview": true,
+                        "cacheFrom": [
+                            {
+                                "disabled": false,
+                                "raw": "",
+                                "registry": {
+                                    "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                }
+                            }
+                        ],
+                        "cacheTo": [
+                            {
+                                "disabled": false,
+                                "raw": "",
+                                "registry": {
+                                    "compression": "gzip",
+                                    "compressionLevel": 0,
+                                    "forceCompression": false,
+                                    "ignoreError": false,
+                                    "imageManifest": true,
+                                    "mode": "max",
+                                    "ociMediaTypes": true,
+                                    "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                }
+                            }
+                        ],
+                        "context": {
+                            "location": "/Users/noahmilberger/Documents/milbo/polygon"
+                        },
+                        "contextHash": "9a2f6caac7cea0e8190034d812d935a8dcf0d73296825c9bcb048298164f2ec7",
+                        "digest": "sha256:d7df4a87a422403fbe8190556b5d70983edbba1bc628627f53da4fdae7b9f02b",
+                        "dockerfile": {
+                            "inline": "",
+                            "location": "/Users/noahmilberger/Documents/milbo/polygon/Dockerfile"
+                        },
+                        "exec": false,
+                        "load": false,
+                        "network": "default",
+                        "noCache": false,
+                        "platforms": [
+                            "linux/amd64"
+                        ],
+                        "pull": false,
+                        "push": true,
+                        "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService@sha256:d7df4a87a422403fbe8190556b5d70983edbba1bc628627f53da4fdae7b9f02b",
+                        "registries": [
+                            {
+                                "address": "https://385192180425.dkr.ecr.us-east-1.amazonaws.com",
+                                "password": {
+                                    "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                    "ciphertext": "v1:gvA+GRe25p9aaO17:Ol1srnoQ+uNijG9eSst0Ioycitl0VrbLHq8wv7lxagbXBjRs60UtadBOJJaGUVd9P5Lv2pcH71XiYdY6PUW+VLW6WxA9fuTRfcCAnXeySqTAjmhSH4bKJFNyGIteRc/giLtmsl6EKSq86YkSVaSRh35X4RJcswuYNdsPSdzdrSaR0oXxK1ORJy+e7JqkkmjbvVlloRYDAo9PF7r4Gi8kn+8TK3SyUqilWdTFFAwGQkzbldU1AXWNvAFhWD72adPQKbvWS4bcn1OiwKP/7ofkj1Z+sI63StPQv85fQ++4piVUCTbRDRaKxKpY19+V/HS8n1Qpz7/0Nby6sWf7+DWWmKE0KkYYthNo9Prbz5F3PBucSFrI+JINPoqGjI9Rn1AvUW4xAwAF7HTcKxTTK7lYIYgpchzj7OAl19WM1lNqgcYTEXnUqAI3YwpbsYm0YkjYHaS+qXHgJhuiiPPcKPMJdc9bYHAvdaHk2SOom9HYGLBgOdS8i9s78gXIqdwZyKnoW6Jp+MR9C7p3MfFaosvfEEZyLYHuFHU1inGxpG4xKYb88RSrbBJOn8GYUpA6Gqer0RS5eWWRkBzAJypN3dgE4doJ5isTzIp2Y18YyzEXfvl1439PcRnEiSK3TeN3WfmkgvIMg7FEhupuyDJT8XHzziDTFX6jTtXdt1Q5qmK+fUmNNS8PZ2cdpUqYmU7hH4VgUt8kS4TBlLMIkgExGz8DPILxxzelgMLe+GmHx5aZHff4LAXYyHHdTwboBapR4zh7Wze9xsfhhhpbyOJSpgPwbxI0VW+ErTb2iSk2EzcgLl2ngZZe2hTwOOfNISmFRgvLVX7TUpG9xvjflrVCDAIyk5zG/eAKSgRGNozoDsnQr1X91F4FxsQtciPE4p336a94UFp3MvUXF8+lQ5qBYe2YLt7SdmpqqDUr+Fp15j9jiXDhonm1g6MYVwz/iQ15R0+HbQA+gVMuWS6PbSWXM9Agsg9biuX2IHisTBZJExEISJlefYT70JcV3U2f52K1mCKzPtQWcjIsfzr+X2DShQV1OYyfWtuCQsD9zQVoK8yn/yFWUJfiWG5aHvbMzeViC010f43noGL7O9DmWj3ZQ3z8vLlRztC7yLQNrqUppVxa8MlYvRf0x8740451I5llkygcoxeM+011GwpvuAVcvdLfuf8ZirEiBuvdH+ZoQhQLg5pVLxXpNiY2EupNxOr6bvLAhgNbg7Q9FTvmz+S4SXRiKHLvHLzxwpW+uw73nH0gHjMzzhLJZPc9Yv2ukRGMklbEtpC3fmrorGtj81LDlTNMos6io0dg/Tt7aR3fww8FI4hOrdmUo8/vtYNwL6iMCImbHEHdSObhhHp+LPxUB1mrKUV7uYPllKCYaMBq2fXEy6hYYkQiLvcet74Ce8p1XQHhsUkaNdeO4gsC85k7WRczDP/2v3LNpsGZ4fnBJAxFJXEDllxDVv0Q3WEzi4ZP3AzvcjLTxIdkYE2bpkG1lxKNhVM3ArQOuvduyJKXRqC7IlDMqk+0jrm/QDqfrKHP44CaUzejS7xEgD5+9rkE0jbSLB1KpXRienG6Ih3bNyqs5FjoiKb7ust35USrOlDQxj7+oRL24aWk8s8449pljBpY1AnlEDyPh2dWTNBzZmLQ8KWTjySMtTD2lH2QUOmQCoMifD6lPCVYC0hvScyWPpdp9tcBmWOXxhNuWzXupQmarZvj34prU9EN6tfoc6Mbipm8I+mloni9/IFgvEQgMb6t5ZgpBYiZdR5np5W4ypl6ATjvYdnrtr4hhNpAEfF+I6cTLhOjC9toz73/PeAqTFGVjCuy3j+lPLiXHp18Hg+aA/IUao9CQrlS45PCMg8sbto3KyYJVftF4jgbY84RONk6KGCnmIKOlAxCV2H/nk5YIxNTLAAss+gV9h7DdaKvs5+ff5ZHdaVED5Hm52QiBARo82zLZSkqjYZEcpbHJ/4iLetP3Ya7cl4fxbgjpUqJgVWZsw9/koTur3xpvU3W2WHaFUnqVowWLI9E4ADhfuxrss3/CH36KGaaWeL3g94n8JrJsSICCiSzppheTCvxfTOj70lI51I/fLntXKdN/idS0sYksIDfY2pzx7dpJ4YfQSYBkTBFsD41bg9Aeheggedd8tZ6DOjywfZmfTrX2Q3FUWMPo8dWdGmgOVtPmkDtcsiBNqpotYxUNs9pmiqcwnSs8AObIflmaYaMFgchFxcszoutJpMMHSu3Kx6VExC3fo9UWEIKdM2bkjnkoWAP9VyzUGomwZV8nymNLe5j5RyJgH39gz14u+CKiUhdDLE1yNgdK0WbgkZcCUQ5TtwnLNnRXGnH2MMnzYpTUxmV+HVWCHP45oXa9lG7kZj5ypG5FpAT16QutNsRkjV6n/x+szs="
+                                },
+                                "username": "AWS"
+                            }
+                        ],
+                        "tags": [
+                            "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService"
+                        ],
+                        "target": ""
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:docker-build::default_0_0_8::169e5602-8ae3-4180-a47b-3f0d9fe7fa51",
+                    "propertyDependencies": {
+                        "buildArgs": [],
+                        "buildOnPreview": [],
+                        "cacheFrom": [],
+                        "cacheTo": [],
+                        "context": [],
+                        "dockerfile": [],
+                        "network": [],
+                        "platforms": [],
+                        "push": [],
+                        "registries": [],
+                        "tags": []
+                    },
+                    "created": "2025-03-31T12:04:29.491256Z",
+                    "modified": "2025-03-31T12:04:29.491256Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/image.ts#788,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::MyServiceTask",
+                    "custom": true,
+                    "id": "polygon-production-MyClusterCluster-basendrt-MyService",
+                    "type": "aws:ecs/taskDefinition:TaskDefinition",
+                    "inputs": {
+                        "__defaults": [
+                            "skipDestroy"
+                        ],
+                        "containerDefinitions": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:SKmtIPwpK4JHSUvy:3/C0ezdpB+LXIjzN9j2KT0OdjBI1Pczw1NcG0YRHaiFJdwW5RZZRRnRxPuv6425877LfZka9BEMjt8kFdpChvJXvBsMH4Jyq65Cc8AaBKYXcIAiG111NOve+I02IAvLfvbwYRtVpFQoES1HEhNaTLdJ5SJBvCZbqhHLINKFssgPyDOX2V/zDPBStWw4ZPvzsU0T+wpl/rMfY5gVliz+sSpsuFAMJ3lCDhyv34ITv5fGTtEbB863RS4KtZixsCjNhKT6dzCSMIiQYUgA0XaTV30I39x35Km9reKfT8nudVWiHKiXCmu7Kfv9EYSz2nKSAf8dBXaO9iZsEiEskD39JkgTAmseCMnCrHxo2YTcK08AtgRfmis/GshMOD+w/eGfEh4MiAOquN+Ga88jJSkwFw5A1TiZhMDgrCjZHApjfaOR8lQnytP78KFazCdluewpcoMvPAx9Bj+OvLVP7EqXjrW9qNQuPdWq/Bt7wCWAeCDo/kWDeQRjVSZS9TTj0Wbd/g6JYQqlMMzXSSZ+SXlstpJPm46g0ZlyjDCnQlpj6TPih42VDHyuW1nCIiLHMAePDUOUNsgw6Yf9MpdoZACWOhyrcdhTC20Ih4XaTGxqk9DVeFkhJEwEccylmenHxt+J7jI34d3VzZieZ3EW3LnbzBR9D+8nxbP3Geb9E0RcdLg6WvjsKKSu26J7a10qGBhbrTpugo7jr8mqXVbG/BPYVrbzFnCmeQHOYmECw5xcs0SsLgyZhvXsppZBJl16BqrB6ERQ+XiQ5XLWh+kKyn/mEXaotvN/d6H8FaYn7EAKJJl8MhnR666RpyISIQ9xqYVnihi1GnUKPeNWWrnK0rGQmsJwQ2t28Uyf8JsuDKbrYvSr2/KDEDfoy1C9PnteXEYEGGgtr8Go6GYakytyHHTd8c9GtA4uo6iI++frugmKnj3XTLeJqTNUMG7FpmmPifsEhIFyRAXvFZFE4btvlRmX2rJpk+w6qnBL23M3erpTQ4Fn0CWzqcV8rAGaL0Q9WLMwChjDMjfn8P0ZxRuxpitx+5qqS/6b7tblrJ4pOAQEskRC7DFLORt0T+qoyT8rZSKLE+lYK9AXxJvJvV/Y1dAu/wUYddMD3qBlPnW0pJdw1"
+                        },
+                        "cpu": "256",
+                        "executionRoleArn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "family": "polygon-production-MyClusterCluster-basendrt-MyService",
+                        "memory": "512",
+                        "networkMode": "awsvpc",
+                        "requiresCompatibilities": [
+                            "FARGATE"
+                        ],
+                        "runtimePlatform": {
+                            "__defaults": [],
+                            "cpuArchitecture": "X86_64",
+                            "operatingSystemFamily": "LINUX"
+                        },
+                        "skipDestroy": false,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "taskRoleArn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceTaskRole-eetxfskk",
+                        "trackLatest": true,
+                        "volumes": []
+                    },
+                    "outputs": {
+                        "__meta": "{\"schema_version\":\"1\"}",
+                        "arn": "arn:aws:ecs:us-east-1:385192180425:task-definition/polygon-production-MyClusterCluster-basendrt-MyService:1",
+                        "arnWithoutRevision": "arn:aws:ecs:us-east-1:385192180425:task-definition/polygon-production-MyClusterCluster-basendrt-MyService",
+                        "containerDefinitions": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:AHkeZOuktUYaZFUc:6SnkiHlb12jWrgV1mBY6rcAAbbbLHdgsB4ASUXZNAz/dfZ5W3Y97ZK3NDIC+9wqQPgbMz0FIncfgGM4BtRlG4NEN2qz2PeJ2OWhvko+XHWSKnBWzYFiIeffuOpR+8RXlD0p2e1qJaZ58l86mfyJpEmXzKvnMklvfGsSPb7huXAxPnuZT2GFCtI6Z3B+6HrxHZCqE2KZKzZanmEYcnCIo3EVgLtb/oYZ5JzUCOGRgjkpcApahXwSULPujzPm8EXqrhNU5sCHelM3Suv8L9QlL7j61dV0I5L97Ee8sxjlMDmL/KJjG0fiSUPVp8kroEgWdfmtfbDowA2OUra1tftV62ypnTebOVPQE1EtoXRbG2bj7oI9jWDdQsZibnqUYVZyqSe4zkL5jOwwYK0dM5XyjihCPoUAOtPjyAQqPm+7UyGSN42I+9z56N0c0kKZ0jVZ17s/q44paH4Co32nYHPZcLSVczy2Zjv5lHFEb9INb4ILNvhQKH3Lr024KJcH/esYMyOfmgvFRxQk0oYoHAxgM3Mw9W9ZksxeZ+/nmPh1TL+StUqtZ2+I6RhvfiUrxf37T49UtJnb6DcUHvktoV80PlPVBxo4a59iHqbRDDVSYMYpD//tHfKscrAioam59nQRVPzkymVun2ZSDJ66Oxu0cdNHp5RrbcLlWKv3HhzJI0YIY1c7zDCZmgZLVLxHLQDHlV7kbRzNjeSI8V8XpDBCxQICgt5FAKrOZpr2vqEyh2l17AbRwuexfCfBHaUI9yge0g8/Dfkbv+6kCM+F/e+KYf2oFiWtIagc79O0WmSwomPy7HxiQ5mP5rfRk6a0aYyueHks0hh5AgTyNKBtBAybkS2HskJtBE4RhM5PLU4akMuIo2gSWC0DlsZK88xp3+aWNyWyMcivt27whTtHkyviXdm4TXnKFV4VKaGZkRtFCqdldbObHIMy2HnNZAZfXxZeKcKZ/qMLDAh3ac86wSeJUZMYHLgyTDpUZBNksNgn4jhusRvEPOjupBJve0S/MFa/1/6eyCsQqYRj/JVx1C74K+yb0uQaU3cVT0sX0CP4BR1WvBQ+QUBTaXkkDlRguLB9z+Q7mhhrncLEmkWJmLZu4LLqYZo7x4+AVodeYxCWfVbidusiNQndOlFfzAuwStfV3q/JmFzCeDiKFThuqy259miIJ3727XzWZY6hrpMJObqmGv+gHDvO4c1ovHBQrIVfi0WoA1PTMyyBXp0pw7ho2NuvJBQ0ARVpLAOApQpYaLp+m7Q=="
+                        },
+                        "cpu": "256",
+                        "ephemeralStorage": null,
+                        "executionRoleArn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceExecutionRole-nzsoacad",
+                        "family": "polygon-production-MyClusterCluster-basendrt-MyService",
+                        "id": "polygon-production-MyClusterCluster-basendrt-MyService",
+                        "inferenceAccelerators": [],
+                        "ipcMode": "",
+                        "memory": "512",
+                        "networkMode": "awsvpc",
+                        "pidMode": "",
+                        "placementConstraints": [],
+                        "proxyConfiguration": null,
+                        "requiresCompatibilities": [
+                            "FARGATE"
+                        ],
+                        "revision": 1,
+                        "runtimePlatform": {
+                            "cpuArchitecture": "X86_64",
+                            "operatingSystemFamily": "LINUX"
+                        },
+                        "skipDestroy": false,
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "taskRoleArn": "arn:aws:iam::385192180425:role/polygon-production-MyServiceTaskRole-eetxfskk",
+                        "trackLatest": true,
+                        "volumes": []
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPublicAccessBlock:BucketPublicAccessBlock::MyBucketPublicAccessBlock",
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPolicy:BucketPolicy::MyBucketPolicy",
+                        "urn:pulumi:production::polygon::sst:aws:Service$docker-build:index:Image::MyServiceImageMyService",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceExecutionRole",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceTaskRole",
+                        "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket",
+                        "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketCorsConfigurationV2:BucketCorsConfigurationV2::MyBucketCors",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:cloudwatch/logGroup:LogGroup::MyServiceLogGroupMyService"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "containerDefinitions": [
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketV2:BucketV2::MyBucketBucket",
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPublicAccessBlock:BucketPublicAccessBlock::MyBucketPublicAccessBlock",
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketCorsConfigurationV2:BucketCorsConfigurationV2::MyBucketCors",
+                            "urn:pulumi:production::polygon::sst:aws:Bucket$aws:s3/bucketPolicy:BucketPolicy::MyBucketPolicy",
+                            "urn:pulumi:production::polygon::sst:aws:Service$docker-build:index:Image::MyServiceImageMyService",
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:cloudwatch/logGroup:LogGroup::MyServiceLogGroupMyService",
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "cpu": [],
+                        "executionRoleArn": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceExecutionRole"
+                        ],
+                        "family": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "memory": [],
+                        "networkMode": [],
+                        "requiresCompatibilities": [],
+                        "runtimePlatform": [],
+                        "taskRoleArn": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:iam/role:Role::MyServiceTaskRole"
+                        ],
+                        "trackLatest": [],
+                        "volumes": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ]
+                    },
+                    "created": "2025-03-31T12:04:30.068638Z",
+                    "modified": "2025-03-31T12:04:30.068638Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/ecs/taskDefinition.ts#446,9"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/service:Service::MyServiceService",
+                    "custom": true,
+                    "id": "arn:aws:ecs:us-east-1:385192180425:service/polygon-production-MyClusterCluster-basendrt/MyService",
+                    "type": "aws:ecs/service:Service",
+                    "inputs": {
+                        "__defaults": [
+                            "availabilityZoneRebalancing",
+                            "deploymentMaximumPercent",
+                            "deploymentMinimumHealthyPercent",
+                            "enableEcsManagedTags",
+                            "schedulingStrategy"
+                        ],
+                        "availabilityZoneRebalancing": "DISABLED",
+                        "cluster": "arn:aws:ecs:us-east-1:385192180425:cluster/polygon-production-MyClusterCluster-basendrt",
+                        "deploymentCircuitBreaker": {
+                            "__defaults": [],
+                            "enable": true,
+                            "rollback": true
+                        },
+                        "deploymentMaximumPercent": 200,
+                        "deploymentMinimumHealthyPercent": 100,
+                        "desiredCount": 1,
+                        "enableEcsManagedTags": false,
+                        "enableExecuteCommand": true,
+                        "launchType": "FARGATE",
+                        "loadBalancers": [
+                            {
+                                "__defaults": [],
+                                "containerName": "MyService",
+                                "containerPort": 3000,
+                                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c"
+                            }
+                        ],
+                        "name": "MyService",
+                        "networkConfiguration": {
+                            "__defaults": [],
+                            "assignPublicIp": true,
+                            "securityGroups": [
+                                "sg-028f20a018a5c91e5"
+                            ],
+                            "subnets": [
+                                "subnet-00632609851c9485b",
+                                "subnet-03961725e776462c2"
+                            ]
+                        },
+                        "schedulingStrategy": "REPLICA",
+                        "serviceRegistries": {
+                            "__defaults": [],
+                            "registryArn": "arn:aws:servicediscovery:us-east-1:385192180425:service/srv-tbuahrs7rerhndkp"
+                        },
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "taskDefinition": "arn:aws:ecs:us-east-1:385192180425:task-definition/polygon-production-MyClusterCluster-basendrt-MyService:1",
+                        "waitForSteadyState": false
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":1200000000000,\"delete\":1200000000000,\"update\":1200000000000},\"schema_version\":\"1\"}",
+                        "alarms": null,
+                        "availabilityZoneRebalancing": "DISABLED",
+                        "capacityProviderStrategies": [],
+                        "cluster": "arn:aws:ecs:us-east-1:385192180425:cluster/polygon-production-MyClusterCluster-basendrt",
+                        "deploymentCircuitBreaker": {
+                            "enable": true,
+                            "rollback": true
+                        },
+                        "deploymentController": {
+                            "type": "ECS"
+                        },
+                        "deploymentMaximumPercent": 200,
+                        "deploymentMinimumHealthyPercent": 100,
+                        "desiredCount": 1,
+                        "enableEcsManagedTags": false,
+                        "enableExecuteCommand": true,
+                        "forceDelete": null,
+                        "forceNewDeployment": null,
+                        "healthCheckGracePeriodSeconds": 0,
+                        "iamRole": "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+                        "id": "arn:aws:ecs:us-east-1:385192180425:service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "launchType": "FARGATE",
+                        "loadBalancers": [
+                            {
+                                "containerName": "MyService",
+                                "containerPort": 3000,
+                                "elbName": "",
+                                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:385192180425:targetgroup/HTTP20250331114522158700000002/317a1cc803941d6c"
+                            }
+                        ],
+                        "name": "MyService",
+                        "networkConfiguration": {
+                            "assignPublicIp": true,
+                            "securityGroups": [
+                                "sg-028f20a018a5c91e5"
+                            ],
+                            "subnets": [
+                                "subnet-00632609851c9485b",
+                                "subnet-03961725e776462c2"
+                            ]
+                        },
+                        "orderedPlacementStrategies": [],
+                        "placementConstraints": [],
+                        "platformVersion": "LATEST",
+                        "propagateTags": "NONE",
+                        "schedulingStrategy": "REPLICA",
+                        "serviceConnectConfiguration": null,
+                        "serviceRegistries": {
+                            "containerName": "",
+                            "containerPort": 0,
+                            "port": 0,
+                            "registryArn": "arn:aws:servicediscovery:us-east-1:385192180425:service/srv-tbuahrs7rerhndkp"
+                        },
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "taskDefinition": "arn:aws:ecs:us-east-1:385192180425:task-definition/polygon-production-MyClusterCluster-basendrt-MyService:1",
+                        "triggers": {},
+                        "volumeConfiguration": null,
+                        "vpcLatticeConfigurations": [],
+                        "waitForSteadyState": false
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::MyServiceTask",
+                        "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/targetGroup:TargetGroup::MyServiceTargetMyServiceHTTP3000",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2",
+                        "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/defaultSecurityGroup:DefaultSecurityGroup::MyVpcSecurityGroup",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:servicediscovery/service:Service::MyServiceCloudmapService"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "cluster": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "deploymentCircuitBreaker": [],
+                        "desiredCount": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "enableExecuteCommand": [],
+                        "launchType": [],
+                        "loadBalancers": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:lb/targetGroup:TargetGroup::MyServiceTargetMyServiceHTTP3000"
+                        ],
+                        "name": [],
+                        "networkConfiguration": [
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet1",
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/subnet:Subnet::MyVpcPublicSubnet2",
+                            "urn:pulumi:production::polygon::sst:aws:Vpc$aws:ec2/defaultSecurityGroup:DefaultSecurityGroup::MyVpcSecurityGroup"
+                        ],
+                        "serviceRegistries": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:servicediscovery/service:Service::MyServiceCloudmapService"
+                        ],
+                        "taskDefinition": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::MyServiceTask"
+                        ],
+                        "waitForSteadyState": []
+                    },
+                    "created": "2025-03-31T12:04:31.254394Z",
+                    "modified": "2025-03-31T12:04:31.254394Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#2144,14"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget",
+                    "custom": true,
+                    "id": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                    "type": "aws:appautoscaling/target:Target",
+                    "inputs": {
+                        "__defaults": [],
+                        "maxCapacity": 1,
+                        "minCapacity": 1,
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "outputs": {
+                        "arn": "arn:aws:application-autoscaling:us-east-1:385192180425:scalable-target/0ec54210b3e673b348b484df7e2847898b99",
+                        "id": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "maxCapacity": 1,
+                        "minCapacity": 1,
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "roleArn": "arn:aws:iam::385192180425:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "suspendedState": {
+                            "dynamicScalingInSuspended": false,
+                            "dynamicScalingOutSuspended": false,
+                            "scheduledScalingSuspended": false
+                        },
+                        "tags": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        },
+                        "tagsAll": {
+                            "sst:app": "polygon",
+                            "sst:stage": "production"
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/service:Service::MyServiceService"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "maxCapacity": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "minCapacity": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster"
+                        ],
+                        "resourceId": [
+                            "urn:pulumi:production::polygon::sst:aws:Cluster$aws:ecs/cluster:Cluster::MyClusterCluster",
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:ecs/service:Service::MyServiceService"
+                        ],
+                        "scalableDimension": [],
+                        "serviceNamespace": []
+                    },
+                    "created": "2025-03-31T12:04:32.090679Z",
+                    "modified": "2025-03-31T12:04:32.090679Z",
+                    "sourcePosition": "project:///../../../file:/Users/noahmilberger/Documents/milbo/polygon/.sst/platform/src/components/aws/service.ts#2222,22"
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/policy:Policy::MyServiceAutoScalingMemoryPolicy",
+                    "custom": true,
+                    "id": "polygon-production-MyServiceAutoScalingMemoryPolicy-baxmrcnk",
+                    "type": "aws:appautoscaling/policy:Policy",
+                    "inputs": {
+                        "__defaults": [],
+                        "name": "polygon-production-MyServiceAutoScalingMemoryPolicy-baxmrcnk",
+                        "policyType": "TargetTrackingScaling",
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "targetTrackingScalingPolicyConfiguration": {
+                            "__defaults": [
+                                "disableScaleIn"
+                            ],
+                            "disableScaleIn": false,
+                            "predefinedMetricSpecification": {
+                                "__defaults": [],
+                                "predefinedMetricType": "ECSServiceAverageMemoryUtilization"
+                            },
+                            "targetValue": 70
+                        }
+                    },
+                    "outputs": {
+                        "alarmArns": [
+                            "arn:aws:cloudwatch:us-east-1:385192180425:alarm:TargetTracking-service/polygon-production-MyClusterCluster-basendrt/MyService-AlarmHigh-fdf2c471-8b81-491e-b739-46d88311a42d",
+                            "arn:aws:cloudwatch:us-east-1:385192180425:alarm:TargetTracking-service/polygon-production-MyClusterCluster-basendrt/MyService-AlarmLow-11ec2937-9c96-4637-81f3-965f4985a9a1"
+                        ],
+                        "arn": "arn:aws:autoscaling:us-east-1:385192180425:scalingPolicy:4210b3e6-73b3-48b4-84df-7e2847898b99:resource/ecs/service/polygon-production-MyClusterCluster-basendrt/MyService:policyName/polygon-production-MyServiceAutoScalingMemoryPolicy-baxmrcnk",
+                        "id": "polygon-production-MyServiceAutoScalingMemoryPolicy-baxmrcnk",
+                        "name": "polygon-production-MyServiceAutoScalingMemoryPolicy-baxmrcnk",
+                        "policyType": "TargetTrackingScaling",
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "stepScalingPolicyConfiguration": null,
+                        "targetTrackingScalingPolicyConfiguration": {
+                            "customizedMetricSpecification": null,
+                            "disableScaleIn": false,
+                            "predefinedMetricSpecification": {
+                                "predefinedMetricType": "ECSServiceAverageMemoryUtilization",
+                                "resourceLabel": ""
+                            },
+                            "scaleInCooldown": 0,
+                            "scaleOutCooldown": 0,
+                            "targetValue": 70
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "name": [],
+                        "policyType": [],
+                        "resourceId": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "scalableDimension": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "serviceNamespace": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "targetTrackingScalingPolicyConfiguration": []
+                    },
+                    "created": "2025-03-31T12:04:32.697955Z",
+                    "modified": "2025-03-31T12:04:32.697955Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/appautoscaling/policy.ts#336,9",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/policy:Policy::MyServiceAutoScalingCpuPolicy",
+                    "custom": true,
+                    "id": "polygon-production-MyServiceAutoScalingCpuPolicy-thwdvzac",
+                    "type": "aws:appautoscaling/policy:Policy",
+                    "inputs": {
+                        "__defaults": [],
+                        "name": "polygon-production-MyServiceAutoScalingCpuPolicy-thwdvzac",
+                        "policyType": "TargetTrackingScaling",
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "targetTrackingScalingPolicyConfiguration": {
+                            "__defaults": [
+                                "disableScaleIn"
+                            ],
+                            "disableScaleIn": false,
+                            "predefinedMetricSpecification": {
+                                "__defaults": [],
+                                "predefinedMetricType": "ECSServiceAverageCPUUtilization"
+                            },
+                            "targetValue": 70
+                        }
+                    },
+                    "outputs": {
+                        "alarmArns": [
+                            "arn:aws:cloudwatch:us-east-1:385192180425:alarm:TargetTracking-service/polygon-production-MyClusterCluster-basendrt/MyService-AlarmHigh-59769d65-3e54-4053-aea6-2f68f601f5ad",
+                            "arn:aws:cloudwatch:us-east-1:385192180425:alarm:TargetTracking-service/polygon-production-MyClusterCluster-basendrt/MyService-AlarmLow-688773f8-6c1a-45cd-8efe-9ed02ae4a7fa"
+                        ],
+                        "arn": "arn:aws:autoscaling:us-east-1:385192180425:scalingPolicy:4210b3e6-73b3-48b4-84df-7e2847898b99:resource/ecs/service/polygon-production-MyClusterCluster-basendrt/MyService:policyName/polygon-production-MyServiceAutoScalingCpuPolicy-thwdvzac",
+                        "id": "polygon-production-MyServiceAutoScalingCpuPolicy-thwdvzac",
+                        "name": "polygon-production-MyServiceAutoScalingCpuPolicy-thwdvzac",
+                        "policyType": "TargetTrackingScaling",
+                        "resourceId": "service/polygon-production-MyClusterCluster-basendrt/MyService",
+                        "scalableDimension": "ecs:service:DesiredCount",
+                        "serviceNamespace": "ecs",
+                        "stepScalingPolicyConfiguration": null,
+                        "targetTrackingScalingPolicyConfiguration": {
+                            "customizedMetricSpecification": null,
+                            "disableScaleIn": false,
+                            "predefinedMetricSpecification": {
+                                "predefinedMetricType": "ECSServiceAverageCPUUtilization",
+                                "resourceLabel": ""
+                            },
+                            "scaleInCooldown": 0,
+                            "scaleOutCooldown": 0,
+                            "targetValue": 70
+                        }
+                    },
+                    "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                    "dependencies": [
+                        "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                    ],
+                    "provider": "urn:pulumi:production::polygon::pulumi:providers:aws::default_6_66_2::ea220be6-207c-4dfd-b494-8872d97cdcde",
+                    "propertyDependencies": {
+                        "name": [],
+                        "policyType": [],
+                        "resourceId": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "scalableDimension": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "serviceNamespace": [
+                            "urn:pulumi:production::polygon::sst:aws:Service$aws:appautoscaling/target:Target::MyServiceAutoScalingTarget"
+                        ],
+                        "targetTrackingScalingPolicyConfiguration": []
+                    },
+                    "created": "2025-03-31T12:04:32.853479Z",
+                    "modified": "2025-03-31T12:04:32.853479Z",
+                    "sourcePosition": "project:///../../platform/node_modules/@pulumi/appautoscaling/policy.ts#336,9",
+                    "ignoreChanges": [
+                        "name"
+                    ]
+                }
+            ],
+            "pending_operations": [
+                {
+                    "resource": {
+                        "urn": "urn:pulumi:production::polygon::sst:aws:Service$docker-build:index:Image::MyServiceImageMyService",
+                        "custom": true,
+                        "id": "sha256:d7df4a87a422403fbe8190556b5d70983edbba1bc628627f53da4fdae7b9f02b",
+                        "type": "docker-build:index:Image",
+                        "inputs": {
+                            "buildArgs": {
+                                "SST_RESOURCE_App": "{\"name\":\"polygon\",\"stage\":\"production\"}",
+                                "SST_RESOURCE_MyBucket": "{\"name\":\"polygon-production-mybucketbucket-wasvnwde\",\"type\":\"sst:aws:Bucket\"}"
+                            },
+                            "buildOnPreview": true,
+                            "cacheFrom": [
+                                {
+                                    "disabled": false,
+                                    "raw": "",
+                                    "registry": {
+                                        "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                    }
+                                }
+                            ],
+                            "cacheTo": [
+                                {
+                                    "disabled": false,
+                                    "raw": "",
+                                    "registry": {
+                                        "compression": "gzip",
+                                        "compressionLevel": 0,
+                                        "forceCompression": false,
+                                        "ignoreError": false,
+                                        "imageManifest": true,
+                                        "mode": "max",
+                                        "ociMediaTypes": true,
+                                        "ref": "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService-cache"
+                                    }
+                                }
+                            ],
+                            "context": {
+                                "location": "/Users/noahmilberger/Documents/milbo/polygon"
+                            },
+                            "dockerfile": {
+                                "inline": "",
+                                "location": "/Users/noahmilberger/Documents/milbo/polygon/Dockerfile"
+                            },
+                            "exec": false,
+                            "load": false,
+                            "network": "default",
+                            "noCache": false,
+                            "platforms": [
+                                "linux/amd64"
+                            ],
+                            "pull": false,
+                            "push": true,
+                            "registries": [
+                                {
+                                    "address": "https://385192180425.dkr.ecr.us-east-1.amazonaws.com",
+                                    "password": {
+                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                        "ciphertext": "v1:Po1zDjVN5MiHaNcc:H6Q6q+WuSu683wwd48XhnRh62JTl1/wBh2IJG1xI50frPYCVpaQu5e6yfsBo3TIyecj4GZ7JFfFzQ0XMFPHIi0PK1SjuK0Xd9T4w25LcQglg/P911KELfH37WGZnvKqaC8hF3OIRTIS0lAGgrqH7bd2x22XzOyaONd/OVhJJBOhTLUdLCHl3Ylwt7lB4BkuDN7+onPr0K51hvfDFQfI1wgN4+ttrbbMi2zG/qNIpvoKnH+vDfwIBzUDw3efdX2WcETvYO5jTapVdTrepyrCEmFQ+sGS+bDNFkydvNA7TzV4Gzjaz+NN7yHcRtqcNSMpzJ6fqfzDXFWbeWlfGH+BkgzGpguCNFbX5YMYuix51Lqx/8PsAT7089aOXguH3FuAucKGx40Jcv+daGmdmhOWiKcVWA0e4h+O9i5fAIv5pvGJsIu3zljId2RnjXm5Td0OBCzavGBCJrmuBQbwqNfdYuWJ+KLNOLwwT3QDdAokw5lZecAvAb8Q/LggsyrpZ8mlXkq1VNZeyZbt1oj8iElSNGIRGBYvz0gzIQrNvVl4C3i8CQufxpuBmoCft9Dvn5FqcNQEpode6KZp8BGekCHDczJRWXWQu40b/tPauFLOKEPl6VPrS4xIsU5Hn8uCcB2Om/EPHueRIjKBmOVybnCxlZ4z8MYGvZIdYEtn8F3UYvMQZ6yESsLQbRatjMbv95vvcP/2PtUsvZfUguF0hxjbCdhxM2VrIacyp+P8Xgh8s2LJKiCBFbrDsFn54DyRaoUmggqPdvlBlT6ghLxYF1mqH95J/nB1F36BlNoO9Yw0ukORybWfexziI4JCXKPFPBVLLmyNvFm8UWWke0K9tm7mCTdOubK6pc5z0qyi2svBEiDHhPCEMZTt75kzNX0Jq+4HeuiL0jgS4V+hj95YLW8T0fjmWiewSubsdq/TGleiuVGGosqovuXDqgfmyo+efCdtPZaL7xIdU0C6qFig3PFvmYyz0p9jOQq+kzomgIA/9lIe8Wg5+B1YlbtVtbZv+bcV9AsjETn07vudCSpdbyK6uifFFzdazOLls+hrtmBVG/jFx30knbEl1aLAgtAjYwp/trOcHW68xh9QMd47rfU7Ceo8q6R9adntxQNNPQeJNwkm52PTwiMhq3fe2/zIUGyjGKSbfQ5vlh0MM2XKo+Qi5PIj7c61nANuVdEVnTxaKO76bhbfWIBQOz7uoDi/aFr1syXyf4n3+Uu0VnmB2V6rnCnQGpMgkJnWVnQSWHGabe/Wyh5as3x0P/+Zmp36SxTCjpt3cs27cKnxnWCQOq1UVE0DTSb9z3HBKUhtMJb5CQ9PahJq8tOn33Ew5dwS/VEnoAH+vSFl/WLADrOQhsBO6k5MHiGt2uNMnUj38+RlrT9iIUH3CcYZJ2zc7FX9YeYi1OX3AIiFHQ/JDDcoRcxA4ELOIOVZjsIdBadx5kzffRolSZGyAWtpSYaPTc2KC27i/iDiKJS4DFduF1cKc1D6aRse6i+lQIdth+eQJTAOktI6u8MYC3l27GXTMR8B5iQNkCaj93tesy5th4iOK2dvmvi0+2npTr8aduiKyjggHr+FylDWMjko33nNZ97S8B1UC7EzkvD5eIDTrB4UpK8xHWgwNzuba9G2Vugvo2s94f/DvxUf7U3aSzpYzSZ/8eN4oVdG4lyYufi3CEJ2wHcGXTWn1pjZUrlNmyL/Drtuke01n0ty68czgT+a7KLycZhVWCChegaIxshubTmbxrO7gEMau6W1tq6hqG9GL38kJ24He/HvpZ/c08Wa1tbsbCHmvvA8HPXVpxNQrlD7BJ7y+YhWjAhGZk7mmUyamQaQG4stC5NFD+mhWdOXDLSpPnVT9IhVNF22zHf3zv3XnnNFAsJ8VD76My9/Xk4tmARdQDqzKd1S11zhYEXhmd7ngixvrvVYbYVCQHpvIEDetaMC8H2L2MeaSStJba/FeyexC+HlnM2c3LxgCUSA4XDW11Chq1AjoJZHMfuOlEf/Wf8rFufqZ8Ez96Fs/tjI/iIt7wAoSKLIEbIco3ASDhn0vAJCmSFuBkiY0eawO+oHJG9ztehclArU+qdJimtAFJbt0ngeERFvFup6MhKZRMLzRMLfkrZ8rtvvZsThdNJ5LDVZ2cxNDuBbY2ugjCq84QSg61I259IqI3zsYeUqViBrdBBJDXf9Je0blyM1aOmIvh0obTD1g8MjtlNIRgc4XgH3MRYAcs8n5DRde9r1dg4/vDU8nKpT/+dfW4ZqlSR6jiHtUDgzPPjoR+OrP2UeP8eJ5WgYmZgmACMl6HC1994glWKMSVfgATZFPK3z6yfE0CC/xZn61arhMwAEqmYJKcGHUA8BfSJYhJG/OX7V+CF/fiD5vhHATFzuUcQk7wLMrQ9M="
+                                    },
+                                    "username": "AWS"
+                                }
+                            ],
+                            "tags": [
+                                "385192180425.dkr.ecr.us-east-1.amazonaws.com/sst-asset:MyService"
+                            ],
+                            "target": ""
+                        },
+                        "parent": "urn:pulumi:production::polygon::sst:aws:Service::MyService",
+                        "provider": "urn:pulumi:production::polygon::pulumi:providers:docker-build::default_0_0_8::169e5602-8ae3-4180-a47b-3f0d9fe7fa51",
+                        "propertyDependencies": {
+                            "buildArgs": [],
+                            "buildOnPreview": [],
+                            "cacheFrom": [],
+                            "cacheTo": [],
+                            "context": [],
+                            "dockerfile": [],
+                            "network": [],
+                            "platforms": [],
+                            "push": [],
+                            "registries": [],
+                            "tags": []
+                        },
+                        "created": "2025-03-31T12:04:29.491256Z",
+                        "modified": "2025-03-31T12:04:29.491256Z",
+                        "sourcePosition": "project:///../../platform/node_modules/@pulumi/image.ts#788,9"
+                    },
+                    "type": "updating"
+                }
+            ],
+            "metadata": {}
+        }
+    }
+}

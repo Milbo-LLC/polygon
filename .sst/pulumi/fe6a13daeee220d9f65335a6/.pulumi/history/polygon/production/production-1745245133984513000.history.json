@@ -1,0 +1,45 @@
+{
+    "kind": "update",
+    "startTime": 1743423608,
+    "message": "Fixed build.",
+    "environment": {
+        "exec.kind": "cli",
+        "git.author": "Noah Milberger",
+        "git.author.email": "n.milberger@gmail.com",
+        "git.committer": "Noah Milberger",
+        "git.committer.email": "n.milberger@gmail.com",
+        "git.dirty": "true",
+        "git.head": "c12defcaf93f1e5c703e5698d01170ae692213a4",
+        "git.headName": "refs/heads/main",
+        "pulumi.arch": "arm64",
+        "pulumi.env.PULUMI_BACKEND_URL": "set",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.env.PULUMI_DEBUG_COMMANDS": "true",
+        "pulumi.env.PULUMI_HOME": "set",
+        "pulumi.env.PULUMI_SKIP_UPDATE_CHECK": "true",
+        "pulumi.flag.config": "set",
+        "pulumi.flag.event-log": "set",
+        "pulumi.flag.non-interactive": "true",
+        "pulumi.flag.skip-preview": "true",
+        "pulumi.flag.stack": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "darwin",
+        "pulumi.version": "v3.146.0",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "Milbo-LLC",
+        "vcs.repo": "polygon",
+        "vcs.root": ".sst/pulumi/fe6a13daeee220d9f65335a6"
+    },
+    "config": {
+        "aws:defaultTags": "{\"tags\":{\"sst:app\":\"polygon\",\"sst:stage\":\"production\"}}",
+        "aws:region": "us-east-1"
+    },
+    "version": 0,
+    "result": "failed",
+    "endTime": 1745245133,
+    "resourceChanges": {
+        "same": 41
+    }
+}

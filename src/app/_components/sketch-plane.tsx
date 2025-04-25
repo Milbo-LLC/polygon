@@ -1,9 +1,11 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { type Dimension, type Tool } from './sketch/_components/sketch-controls'
+import { useKeyboardShortcut } from '~/hooks/use-keyboard-shortcuts'
 
+// Types
 interface SketchPlaneProps {
   dimension: Dimension
   tool: Tool
@@ -19,20 +21,91 @@ interface Point3D {
   z: number
 }
 
-interface DrawingItem {
+interface SketchItem {
   id: string
   tool: Tool
   color: string
   points: Point3D[]
-  dimension: Dimension // Track which dimension this drawing belongs to
+  dimension: Dimension
 }
 
-// Global store to keep drawings across component rerenders
-const globalDrawings: Record<Dimension, DrawingItem[]> = {
+// Constants
+const OFFSET_FROM_PLANE = 0.01;
+const DEFAULT_SKETCH_COLOR = '#000000';
+const ACTIVE_SKETCH_COLOR = '#ff0000';
+const DEFAULT_LINE_WIDTH = 3;
+
+// Global store to keep sketches across component rerenders
+const globalSketchStore: Record<Dimension, SketchItem[]> = {
   x: [],
   y: [],
   z: []
 };
+
+// Custom hook for sketch persistence
+function useSketchPersistence(dimension: Dimension, persistSketches: boolean) {
+  const [sketches, setSketches] = useState<SketchItem[]>([]);
+  
+  // Load initial sketches from global store
+  useEffect(() => {
+    if (persistSketches) {
+      setSketches(globalSketchStore[dimension]);
+    }
+  }, [dimension, persistSketches]);
+  
+  // Update global store when sketches change
+  useEffect(() => {
+    if (persistSketches) {
+      globalSketchStore[dimension] = sketches;
+    }
+  }, [sketches, dimension, persistSketches]);
+  
+  return { sketches, setSketches };
+}
+
+// Custom hook for grid snapping
+function useGridSnapping(gridSize: number, gridDivisions: number) {
+  return useCallback((value: number): number => {
+    const cellSize = gridSize / gridDivisions;
+    return Math.round(value / cellSize) * cellSize;
+  }, [gridSize, gridDivisions]);
+}
+
+// Custom hook for raycasting and point calculation
+function useRaycast(meshRef: React.RefObject<THREE.Mesh>, snapToGrid: (value: number) => number) {
+  const { raycaster, mouse, camera } = useThree();
+  
+  const getIntersectionPoint = useCallback((): THREE.Intersection | null => {
+    if (!meshRef.current) return null;
+    
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(meshRef.current);
+    
+    return intersects.length > 0 ? intersects[0] as THREE.Intersection : null;
+  }, [raycaster, mouse, camera, meshRef]);
+  
+  const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
+    if (!intersection?.point) return null;
+    
+    const point = intersection.point;
+    
+    return {
+      x: snapToGrid(point.x),
+      y: snapToGrid(point.y),
+      z: snapToGrid(point.z)
+    };
+  }, [snapToGrid]);
+  
+  return { getIntersectionPoint, getSnappedPoint };
+}
+
+// Tool handlers for different sketch tools
+interface ToolHandlers {
+  [key: string]: {
+    handleMove: (currentSketch: SketchItem, newPoint: Point3D) => SketchItem;
+    getPoints: (sketch: SketchItem) => [number, number, number][];
+  }
+}
 
 export default function SketchPlane({
   dimension,
@@ -42,28 +115,16 @@ export default function SketchPlane({
   gridDivisions = 100,
   persistDrawings = false
 }: SketchPlaneProps) {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const [drawings, setDrawings] = useState<DrawingItem[]>([])
-  const [isDrawing, setIsDrawing] = useState(false)
-  const [currentDrawing, setCurrentDrawing] = useState<DrawingItem | null>(null)
-  const { raycaster, mouse, camera } = useThree()
+  const meshRef = useRef<THREE.Mesh>(null);
+  const { sketches, setSketches } = useSketchPersistence(dimension, persistDrawings);
+  const [isSketching, setIsSketching] = useState(false);
+  const [currentSketch, setCurrentSketch] = useState<SketchItem | null>(null);
   
-  // Load initial drawings from global store for this dimension
-  useEffect(() => {
-    if (persistDrawings) {
-      setDrawings(globalDrawings[dimension]);
-    }
-  }, [dimension, persistDrawings]);
+  const snapToGrid = useGridSnapping(gridSize, gridDivisions);
+  const { getIntersectionPoint, getSnappedPoint } = useRaycast(meshRef, snapToGrid);
   
-  // Update global store whenever drawings change
-  useEffect(() => {
-    if (persistDrawings) {
-      globalDrawings[dimension] = drawings;
-    }
-  }, [drawings, dimension, persistDrawings]);
-  
-  // Position and rotation based on dimension
-  const planeConfig = {
+  // Plane config based on dimension
+  const planeConfig = useMemo(() => ({
     x: {
       position: [0, 0, 0],
       rotation: [0, Math.PI / 2, 0],
@@ -79,190 +140,205 @@ export default function SketchPlane({
       rotation: [0, 0, 0],
       color: '#7b7bff'
     }
-  }
-
-  // Snap to grid
-  const snapToGrid = useCallback((value: number): number => {
-    const cellSize = gridSize / gridDivisions
-    return Math.round(value / cellSize) * cellSize
-  }, [gridSize, gridDivisions]);
-
-  // Listen for keyboard shortcuts
-  useEffect(() => {
-    if (!isActive) return
-    
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
-        // Escape cancels current drawing
-        if (isDrawing) {
-          setIsDrawing(false)
-          setCurrentDrawing(null)
-        }
-      } else if (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey)) {
-        // Undo last drawing
-        e.preventDefault()
-        setDrawings(prev => {
-          const newDrawings = prev.slice(0, -1);
-          globalDrawings[dimension] = newDrawings; // Update global store
-          return newDrawings;
-        })
-      }
-    }
-    
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isActive, isDrawing, dimension])
-
-  // Get snapped point from intersection
-  const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
-    if (!intersection?.point) return null
-    
-    const point = intersection.point
-    
-    return {
-      x: snapToGrid(point.x),
-      y: snapToGrid(point.y),
-      z: snapToGrid(point.z)
-    }
-  }, [snapToGrid]);
-
-  useEffect(() => {
-    const handlePointerMove = () => {
-      if (!isActive || !isDrawing || !currentDrawing || !meshRef.current) return
-      
-      raycaster.setFromCamera(mouse, camera)
-      const intersects = raycaster.intersectObject(meshRef.current)
-      
-      if (intersects.length > 0 && intersects[0]) {
-        const snappedPoint = getSnappedPoint(intersects[0])
-        if (!snappedPoint) return
+  }), []);
+  
+  // Tool handlers
+  const toolHandlers = useMemo<ToolHandlers>(() => ({
+    pencil: {
+      handleMove: (currentSketch, newPoint) => ({
+        ...currentSketch,
+        points: [...currentSketch.points, newPoint]
+      }),
+      getPoints: (sketch) => convertPointsToLine(sketch.points)
+    },
+    rectangle: {
+      handleMove: (currentSketch, newPoint) => {
+        const firstPoint = currentSketch.points[0];
+        if (!firstPoint) return currentSketch;
         
-        if (tool === 'pencil') {
-          setCurrentDrawing({
-            ...currentDrawing,
-            points: [...currentDrawing.points, snappedPoint]
-          })
-        } else if (tool === 'rectangle' && currentDrawing.points.length > 0) {
-          const firstPoint = currentDrawing.points[0]
-          if (firstPoint) {
-            setCurrentDrawing({
-              ...currentDrawing,
-              points: [firstPoint, snappedPoint]
-            })
-          }
-        }
-      }
-    }
-
-    window.addEventListener('pointermove', handlePointerMove)
-    
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-    }
-  }, [isActive, isDrawing, currentDrawing, camera, mouse, raycaster, tool, dimension, getSnappedPoint])
-
-  const handleClick = () => {
-    if (!isActive || !meshRef.current) return
-    
-    raycaster.setFromCamera(mouse, camera)
-    const intersects = raycaster.intersectObject(meshRef.current)
-    
-    if (intersects.length > 0 && intersects[0]) {
-      if (isDrawing && currentDrawing) {
-        if (currentDrawing.points.length >= 2) {
-          const newDrawings = [...drawings, currentDrawing];
-          setDrawings(newDrawings);
-          if (persistDrawings) {
-            globalDrawings[dimension] = newDrawings;
-          }
-        }
+        return {
+          ...currentSketch,
+          points: [firstPoint, newPoint]
+        };
+      },
+      getPoints: (sketch) => {
+        if (sketch.points.length < 2) return [];
         
-        setIsDrawing(false)
-        setCurrentDrawing(null)
-        return
+        const [start, end] = sketch.points;
+        if (!start || !end) return [];
+        
+        return getRectanglePoints(start, end);
       }
-      
-      // Otherwise, start a new drawing
-      const snappedPoint = getSnappedPoint(intersects[0])
-      if (!snappedPoint) return
-      
-      setIsDrawing(true)
-      setCurrentDrawing({
-        id: Date.now().toString(),
-        tool,
-        color: '#000000',
-        points: [snappedPoint],
-        dimension
-      })
     }
-  }
-
-  // Convert points for line rendering based on dimension
-  const getLinePoints = (points: Point3D[]): [number, number, number][] => {
-    if (!points || points.length === 0) return []
+  }), []);
+  
+  // Points transformation helper functions
+  const convertPointsToLine = useCallback((points: Point3D[]): [number, number, number][] => {
+    if (!points || points.length === 0) return [];
     
     return points.map((p): [number, number, number] => {
       if (dimension === 'x') {
-        // For X plane (YZ plane)
-        return [0.01, p.y, p.z] 
+        return [OFFSET_FROM_PLANE, p.y, p.z]; 
       } else if (dimension === 'y') {
-        // For Y plane (XZ plane)
-        return [p.x, 0.01, p.z]
+        return [p.x, OFFSET_FROM_PLANE, p.z];
       } else {
-        // For Z plane (XY plane)
-        return [p.x, p.y, 0.01]
+        return [p.x, p.y, OFFSET_FROM_PLANE];
       }
-    })
-  }
-
-  // Get rectangle points from start and end
-  const getRectanglePoints = (start: Point3D, end: Point3D): [number, number, number][] => {
+    });
+  }, [dimension]);
+  
+  const getRectanglePoints = useCallback((start: Point3D, end: Point3D): [number, number, number][] => {
     if (dimension === 'x') {
-      // For X plane (YZ plane)
       return [
-        [0.01, start.y, start.z],
-        [0.01, start.y, end.z],
-        [0.01, end.y, end.z],
-        [0.01, end.y, start.z],
-        [0.01, start.y, start.z]
-      ]
+        [OFFSET_FROM_PLANE, start.y, start.z],
+        [OFFSET_FROM_PLANE, start.y, end.z],
+        [OFFSET_FROM_PLANE, end.y, end.z],
+        [OFFSET_FROM_PLANE, end.y, start.z],
+        [OFFSET_FROM_PLANE, start.y, start.z]
+      ];
     } else if (dimension === 'y') {
-      // For Y plane (XZ plane)
       return [
-        [start.x, 0.01, start.z],
-        [end.x, 0.01, start.z],
-        [end.x, 0.01, end.z],
-        [start.x, 0.01, end.z],
-        [start.x, 0.01, start.z]
-      ]
+        [start.x, OFFSET_FROM_PLANE, start.z],
+        [end.x, OFFSET_FROM_PLANE, start.z],
+        [end.x, OFFSET_FROM_PLANE, end.z],
+        [start.x, OFFSET_FROM_PLANE, end.z],
+        [start.x, OFFSET_FROM_PLANE, start.z]
+      ];
     } else {
-      // For Z plane (XY plane)
       return [
-        [start.x, start.y, 0.01],
-        [end.x, start.y, 0.01],
-        [end.x, end.y, 0.01],
-        [start.x, end.y, 0.01],
-        [start.x, start.y, 0.01]
-      ]
+        [start.x, start.y, OFFSET_FROM_PLANE],
+        [end.x, start.y, OFFSET_FROM_PLANE],
+        [end.x, end.y, OFFSET_FROM_PLANE],
+        [start.x, end.y, OFFSET_FROM_PLANE],
+        [start.x, start.y, OFFSET_FROM_PLANE]
+      ];
     }
-  }
-
-  // Safe renderer for rectangle that checks for undefined points
-  const renderRectangle = (drawing: DrawingItem) => {
-    if (drawing.points.length < 2) return null
-    const start = drawing.points[0]
-    const end = drawing.points[1]
-    if (!start || !end) return null
+  }, [dimension]);
+  
+  // Handlers
+  const handleCancelSketching = useCallback(() => {
+    if (isSketching) {
+      setIsSketching(false);
+      setCurrentSketch(null);
+    }
+  }, [isSketching]);
+  
+  const handleUndoSketching = useCallback(() => {
+    setSketches(prev => {
+      const newSketches = prev.slice(0, -1);
+      return newSketches;
+    });
+  }, [setSketches]);
+  
+  const handleCompleteSketching = useCallback(() => {
+    if (!currentSketch || currentSketch.points.length < 2) {
+      setIsSketching(false);
+      setCurrentSketch(null);
+      return;
+    }
+    
+    setSketches(prev => [...prev, currentSketch]);
+    setIsSketching(false);
+    setCurrentSketch(null);
+  }, [currentSketch, setSketches]);
+  
+  const handleStartSketching = useCallback((point: Point3D) => {
+    setIsSketching(true);
+    setCurrentSketch({
+      id: Date.now().toString(),
+      tool,
+      color: DEFAULT_SKETCH_COLOR,
+      points: [point],
+      dimension
+    });
+  }, [tool, dimension]);
+  
+  // Use keyboard shortcuts
+  useKeyboardShortcut([
+    {
+      key: 'Escape',
+      disabled: !isActive,
+      callback: handleCancelSketching
+    },
+    {
+      key: 'z',
+      ctrlKey: true,
+      disabled: !isActive,
+      preventDefault: true,
+      callback: handleUndoSketching
+    },
+    {
+      key: 'z',
+      metaKey: true,
+      disabled: !isActive,
+      preventDefault: true,
+      callback: handleUndoSketching
+    }
+  ]);
+  
+  // Handle mouse move for sketching
+  useEffect(() => {
+    if (!isActive || !isSketching || !currentSketch) return;
+    
+    const handlePointerMove = () => {
+      const intersection = getIntersectionPoint();
+      if (!intersection) return;
+      
+      const snappedPoint = getSnappedPoint(intersection);
+      if (!snappedPoint) return;
+      
+      const handler = toolHandlers[currentSketch.tool];
+      if (handler) {
+        setCurrentSketch(handler.handleMove(currentSketch, snappedPoint));
+      }
+    };
+    
+    window.addEventListener('pointermove', handlePointerMove);
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, [
+    isActive, isSketching, currentSketch, 
+    getIntersectionPoint, getSnappedPoint, toolHandlers
+  ]);
+  
+  // Handle click to start/end sketching
+  const handleClick = useCallback(() => {
+    if (!isActive) return;
+    
+    const intersection = getIntersectionPoint();
+    if (!intersection) return;
+    
+    if (isSketching) {
+      handleCompleteSketching();
+      return;
+    }
+    
+    const snappedPoint = getSnappedPoint(intersection);
+    if (!snappedPoint) return;
+    
+    handleStartSketching(snappedPoint);
+  }, [
+    isActive, isSketching, 
+    getIntersectionPoint, getSnappedPoint, 
+    handleCompleteSketching, handleStartSketching
+  ]);
+  
+  // Render sketch
+  const renderSketch = useCallback((sketch: SketchItem, isActive = false) => {
+    const handler = toolHandlers[sketch.tool];
+    if (!handler || sketch.points.length < 2) return null;
+    
+    const points = handler.getPoints(sketch);
+    if (points.length === 0) return null;
     
     return (
       <Line
-        key={drawing.id}
-        points={getRectanglePoints(start, end)}
-        color={drawing.color}
-        lineWidth={3}
+        key={sketch.id}
+        points={points}
+        color={isActive ? ACTIVE_SKETCH_COLOR : sketch.color}
+        lineWidth={DEFAULT_LINE_WIDTH}
       />
-    )
-  }
+    );
+  }, [toolHandlers]);
 
   return (
     <>
@@ -278,44 +354,16 @@ export default function SketchPlane({
         <meshBasicMaterial 
           color={planeConfig[dimension].color}
           transparent={true}
-          opacity={isDrawing ? 0.2 : 0.1}
+          opacity={isSketching ? 0.2 : 0.1}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Render existing drawings */}
-      {drawings.map((drawing) => (
-        drawing.tool === 'pencil' ? (
-          <Line
-            key={drawing.id}
-            points={getLinePoints(drawing.points)}
-            color={drawing.color}
-            lineWidth={3}
-          />
-        ) : drawing.tool === 'rectangle' && drawing.points.length >= 2 ? 
-          renderRectangle(drawing) : null
-      ))}
+      {/* Render existing sketches */}
+      {sketches.map(sketch => renderSketch(sketch))}
 
-      {/* Render current drawing */}
-      {isActive && currentDrawing && (
-        <>
-          {currentDrawing.tool === 'pencil' && currentDrawing.points.length >= 2 && (
-            <Line
-              points={getLinePoints(currentDrawing.points)}
-              color="#ff0000"
-              lineWidth={3}
-            />
-          )}
-          {currentDrawing.tool === 'rectangle' && currentDrawing.points.length >= 2 && 
-            currentDrawing.points[0] && currentDrawing.points[1] && (
-            <Line
-              points={getRectanglePoints(currentDrawing.points[0], currentDrawing.points[1])}
-              color="#ff0000"
-              lineWidth={3}
-            />
-          )}
-        </>
-      )}
+      {/* Render current sketch */}
+      {isActive && currentSketch && currentSketch.points.length >= 1 && renderSketch(currentSketch, true)}
     </>
-  )
+  );
 } 
