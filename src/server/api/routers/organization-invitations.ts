@@ -20,12 +20,11 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("No active organization");
       }
 
-      // Check if user has permission to create invitations (must be owner or admin)
       const userOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
           organizationId: input.organizationId,
-          role: { in: ['owner', 'admin'] }, // Only owners and admins can send invitations
+          role: { in: ['owner', 'admin'] },
           deletedAt: null
         }
       });
@@ -34,9 +33,44 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("You don't have permission to send invitations for this organization");
       }
 
+
+      const existingUser = await ctx.db.user.findUnique({
+        where: { email: input.email },
+        select: { id: true }
+      });
+
+      if (existingUser) {
+        const existingMembership = await ctx.db.userOrganization.findFirst({
+          where: {
+            userId: existingUser.id,
+            organizationId: input.organizationId,
+            deletedAt: null
+          }
+        });
+
+        if (existingMembership) {
+          throw new Error("This user is already a member of the organization");
+        }
+      }
+
+      const pendingInvitation = await ctx.db.organizationInvitation.findFirst({
+        where: {
+          email: input.email,
+          organizationId: input.organizationId,
+          acceptedAt: null,
+          deletedAt: null,
+          expiresAt: {
+            gt: new Date()
+          }
+        }
+      });
+
+      if (pendingInvitation) {
+        throw new Error("There is already a pending invitation for this email address");
+      }
+
       const expiresAt = new Date(Date.now() + ONE_WEEK_IN_MS);
 
-      // Create a data object with all properties explicitly typed
       const data = {
         email: input.email,
         organizationId: input.organizationId,
@@ -45,9 +79,7 @@ export const organizationInvitationRouter = createTRPCRouter({
         expiresAt,
       };
 
-      // Use a transaction to ensure both actions complete or fail together
       const [organizationInvitation] = await ctx.db.$transaction([
-        // Create the invitation
         ctx.db.organizationInvitation.create({
           data,
           include: {
@@ -56,7 +88,6 @@ export const organizationInvitationRouter = createTRPCRouter({
           },
         }),
         
-        // Create a notification record for tracking
         ctx.db.notification.create({
           data: {
             userId: ctx.session.user.id,
@@ -68,7 +99,6 @@ export const organizationInvitationRouter = createTRPCRouter({
         })
       ]);
 
-      // Fetch organization and inviter details for the email
       const [organization, inviter] = await Promise.all([
         ctx.db.organization.findUnique({
           where: { id: input.organizationId },
@@ -78,7 +108,6 @@ export const organizationInvitationRouter = createTRPCRouter({
         })
       ]);
 
-      // Send the invitation email
       if (organization?.name && inviter?.name) {
         await sendOrganizationInvitationEmail(
           input.email,
@@ -135,7 +164,6 @@ export const organizationInvitationRouter = createTRPCRouter({
     .input(UpdateOrganizationInvitationSchema)
     .output(OrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
-      // Fetch the invitation to get the organization ID
       const invitation = await ctx.db.organizationInvitation.findUnique({
         where: { id: input.id },
         select: { organizationId: true }
@@ -145,12 +173,11 @@ export const organizationInvitationRouter = createTRPCRouter({
         throw new Error("Invitation not found");
       }
       
-      // Check if user has permission to update invitations (must be owner or admin)
       const userOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
           organizationId: invitation.organizationId,
-          role: { in: ['owner', 'admin'] }, // Only owners and admins can update invitations
+          role: { in: ['owner', 'admin'] },
           deletedAt: null
         }
       });
@@ -172,5 +199,47 @@ export const organizationInvitationRouter = createTRPCRouter({
       });
 
       return organizationInvitation;
+    }),
+
+  accept: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .output(OrganizationInvitationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      
+      const invitation = await ctx.db.organizationInvitation.findUnique({
+        where: { id },
+        include: {
+          organization: true,
+          invitedByUser: true,
+        },
+      });
+      
+      if (!invitation) {
+        throw new Error("Invitation not found");
+      }
+      
+      if (invitation.email !== ctx.session.user.email) {
+        throw new Error("You can only accept invitations sent to your email address");
+      }
+      
+      if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
+        throw new Error("This invitation has expired");
+      }
+      
+      if (invitation.acceptedAt) {
+        throw new Error("This invitation has already been accepted");
+      }
+      
+      const updatedInvitation = await ctx.db.organizationInvitation.update({
+        where: { id },
+        data: { acceptedAt: new Date() },
+        include: {
+          organization: true,
+          invitedByUser: true,
+        },
+      });
+      
+      return updatedInvitation;
     }),
 });

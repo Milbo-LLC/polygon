@@ -5,7 +5,7 @@ import {
   protectedProcedure,
   orgProtectedProcedure,
 } from "~/server/api/trpc";
-import { UpdateUserOrganizationSchema, type MemberRole } from "~/validators/user-organizations";
+import { UpdateUserOrganizationSchema, type MemberRole, MemberRoleEnum } from "~/validators/user-organizations";
 import { UserOrganizationWithOrgSchema } from "~/validators/extended-schemas";
 
 type UserOrganizationWithOrganization = UserOrganization & {
@@ -158,12 +158,10 @@ export const userOrganizationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId, organizationId, role } = input;
 
-      // Prevent setting role to owner
       if (role === "owner") {
         throw new Error("Cannot set a user's role to owner");
       }
 
-      // Check if user has permission to update
       const currentUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
@@ -177,7 +175,6 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("You don't have permission to update this user's role");
       }
 
-      // Find the user organization record to update
       const targetUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,
@@ -194,12 +191,10 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("User organization not found");
       }
 
-      // Prevent changing an owner's role
       if (targetUserOrg.role as MemberRole === "owner") {
         throw new Error("Owner roles cannot be changed");
       }
 
-      // Use updateMany with specific conditions instead of update by ID
       await ctx.db.userOrganization.updateMany({
         where: {
           userId,
@@ -211,7 +206,6 @@ export const userOrganizationRouter = createTRPCRouter({
         }
       });
 
-      // Fetch the updated record
       const updatedUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,
@@ -242,7 +236,6 @@ export const userOrganizationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId, organizationId } = input;
 
-      // Check if user has permission to remove
       const currentUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId: ctx.session.user.id,
@@ -263,25 +256,51 @@ export const userOrganizationRouter = createTRPCRouter({
         throw new Error("User organization not found");
       }
 
-      // Only owners can remove other owners/admins
       if ((targetUserOrg.role === "owner" || targetUserOrg.role === "admin") 
           && currentUserOrg.role !== "owner") {
         throw new Error("Only owners can remove owners or admins");
       }
 
-      // Use updateMany with specific conditions for soft delete
-      await ctx.db.userOrganization.updateMany({
-        where: {
-          userId,
-          organizationId,
-          deletedAt: null
-        },
-        data: {
-          deletedAt: new Date()
+      const targetUser = await ctx.db.user.findUnique({
+        where: { id: userId }
+      });
+
+      await ctx.db.$transaction(async (tx) => {
+        await tx.userOrganization.updateMany({
+          where: {
+            userId,
+            organizationId,
+            deletedAt: null
+          },
+          data: {
+            deletedAt: new Date()
+          }
+        });
+
+        if (targetUser?.activeOrganizationId === organizationId) {
+          const otherUserOrgs = await tx.userOrganization.findMany({
+            where: {
+              userId,
+              organizationId: { not: organizationId },
+              deletedAt: null
+            },
+            orderBy: {
+              organizationId: 'asc'
+            },
+            take: 1
+          });
+
+          const newActiveOrgId = otherUserOrgs.length > 0 
+            ? otherUserOrgs[0]?.organizationId ?? userId
+            : userId;
+
+          await tx.user.update({
+            where: { id: userId },
+            data: { activeOrganizationId: newActiveOrgId }
+          });
         }
       });
 
-      // Return the updated record for consistency
       const removedUserOrg = await ctx.db.userOrganization.findFirst({
         where: {
           userId,
@@ -299,5 +318,89 @@ export const userOrganizationRouter = createTRPCRouter({
       }
 
       return parseUserOrganization(removedUserOrg);
+    }),
+
+  // Restore a previously deleted user organization or create a new one
+  restoreOrCreate: protectedProcedure
+    .input(z.object({
+      userId: z.string(),
+      organizationId: z.string(),
+      role: MemberRoleEnum
+    }))
+    .output(UserOrganizationWithOrgSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { userId, organizationId, role } = input;
+        
+        const existingActiveUserOrg = await ctx.db.userOrganization.findFirst({
+          where: { 
+            userId,
+            organizationId,
+            deletedAt: null
+          }
+        });
+        
+        if (existingActiveUserOrg) {
+          throw new Error("User is already a member of this organization");
+        }
+        
+        const deletedUserOrg = await ctx.db.userOrganization.findFirst({
+          where: {
+            userId,
+            organizationId,
+            deletedAt: { not: null }
+          }
+        });
+        
+        let userOrganization;
+        
+        if (deletedUserOrg) {
+          await ctx.db.userOrganization.updateMany({
+            where: { 
+              userId,
+              organizationId,
+              deletedAt: { not: null }
+            },
+            data: { 
+              deletedAt: null,
+              role,
+              updatedAt: new Date()
+            }
+          });
+          
+          userOrganization = await ctx.db.userOrganization.findFirst({
+            where: {
+              userId,
+              organizationId,
+              deletedAt: null
+            },
+            include: {
+              organization: true,
+              user: true
+            }
+          });
+          
+          if (!userOrganization) {
+            throw new Error("Failed to restore user organization");
+          }
+        } else {
+          userOrganization = await ctx.db.userOrganization.create({
+            data: {
+              userId,
+              organizationId,
+              role
+            },
+            include: {
+              organization: true,
+              user: true
+            }
+          });
+        }
+        
+        return parseUserOrganization(userOrganization);
+      } catch (error) {
+        console.error("restoreOrCreate error:", error);
+        throw error;
+      }
     }),
 });

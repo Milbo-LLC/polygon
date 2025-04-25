@@ -18,7 +18,8 @@
     "postinstall": "prisma generate",
     "preview": "next build && next start",
     "start": "NODE_ENV=production node server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
