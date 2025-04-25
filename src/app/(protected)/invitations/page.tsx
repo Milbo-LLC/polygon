@@ -14,7 +14,7 @@ import { api } from '~/trpc/react';
 import { type OrganizationInvitation } from '~/validators/organization-invitations';
 import Image from 'next/image';
 import { useOrganizationContext } from '~/providers/organization-provider';
-import { MemberRole } from '~/validators/user-organizations';
+import { type MemberRole } from '~/validators/user-organizations';
 
 enum InvitationState {
   LOADING = 'loading',
