@@ -16,13 +16,7 @@ Polygon is an open-source 3D modeling tool for the AI future. Built off of [T3 S
    pnpm install
    ```
 
-2. Set up environment variables:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Then configure the `.env` file with appropriate values.
+2. Login to Doppler
 
 3. Start the database:
 
