@@ -24,6 +24,9 @@
     --input: 25 20% 50%;
     --ring: 25 96% 54%;
     --radius: 0.5rem;
+    --grid-color: 220 80% 56%;
+    --grid-color-major: 220 80% 60%;
+    --grid-color-minor: 220 70% 50%;
   }
   
   .dark {
@@ -47,6 +50,9 @@
     --input: 25 20% 18%;
     --ring: 25 96% 54%;
     --radius: 0.5rem;
+    --grid-color: 220 80% 75%;
+    --grid-color-major: 220 80% 80%;
+    --grid-color-minor: 220 80% 70%;
   }
 }
 

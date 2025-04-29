@@ -11,6 +11,7 @@ import ControlPanel from './control-panel'
 import PlaneSelector from './sketch/_components/plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
+import DynamicAxesHelper from './dynamic-axes-helper'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -156,8 +157,8 @@ export default function Scene() {
         camera={{
           position: [100, 100, 100],
           fov: 30,
-          near: 0.01,
-          far: 10000
+          near: 0.0001,
+          far: 100000
         }}
         tabIndex={0}
       >
@@ -170,7 +171,7 @@ export default function Scene() {
         
         <Gizmo />
         <Grid />
-        <axesHelper args={[100]} />
+        <DynamicAxesHelper />
         
         {/* Plane selector - only show when in sketch mode and no dimension selected */}
         <PlaneSelector
