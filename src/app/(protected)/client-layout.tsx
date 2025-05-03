@@ -6,7 +6,7 @@ import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OrganizationProvider } from "~/providers/organization-provider";
-import { useSession } from "next-auth/react";
+import { useSession } from "~/server/auth/client";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 
@@ -16,13 +16,22 @@ const ROUTES_WITHOUT_NAVBAR = [
   "/workspaces"
 ];
 
+// Define a more specific type for the user in the session
+interface ExtendedUser {
+  id: string;
+  name?: string;
+  email?: string;
+  activeOrganizationId?: string;
+  organizations?: any[];
+}
+
 function ClientLayoutContent({ children }: PropsWithChildren) {
   // State to control what's rendered
   const [isLoading, setIsLoading] = useState(true);
   const [shouldShowNavbar, setShouldShowNavbar] = useState(false);
   const [userId, setUserId] = useState<string | undefined>(undefined);
   
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const pathname = usePathname();
@@ -42,7 +51,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
     
     // Handle authentication redirects
-    if (status !== 'loading') {
+    if (!isPending) {
       if (!session) {
         // Redirect unauthenticated users
         if (invitationCode) {
@@ -58,16 +67,17 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
         }
         
         // Set user ID and organization ID
-        if (session.user?.id) {
-          console.log('Setting user ID and organization ID', session.user.id, session.user.activeOrganizationId);
-          setUserId(session.user.id);
+        const user = session.user as ExtendedUser | undefined;
+        if (user?.id) {
+          console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
+          setUserId(user.id);
         }
         
         // We're done loading
         setIsLoading(false);
       }
     }
-  }, [session, status, pathname, searchParams, router, posthog ]);
+  }, [session, isPending, pathname, searchParams, router, posthog ]);
 
   if (isLoading) {
     return (

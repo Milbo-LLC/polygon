@@ -43,7 +43,7 @@ import {
 import { Large, Muted, Small } from "~/components/ui/typography";
 import { api } from "~/trpc/react";
 import { useOrganizationContext } from "~/providers/organization-provider";
-import { useSession } from "next-auth/react";
+import { useSession } from "~/server/auth/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,6 +66,14 @@ type UserOrganizationType = {
   user?: UserType;
 };
 
+// Define a more specific type for the user in the session
+interface ExtendedUser {
+  id: string;
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
 const inviteFormSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   role: z.string().min(1, "Please select a role"),
@@ -79,8 +87,8 @@ type InviteFormValues = z.infer<typeof inviteFormSchema>;
 type UpdateRoleFormValues = z.infer<typeof updateRoleSchema>;
 
 export default function MembersSettingsPage() {
-  const session = useSession();
-  const user = session.data?.user;
+  const { data: session } = useSession();
+  const user = session?.user as ExtendedUser | undefined;
   const { organization } = useOrganizationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);

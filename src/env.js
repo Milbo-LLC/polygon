@@ -7,12 +7,17 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    NEXTAUTH_SECRET:
+    // Better Auth variables  
+    BETTER_AUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
+    
+    // OAuth providers
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    
+    // Database and other services
     DATABASE_URL: z.string().url(),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
@@ -30,6 +35,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
+    NEXT_PUBLIC_BETTER_AUTH_URL: z.string().url(),
     NEXT_PUBLIC_POSTHOG_KEY: z.string(),
     NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   },
@@ -39,9 +45,17 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    // Better Auth variables
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    
+    // Client-side Better Auth variables
+    NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+    
+    // OAuth providers
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    
+    // Database and other services
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,

@@ -1,6 +1,6 @@
 'use client';
 
-import { SessionProvider, useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { TooltipProvider } from '~/components/ui/tooltip';
 import { TRPCReactProvider } from '~/trpc/react';
 
@@ -39,7 +39,7 @@ function PostHogIdentifier() {
         email: session.user.email,
       });
     }
-  }, [session?.user.email, session?.user.name]);
+  }, [session?.user?.email, session?.user?.name]);
 
   return null;
 }
@@ -76,16 +76,16 @@ function SuspendedPostHogPageView() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  // Better Auth doesn't use a SessionProvider like NextAuth.js
+  // The client automatically provides session context
   return (
-    <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
-      <TRPCReactProvider>
-          <PostHogProvider>
-            <PostHogIdentifier />
-            <ThemeProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </ThemeProvider>
-          </PostHogProvider>
-      </TRPCReactProvider>
-    </SessionProvider>
+    <TRPCReactProvider>
+      <PostHogProvider>
+        <PostHogIdentifier />
+        <ThemeProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
+      </PostHogProvider>
+    </TRPCReactProvider>
   );
 }

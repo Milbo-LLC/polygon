@@ -29,8 +29,18 @@ import { Input } from "~/components/ui/input";
 import { socket } from "~/socket";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useOrganizationContext } from "~/providers/organization-provider";
-import { useSession } from "next-auth/react";
+import { useSession } from "~/server/auth/client";
 import { Logo } from "~/components/ui/logo";
+
+// Define a more specific type for the user in the session
+interface ExtendedUser {
+  id: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  activeOrganizationId?: string;
+  organizations?: any[];
+}
 
 function ProjectsContent() {
   
@@ -44,8 +54,10 @@ function ProjectsContent() {
   const router = useRouter();
   const { organization } = useOrganizationContext();
   const { data: session } = useSession();
+  const user = session?.user as ExtendedUser | undefined;
+  
   const { data: userOrganization } = api.userOrganization.get.useQuery(undefined, {
-    enabled: !!session?.user?.id && !!organization?.id
+    enabled: !!user?.id && !!organization?.id
   });
   
   // Fetch all users in the organization to determine if user is the only member
@@ -85,12 +97,12 @@ function ProjectsContent() {
       });
       
       // Join organization room
-      if (organization?.id && session?.user?.id) {
+      if (organization?.id && user?.id) {
         socket.emit("join-org", {
           organizationId: organization.id,
-          userId: session.user.id,
-          userName: session.user.name,
-          userImage: session.user.image
+          userId: user.id,
+          userName: user.name,
+          userImage: user.image
         });
       }
     }
@@ -117,7 +129,7 @@ function ProjectsContent() {
       socket.off("disconnect", onDisconnect);
       socket.off("users-update", onUsersUpdate);
     };
-  }, [organization?.id, session?.user]);
+  }, [organization?.id, user]);
 
   const createProject = api.project.create.useMutation({
     onSuccess: async (project: ProjectWithDocuments) => {
@@ -155,7 +167,7 @@ function ProjectsContent() {
 
   // Check if there are any projects not created by the current user
   const hasProjectsFromOtherUsers = projects.some(
-    project => project.userId !== session?.user?.id
+    project => project.userId !== user?.id
   );
 
   const CreateProjectCard = (
@@ -177,7 +189,7 @@ function ProjectsContent() {
     if (isOwnerOrAdmin) return true;
     
     // Regular members can only delete their own projects
-    return project.userId === session?.user?.id;
+    return project.userId === user?.id;
   };
 
   return (
@@ -194,24 +206,24 @@ function ProjectsContent() {
             <div className="text-sm text-muted-foreground mr-2">Online:</div>
             <div className="flex -space-x-2">
               {onlineUsers
-                .filter(user => user.id !== session?.user?.id) // Filter out the current user
-                .map(user => (
+                .filter(onlineUser => onlineUser.id !== user?.id) // Filter out the current user
+                .map(onlineUser => (
                   <div 
-                    key={user.id} 
+                    key={onlineUser.id} 
                     className="relative"
-                    title={user.name ?? "Unknown user"}
+                    title={onlineUser.name ?? "Unknown user"}
                   >
                     <Logo
-                      id={user.id}
-                      name={user.name}
-                      logoUrl={user.image}
+                      id={onlineUser.id}
+                      name={onlineUser.name}
+                      logoUrl={onlineUser.image}
                       size="sm"
                       className="border border-green-400"
                     />
                     <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-500 ring-1 ring-white"></span>
                   </div>
                 ))}
-              {onlineUsers.filter(user => user.id !== session?.user?.id).length === 0 && (
+              {onlineUsers.filter(onlineUser => onlineUser.id !== user?.id).length === 0 && (
                 <div className="text-sm text-muted-foreground">No other members online</div>
               )}
             </div>
@@ -259,33 +271,41 @@ function ProjectsContent() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <P className="text-gray-600 text-sm line-clamp-3">{project.description}</P>
-                {/* Show "Created by you" if:
-                    1. The project was created by the current user
-                    2. AND either of these conditions:
-                        - There are multiple users in the organization
-                        - OR there are projects from other users in the organization
-                */}
-                {project.userId === session?.user?.id && (hasProjectsFromOtherUsers || !isOnlyUserInOrg) && (
-                  <div className="absolute bottom-2 left-2">
-                    <div className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
-                      Created by you
-                    </div>
-                  </div>
-                )}
+                <P className="text-muted-foreground line-clamp-2">
+                  {project.description || "No description"}
+                </P>
               </CardHeader>
+              
+              {/* Card Footer with Project Ownership and Document Count */}
+              <div className="absolute bottom-0 left-0 right-0 p-2 flex items-center justify-between">
+                <div>
+                  {/* Only show "Your Project" tag if needed */}
+                  {project.userId === user?.id && (hasProjectsFromOtherUsers || !isOnlyUserInOrg) && (
+                    <div className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
+                      Your Project
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {/* Document count */}
+                  <P className="text-xs text-muted-foreground">
+                    {project.documents?.length ?? 0} {project.documents?.length === 1 ? "document" : "documents"}
+                  </P>
+                </div>
+              </div>
             </Card>
           ))}
         </div>
       </div>
 
+      {/* Delete Project Dialog */}
       <AlertDialog open={!!projectToDelete} onOpenChange={() => setProjectToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete &quot;{projectToDelete?.name}&quot; and all its contents.
-              This action cannot be undone.
+              This action cannot be undone. This will permanently delete your
+              project and its documents.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -297,6 +317,7 @@ function ProjectsContent() {
                   setProjectToDelete(null);
                 }
               }}
+              className="bg-destructive hover:bg-destructive/90"
             >
               Delete
             </AlertDialogAction>
@@ -304,30 +325,29 @@ function ProjectsContent() {
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Rename Project Dialog */}
       <AlertDialog open={!!projectToRename} onOpenChange={() => setProjectToRename(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Rename Project</AlertDialogTitle>
             <AlertDialogDescription>
-              Enter a new name for &quot;{projectToRename?.name}&quot;
+              Enter a new name for your project.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Input
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Project name"
-            className="my-4"
+            className="my-2"
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 handleRenameSubmit();
               }
             }}
           />
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleRenameSubmit}
-            >
+            <AlertDialogAction onClick={handleRenameSubmit}>
               Rename
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -340,14 +360,16 @@ function ProjectsContent() {
 export default function ProjectsPage() {
   return (
     <Suspense fallback={
-      <div className="flex flex-col w-full h-full p-4 gap-4">
-        <Skeleton className="h-4 w-32 mb-2" />
-        <Skeleton className="h-4 w-40 mb-4" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-[240px]" />
-          ))}
-        </div>
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Card key={index} className="h-[240px]">
+            <CardHeader>
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-full mt-2" />
+              <Skeleton className="h-4 w-full mt-1" />
+            </CardHeader>
+          </Card>
+        ))}
       </div>
     }>
       <ProjectsContent />

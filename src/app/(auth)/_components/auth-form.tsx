@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card"
-import { signIn, useSession } from "next-auth/react"
+import { useSession, signInWithGoogle } from "~/server/auth/client"
 import { FaGoogle as GoogleIcon } from "react-icons/fa"
 import { Button } from "~/components/ui/button"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -17,7 +17,7 @@ export function AuthForm({
 }: { 
   mode?: "login" | "signup";
 }) {
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -26,12 +26,11 @@ export function AuthForm({
   
   // Handle redirection after authentication
   useEffect(() => {
-    if (status === 'authenticated' && session) {
-      
+    if (!isPending && session) {
       // Then redirect to the callback URL
       router.push(callbackUrl);
     }
-  }, [status, session, callbackUrl, router,]);
+  }, [isPending, session, callbackUrl, router]);
   
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -46,7 +45,7 @@ export function AuthForm({
             <Button 
               variant="outline" 
               className="w-full" 
-              onClick={() => signIn('google', { callbackUrl })}
+              onClick={() => signInWithGoogle(callbackUrl)}
             >
               <GoogleIcon />
               {mode === "login" ? "Login with Google" : "Sign up with Google"}

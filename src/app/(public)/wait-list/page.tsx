@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from "~/components/ui/button";
 import { H3, P } from "~/components/ui/typography";
-import { useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { AUTH_REDIRECT_PATH_SIGN_UP } from "~/constants/links";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardContent } from "~/components/ui/card";
@@ -13,12 +14,13 @@ import WaitListScene from "./components/waitlist-scene";
 import { useHandleSignout } from "~/hooks/use-handle-signout";
 
 export default function WaitListPage() {
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
   const posthog = usePostHog();
 
   const { handleSignout } = useHandleSignout();
 
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
   const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function WaitListPage() {
     router.push(AUTH_REDIRECT_PATH_SIGN_UP);
   };
 
-  if (status === "loading") {
+  if (isPending) {
     return (
       <div className="flex flex-col items-center justify-center h-screen w-screen">
         <P>Loading...</P>

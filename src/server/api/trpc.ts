@@ -10,9 +10,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { type Session } from "next-auth";
 
-import { auth } from "~/server/auth"; 
+import { getUserSession } from "~/server/auth"; 
 import { db } from "~/server/db";
 
 /**
@@ -29,20 +28,37 @@ import { db } from "~/server/db";
  */
 
 interface CreateContextOptions {
-  session: Session | null;
+  session: any | null; // Using a generic session type for Better Auth
   headers: Headers;
 }
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await auth();
+  console.log("\n\n=== CREATING TRPC CONTEXT ===");
+  console.log("Headers present:", Object.fromEntries([...opts.headers.entries()]));
+  
+  const session = await getUserSession();
+  console.log("Session obtained:", session ? {
+    userId: session.user?.id,
+    activeOrgId: session.user ? (session.user as any).activeOrganizationId : undefined,
+    userEmail: session.user?.email
+  } : 'No session');
+  
   return createInnerTRPCContext({
     session,
     headers: opts.headers,
   });
 };
 
-const createInnerTRPCContext = async (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   const { session, headers } = opts;
+  
+  // Debug session information
+  console.log('Session in createInnerTRPCContext:', 
+    session ? {
+      userId: session.user?.id,
+      activeOrgId: session.user ? (session.user as any).activeOrganizationId : undefined,
+      userEmail: session.user?.email
+    } : 'No session');
   
   if (!session?.user) {
     return {
@@ -52,14 +68,21 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
     };
   }
 
-  // Try to get organization ID from header
-  const organizationId = headers.get("x-organization-id");
-  
   // Get user's organizations
   const userOrganizations = await db.userOrganization.findMany({
     where: { userId: session.user.id },
     include: { organization: true },
   });
+
+  console.log(`Found ${userOrganizations.length} organizations for user ${session.user.id}`);
+  
+  if (userOrganizations.length > 0) {
+    console.log('Available organizations:', userOrganizations.map(uo => ({
+      id: uo.organizationId,
+      name: uo.organization.name,
+      role: uo.role
+    })));
+  }
 
   if (userOrganizations.length === 0) {
     console.log(`⚠️ No organizations found for user ${session.user.id}, creating personal org`);
@@ -106,30 +129,112 @@ const createInnerTRPCContext = async (opts: CreateContextOptions) => {
       });
     }
   }
-
-  // If orgId is provided, validate it
-  if (organizationId) {
+  
+  // CRITICAL FIX: After updating the user with a new activeOrganizationId, 
+  // we need to make sure we have the latest version from the database
+  
+  // Get the most up-to-date user with the activeOrganizationId from the database
+  const currentUser = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { 
+      id: true,
+      activeOrganizationId: true 
+    }
+  });
+  
+  console.log('Database user check:', {
+    userId: currentUser?.id,
+    activeOrgId: currentUser?.activeOrganizationId,
+    sessionActiveOrgId: (session.user as any).activeOrganizationId
+  });
+  
+  // Priority order for organization ID:
+  // 1. Organization ID from headers (if valid)
+  // 2. User's activeOrganizationId from database (if valid)
+  // 3. User's activeOrganizationId from session (if valid) - this might be outdated
+  // 4. Fallback to personal org or first available org
+  
+  // Try to get organization ID from header
+  const headerOrgId = headers.get("x-organization-id");
+  
+  // 1. If orgId is provided in headers, validate it
+  if (headerOrgId) {
+    console.log(`Header organization ID found: ${headerOrgId}`);
     const hasAccess = userOrganizations.some(
-      (uo) => uo.organizationId === organizationId
+      (uo) => uo.organizationId === headerOrgId
     );
     if (!hasAccess) {
-      console.log(`⚠️ User ${session.user.id} attempted to access unauthorized org ${organizationId}`);
+      console.log(`⚠️ User ${session.user.id} attempted to access unauthorized org ${headerOrgId}`);
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Invalid organization access",
       });
     }
+    
+    // Use the explicitly requested org ID from headers
+    console.log(`🔑 Using organization ID from headers: ${headerOrgId} for user ${session.user.id}`);
+    return {
+      db,
+      session,
+      organizationId: headerOrgId,
+    };
   }
 
-  // Use provided org ID, user ID as personal org, or default to first organization
-  const effectiveOrgId = organizationId ?? session.user.id ?? userOrganizations[0]?.organizationId;
-  
-  console.log(`🔑 Using organization ID: ${effectiveOrgId} for user ${session.user.id}`);
+  // 2. If the database user has an activeOrganizationId, use that (fresh data)
+  if (currentUser?.activeOrganizationId) {
+    console.log(`Active organization ID found in database: ${currentUser.activeOrganizationId}`);
+    
+    // Validate that the user has access to this organization
+    const hasAccess = userOrganizations.some(
+      (uo) => uo.organizationId === currentUser.activeOrganizationId
+    );
+    
+    if (hasAccess) {
+      console.log(`🔑 Using active organization ID from database: ${currentUser.activeOrganizationId} for user ${session.user.id}`);
+      return {
+        db,
+        session,
+        organizationId: currentUser.activeOrganizationId,
+      };
+    }
+    console.log(`⚠️ User ${session.user.id} has invalid activeOrganizationId ${currentUser.activeOrganizationId} in database. User does not have access to this organization.`);
+  }
 
+  // 3. If user has an activeOrganizationId in the session, use that (might be outdated)
+  const sessionActiveOrgId = (session.user as any).activeOrganizationId;
+  if (sessionActiveOrgId) {
+    console.log(`Active organization ID found in session: ${sessionActiveOrgId}`);
+    console.log(`Session user object:`, JSON.stringify(session.user, null, 2));
+    
+    // Validate that the user has access to this organization
+    const hasAccess = userOrganizations.some(
+      (uo) => uo.organizationId === sessionActiveOrgId
+    );
+    
+    if (hasAccess) {
+      console.log(`🔑 Using active organization ID from session: ${sessionActiveOrgId} for user ${session.user.id}`);
+      return {
+        db,
+        session,
+        organizationId: sessionActiveOrgId,
+      };
+    }
+    // If the active org ID is invalid, continue to fallback options
+    console.log(`⚠️ User ${session.user.id} has invalid activeOrganizationId ${sessionActiveOrgId} in session. User does not have access to this organization.`);
+    console.log(`Available organizations:`, userOrganizations.map(o => o.organizationId));
+  } else {
+    console.log(`⚠️ No activeOrganizationId found in session for user ${session.user.id}`);
+    console.log(`Session user object:`, JSON.stringify(session.user, null, 2));
+  }
+  
+  // 4. Fallback options: personal org or first available org
+  const fallbackOrgId = userOrganizations.find(uo => uo.organizationId === session.user.id)?.organizationId || userOrganizations[0]?.organizationId;
+  console.log(`🔑 Using fallback organization ID: ${fallbackOrgId} for user ${session.user.id}`);
+  
   return {
     db,
     session,
-    organizationId: effectiveOrgId,
+    organizationId: fallbackOrgId,
   };
 };
 

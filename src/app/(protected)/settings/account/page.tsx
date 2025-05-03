@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Large, Muted, Small } from '~/components/ui/typography';
-import { useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { TeamLogoInput } from '~/components/team-logo-input';

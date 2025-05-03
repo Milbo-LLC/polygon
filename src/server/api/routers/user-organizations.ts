@@ -13,16 +13,26 @@ type UserOrganizationWithOrganization = UserOrganization & {
   user: User;
 };
 
-export const parseUserOrganization = (uo: UserOrganizationWithOrganization) => ({
-  createdAt: uo.createdAt,
-  updatedAt: uo.updatedAt,
-  deletedAt: uo.deletedAt,
-  userId: uo.userId,
-  organizationId: uo.organizationId,
-  role: uo.role as MemberRole,
-  organization: uo.organization,
-  user: uo.user
-});
+export const parseUserOrganization = (uo: UserOrganizationWithOrganization) => {
+  // Create a copy of the user object to safely modify it
+  const user = { ...uo.user };
+  
+  // If emailVerified is a boolean, convert it to a date
+  if (user.emailVerified !== null && typeof user.emailVerified === 'boolean') {
+    user.emailVerified = user.emailVerified ? new Date() : null;
+  }
+
+  return {
+    createdAt: uo.createdAt,
+    updatedAt: uo.updatedAt,
+    deletedAt: uo.deletedAt,
+    userId: uo.userId,
+    organizationId: uo.organizationId,
+    role: uo.role as MemberRole,
+    organization: uo.organization,
+    user: user
+  };
+};
 
 export const userOrganizationRouter = createTRPCRouter({
   get: protectedProcedure
