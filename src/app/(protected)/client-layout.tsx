@@ -9,21 +9,13 @@ import { OrganizationProvider } from "~/providers/organization-provider";
 import { useSession } from "~/server/auth/client";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
+import { type SessionUser } from "~/types/auth";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
   "/settings",
   "/workspaces"
 ];
-
-// Define a more specific type for the user in the session
-interface ExtendedUser {
-  id: string;
-  name?: string;
-  email?: string;
-  activeOrganizationId?: string;
-  organizations?: any[];
-}
 
 function ClientLayoutContent({ children }: PropsWithChildren) {
   // State to control what's rendered
@@ -67,7 +59,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
         }
         
         // Set user ID and organization ID
-        const user = session.user as ExtendedUser | undefined;
+        const user = session.user as SessionUser | undefined;
         if (user?.id) {
           console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
           setUserId(user.id);

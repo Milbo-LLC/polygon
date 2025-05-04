@@ -15,9 +15,13 @@ export const organizationInvitationRouter = createTRPCRouter({
     .input(CreateOrganizationInvitationSchema)
     .output(OrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
-      const organizationId = ctx.organizationId;
+      const organizationId = ctx.organizationId as string | null;
       if (!organizationId) {
         throw new Error("No active organization");
+      }
+
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
       }
 
       const userOrg = await ctx.db.userOrganization.findFirst({
@@ -32,7 +36,6 @@ export const organizationInvitationRouter = createTRPCRouter({
       if (!userOrg) {
         throw new Error("You don't have permission to send invitations for this organization");
       }
-
 
       const existingUser = await ctx.db.user.findUnique({
         where: { email: input.email },
@@ -145,7 +148,11 @@ export const organizationInvitationRouter = createTRPCRouter({
   getAll: protectedProcedure
     .output(z.array(OrganizationInvitationSchema))
     .query(async ({ ctx }) => {
-      const organizationId = ctx.organizationId;
+      const organizationId = ctx.organizationId as string | null;
+      if (!organizationId) {
+        throw new Error("No active organization");
+      }
+      
       const organizationInvitations = await ctx.db.organizationInvitation.findMany({
         where: {
           organizationId,

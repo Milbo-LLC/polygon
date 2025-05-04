@@ -4,6 +4,7 @@ import type { Organization } from "@prisma/client";
 import { db } from "~/server/db";
 import { sendWelcomeEmailServer } from "~/lib/email-server";
 import { env } from "~/env";
+import { type SessionEventProps, type SignInEventProps } from "~/types/auth";
 
 /**
  * This file was converted from NextAuth.js to Better Auth
@@ -15,14 +16,14 @@ declare module "better-auth" {
   // Extend or modify existing types rather than creating duplicates
   interface UserWithAdditionalFields {
     organizations: Organization[];
-    activeOrganizationId?: string;
+    activeOrganizationId?: string | null;
   }
   
   interface SessionWithAdditionalFields {
     user: {
       id: string;
       organizations: Organization[];
-      activeOrganizationId?: string;
+      activeOrganizationId?: string | null;
       name?: string;
       email?: string;
     }
@@ -57,7 +58,11 @@ export const authConfig = betterAuth({
   // Event hooks (replacing NextAuth callbacks)
   events: {
     // Session hook to enrich user data
-    onSession: async ({ session, user }: any) => {
+    onSession: async ({ session, user }: SessionEventProps) => {
+      if (!user.id) {
+        return session;
+      }
+      
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
         include: {
@@ -80,7 +85,7 @@ export const authConfig = betterAuth({
     },
     
     // Sign-in hook to handle organization creation
-    onSignIn: async ({ user }: any) => {
+    onSignIn: async ({ user }: SignInEventProps) => {
       console.log('⭐ signIn callback triggered with user:', JSON.stringify({
         id: user.id,
         email: user.email,
@@ -131,7 +136,7 @@ export const authConfig = betterAuth({
               // Create the user-organization relationship
               const userOrg = await tx.userOrganization.create({
                 data: {
-                  userId: user.id!,
+                  userId: user.id,
                   organizationId: organization.id,
                   role: 'owner',
                 },
@@ -144,7 +149,7 @@ export const authConfig = betterAuth({
                 console.log('📧 Creating notification record...');
                 await tx.notification.create({
                   data: {
-                    userId: user.id!,
+                    userId: user.id,
                     type: 'welcome',
                     channel: 'email',
                     organizationId: organization.id,

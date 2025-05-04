@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getUserSession } from "~/server/auth";
 
 export async function GET(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
     // Get the redirect URL from the query parameters
     const { searchParams } = new URL(req.url);
-    const redirect = searchParams.get("redirect") || "/";
+    const redirect = searchParams.get("redirect") ?? "/";
 
     // Force a complete session refresh from the database
     const response = NextResponse.redirect(new URL(redirect, req.url));

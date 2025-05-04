@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { TeamLogoInput } from '~/components/team-logo-input';
 import { type User } from '~/validators/users';
 import { api } from '~/trpc/react';
+import { authClient } from '~/server/auth/client';
 
 // Form validation schema
 const accountFormSchema = z.object({
@@ -24,18 +25,13 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export default function AccountSettingsPage() {
-  const { data: session, update: updateSession } = useSession();
+  const { data: session } = useSession();
   const updateUser = api.user.update.useMutation({
-    onSuccess: async (data: User) => {
-      await updateSession({
-        ...session,
-        user: {
-          ...session?.user,
-          name: data.name,
-          email: data.email,
-          image: data.image,
-        },
-      });
+    onSuccess: async (_data: User) => {
+      // Instead of using updateSession (which doesn't exist in Better Auth),
+      // we'll force a fresh session by requesting it with disableCookieCache
+      await authClient.getSession({ query: { disableCookieCache: true } });
+      
       toast.success('Account settings updated');
     },
     onError: () => {

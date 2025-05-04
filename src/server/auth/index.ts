@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { headers } from "next/headers";
 import { authConfig } from "./config";
+import { type Session } from "~/types/auth";
 
 // Export the auth instance for use in API routes
 export const auth = authConfig;
@@ -9,7 +10,7 @@ export const auth = authConfig;
 export const getSession = cache(async () => {
   return auth.api.getSession({
     headers: await headers()
-  });
+  }) as Promise<Session | null>;
 });
 
 // Export a simple function to get the user session
@@ -24,8 +25,8 @@ export async function getUserSession() {
     console.log(`Session retrieved in ${endTime - startTime}ms`, {
       present: !!session,
       userId: session?.user?.id,
-      // Access the activeOrganizationId safely (it may be on the user object)
-      activeOrgId: session?.user ? (session.user as any).activeOrganizationId : undefined,
+      // Access the activeOrganizationId safely
+      activeOrgId: session?.user?.activeOrganizationId,
     });
     
     return session;

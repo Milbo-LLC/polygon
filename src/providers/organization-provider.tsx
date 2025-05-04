@@ -8,6 +8,7 @@ import { authClient } from '~/server/auth/client';
 import { type Organization } from '~/validators/organizations';
 import { type MemberRole } from '~/validators/user-organizations';
 import { type UserOrganizationWithOrg } from '~/validators/extended-schemas';
+import { type SessionUser } from '~/types/auth';
 
 type OrganizationContextValue = 
   | ({
@@ -35,7 +36,7 @@ export function OrganizationProvider({
 }) {
   const utils = api.useUtils();
   const { data: session } = authClient.useSession();
-  const user = session?.user;
+  const user = session?.user as SessionUser | undefined;
 
   const { data: organization, isLoading: loadingOrganization } = api.organization.get.useQuery(undefined, {
     enabled: !!userId,
@@ -105,7 +106,7 @@ export function OrganizationProvider({
     console.log('=== ORGANIZATION SWITCH STARTED ===');
     console.log('Current session:', {
       userId: user?.id,
-      activeOrgId: (user as any)?.activeOrganizationId,
+      activeOrgId: user?.activeOrganizationId,
       target: organizationId
     });
     
@@ -116,10 +117,13 @@ export function OrganizationProvider({
         id: user?.id,
         activeOrganizationId: organizationId,
       });
+      
+      // Cast the updatedUser to our SessionUser type to access activeOrganizationId
+      const typedUser = updatedUser as unknown as SessionUser;
+      
       console.log('Database updated successfully:', {
-        userId: updatedUser.id,
-        // Access activeOrganizationId safely since it might not be in the type
-        activeOrgId: (updatedUser as any).activeOrganizationId
+        userId: typedUser.id,
+        activeOrgId: typedUser.activeOrganizationId
       });
       
       // Force a fresh session fetch to update with new activeOrganizationId
@@ -133,12 +137,12 @@ export function OrganizationProvider({
           } 
         });
         
+        const sessionUser = newSessionResponse?.data?.user as SessionUser | undefined;
+        
         console.log('Session refresh response:', {
           success: !!newSessionResponse?.data,
-          userId: newSessionResponse?.data?.user?.id,
-          // Access activeOrganizationId safely
-          activeOrgId: newSessionResponse?.data?.user ? 
-            (newSessionResponse.data.user as any).activeOrganizationId : undefined,
+          userId: sessionUser?.id,
+          activeOrgId: sessionUser?.activeOrganizationId,
           error: newSessionResponse?.error?.message
         });
       } catch (sessionError) {

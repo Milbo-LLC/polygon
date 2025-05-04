@@ -31,16 +31,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { useOrganizationContext } from "~/providers/organization-provider";
 import { useSession } from "~/server/auth/client";
 import { Logo } from "~/components/ui/logo";
-
-// Define a more specific type for the user in the session
-interface ExtendedUser {
-  id: string;
-  name?: string;
-  email?: string;
-  image?: string;
-  activeOrganizationId?: string;
-  organizations?: any[];
-}
+import { type ExtendedSessionUser } from "~/types/auth";
 
 function ProjectsContent() {
   
@@ -54,7 +45,7 @@ function ProjectsContent() {
   const router = useRouter();
   const { organization } = useOrganizationContext();
   const { data: session } = useSession();
-  const user = session?.user as ExtendedUser | undefined;
+  const user = session?.user as ExtendedSessionUser | undefined;
   
   const { data: userOrganization } = api.userOrganization.get.useQuery(undefined, {
     enabled: !!user?.id && !!organization?.id
@@ -272,18 +263,18 @@ function ProjectsContent() {
                   </DropdownMenu>
                 </div>
                 <P className="text-muted-foreground line-clamp-2">
-                  {project.description || "No description"}
+                  {project.description ?? "No description"}
                 </P>
               </CardHeader>
               
               {/* Card Footer with Project Ownership and Document Count */}
               <div className="absolute bottom-0 left-0 right-0 p-2 flex items-center justify-between">
                 <div>
-                  {/* Only show "Your Project" tag if needed */}
+                  {/* Owner badge - only shown when needed */}
                   {project.userId === user?.id && (hasProjectsFromOtherUsers || !isOnlyUserInOrg) && (
-                    <div className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
                       Your Project
-                    </div>
+                    </span>
                   )}
                 </div>
                 <div>

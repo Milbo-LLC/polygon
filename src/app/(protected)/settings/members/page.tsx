@@ -51,6 +51,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { type MemberRole } from "~/validators/user-organizations";
+import { type ExtendedSessionUser } from "~/types/auth";
 
 // Define types for organization members
 type UserType = {
@@ -66,14 +67,6 @@ type UserOrganizationType = {
   user?: UserType;
 };
 
-// Define a more specific type for the user in the session
-interface ExtendedUser {
-  id: string;
-  name?: string;
-  email?: string;
-  image?: string;
-}
-
 const inviteFormSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   role: z.string().min(1, "Please select a role"),
@@ -88,7 +81,7 @@ type UpdateRoleFormValues = z.infer<typeof updateRoleSchema>;
 
 export default function MembersSettingsPage() {
   const { data: session } = useSession();
-  const user = session?.user as ExtendedUser | undefined;
+  const user = session?.user as ExtendedSessionUser | undefined;
   const { organization } = useOrganizationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);

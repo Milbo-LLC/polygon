@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { getUserSession } from "~/server/auth"; 
 import { db } from "~/server/db";
+import { type Session } from "~/types/auth";
 
 /**
  * 1. CONTEXT
@@ -28,8 +29,15 @@ import { db } from "~/server/db";
  */
 
 interface CreateContextOptions {
-  session: any | null; // Using a generic session type for Better Auth
+  session: Session | null;
   headers: Headers;
+}
+
+// Define the return type of createInnerTRPCContext
+export interface Context {
+  db: typeof db;
+  session: Session | null;
+  organizationId: string | null | undefined;
 }
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
@@ -39,7 +47,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await getUserSession();
   console.log("Session obtained:", session ? {
     userId: session.user?.id,
-    activeOrgId: session.user ? (session.user as any).activeOrganizationId : undefined,
+    activeOrgId: session.user?.activeOrganizationId,
     userEmail: session.user?.email
   } : 'No session');
   
@@ -56,7 +64,7 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   console.log('Session in createInnerTRPCContext:', 
     session ? {
       userId: session.user?.id,
-      activeOrgId: session.user ? (session.user as any).activeOrganizationId : undefined,
+      activeOrgId: session.user?.activeOrganizationId,
       userEmail: session.user?.email
     } : 'No session');
   
@@ -145,7 +153,7 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   console.log('Database user check:', {
     userId: currentUser?.id,
     activeOrgId: currentUser?.activeOrganizationId,
-    sessionActiveOrgId: (session.user as any).activeOrganizationId
+    sessionActiveOrgId: session.user.activeOrganizationId
   });
   
   // Priority order for organization ID:
@@ -201,7 +209,7 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   }
 
   // 3. If user has an activeOrganizationId in the session, use that (might be outdated)
-  const sessionActiveOrgId = (session.user as any).activeOrganizationId;
+  const sessionActiveOrgId = session.user.activeOrganizationId;
   if (sessionActiveOrgId) {
     console.log(`Active organization ID found in session: ${sessionActiveOrgId}`);
     console.log(`Session user object:`, JSON.stringify(session.user, null, 2));
@@ -228,8 +236,8 @@ export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   }
   
   // 4. Fallback options: personal org or first available org
-  const fallbackOrgId = userOrganizations.find(uo => uo.organizationId === session.user.id)?.organizationId || userOrganizations[0]?.organizationId;
-  console.log(`🔑 Using fallback organization ID: ${fallbackOrgId} for user ${session.user.id}`);
+  const fallbackOrgId = userOrganizations.find(uo => uo.organizationId === session.user?.id)?.organizationId ?? userOrganizations[0]?.organizationId;
+  console.log(`🔑 Using fallback organization ID: ${fallbackOrgId} for user ${session.user?.id}`);
   
   return {
     db,

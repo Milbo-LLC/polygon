@@ -43,7 +43,7 @@ export const projectRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
-            organizationId: ctx.organizationId,
+            organizationId: ctx.organizationId!,
             userId: ctx.session.user.id,
           },
         });

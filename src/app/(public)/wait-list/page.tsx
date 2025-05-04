@@ -1,20 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { Button } from "~/components/ui/button";
-import { H3, P } from "~/components/ui/typography";
-import { useSession } from '~/server/auth/client';
-import { AUTH_REDIRECT_PATH_SIGN_UP } from "~/constants/links";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardContent } from "~/components/ui/card";
+import { AUTH_REDIRECT_PATH_SIGN_UP } from "~/constants/links";
+import { useSession } from "~/server/auth/client";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { H3, P } from "~/components/ui/typography";
 import { usePostHog } from "posthog-js/react";
 import { FEATURE_FLAGS } from "~/constants/app";
-import { useEffect } from "react";
 import WaitListScene from "./components/waitlist-scene";
 import { useHandleSignout } from "~/hooks/use-handle-signout";
 
 export default function WaitListPage() {
-  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
   const posthog = usePostHog();
 

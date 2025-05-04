@@ -17,11 +17,9 @@ export const parseUserOrganization = (uo: UserOrganizationWithOrganization) => {
   // Create a copy of the user object to safely modify it
   const user = { ...uo.user };
   
-  // If emailVerified is a boolean, convert it to a date
-  if (user.emailVerified !== null && typeof user.emailVerified === 'boolean') {
-    user.emailVerified = user.emailVerified ? new Date() : null;
-  }
-
+  // Instead of converting boolean to Date, we'll keep the original value 
+  // as it will be properly handled during serialization
+  
   return {
     createdAt: uo.createdAt,
     updatedAt: uo.updatedAt,
@@ -39,6 +37,10 @@ export const userOrganizationRouter = createTRPCRouter({
     .output(UserOrganizationWithOrgSchema)
     .query(async ({ ctx }) => {
       const organizationId = ctx.organizationId;
+      if (!organizationId || !ctx.session?.user?.id) {
+        throw new Error("User not authenticated or no active organization");
+      }
+      
       const userId = ctx.session.user.id;
 
       const userOrganization = await ctx.db.userOrganization.findFirst({
