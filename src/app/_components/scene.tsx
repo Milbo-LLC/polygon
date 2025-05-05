@@ -11,6 +11,7 @@ import ControlPanel from './control-panel'
 import PlaneSelector from './sketch/_components/plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
+import DynamicAxesHelper from './dynamic-axes-helper'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -153,11 +154,11 @@ export default function Scene() {
       <ControlPanel />
       <Canvas 
         className="flex h-full w-full" 
-        camera={{ 
-          position: [20, 20, 20],
-          fov: 30, // Increased FOV for wider view (was 15)
-          near: 0.1,
-          far: 1000
+        camera={{
+          position: [100, 100, 100],
+          fov: 30,
+          near: 0.0001,
+          far: 100000
         }}
         tabIndex={0}
       >
@@ -169,10 +170,8 @@ export default function Scene() {
         />
         
         <Gizmo />
-        <Grid 
-          size={gridSize} 
-          divisions={gridDivisions} 
-        />
+        <Grid />
+        <DynamicAxesHelper />
         
         {/* Plane selector - only show when in sketch mode and no dimension selected */}
         <PlaneSelector
@@ -215,8 +214,8 @@ export default function Scene() {
         
         <CameraControls 
           ref={cameraControlsRef}
-          minDistance={1}
-          maxDistance={500}
+          minDistance={0.01}
+          maxDistance={10000}
           makeDefault
         />
         <directionalLight position={[2, 2, 2]} />
