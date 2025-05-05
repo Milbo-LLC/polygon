@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin');
   const url = request.nextUrl.pathname;
-  const host = request.headers.get('host') || '';
+  const host = request.headers.get('host') ?? '';
   
   console.log(`Middleware processing ${request.method} request to ${url} from origin: ${origin}, on host: ${host}`);
   
@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   if (url.startsWith('/api/')) {
     // Check if this is a staging server and the request is from a PR environment
     const isStagingHost = host.includes('polygon-staging');
-    const isRequestFromPR = origin?.includes('polygon-polygon-pr-') || origin?.includes('polygon-pr-');
+    const isRequestFromPR = origin?.includes('polygon-polygon-pr-') ?? origin?.includes('polygon-pr-');
     
     // We need to explicitly allow the PR environment to access the staging API
     // This handles the specific error case you're encountering
@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
       const response = new NextResponse(null, {
         status: 200,
         headers: {
-          'Access-Control-Allow-Origin': origin || '*',
+          'Access-Control-Allow-Origin': origin ?? '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
           'Access-Control-Max-Age': '86400',
@@ -45,7 +45,7 @@ export function middleware(request: NextRequest) {
     const response = NextResponse.next();
     
     // Add CORS headers to all API responses
-    response.headers.set('Access-Control-Allow-Origin', origin || '*');
+    response.headers.set('Access-Control-Allow-Origin', origin ?? '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
