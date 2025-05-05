@@ -8,6 +8,11 @@ export function middleware(request: NextRequest) {
   
   console.log(`Middleware processing ${request.method} request to ${url} from origin: ${origin}, on host: ${host}`);
   
+  // Skip handling for static assets
+  if (url.startsWith('/_next/static/')) {
+    return NextResponse.next();
+  }
+
   // Handle CORS for API routes
   if (url.startsWith('/api/')) {
     // Check if this is a staging server and the request is from a PR environment
@@ -57,7 +62,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Match all API routes
+// Match API routes and static assets
 export const config = {
-  matcher: '/api/:path*',
+  matcher: ['/api/:path*'],
 }; 

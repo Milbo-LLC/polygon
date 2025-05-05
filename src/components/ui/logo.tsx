@@ -44,6 +44,7 @@ export function Logo({
             alt={`${name} logo`}
             className={cn("size-full object-cover", imageClassName)}
             fill
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         )}
       </div>
