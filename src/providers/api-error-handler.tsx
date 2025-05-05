@@ -7,17 +7,32 @@ import {
   useContext, 
   useState, 
   useEffect, 
-  type PropsWithChildren 
+  type PropsWithChildren,
+  useCallback
 } from "react";
 import { toast } from "sonner";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { api } from "~/trpc/react";
 
+interface ErrorWithCode {
+  code: string;
+}
+
+function hasErrorCode(obj: unknown): obj is ErrorWithCode {
+  return (
+    typeof obj === 'object' && 
+    obj !== null && 
+    'code' in obj && 
+    typeof (obj as ErrorWithCode).code === 'string'
+  );
+}
+
 // Create context for error handling
 const ApiErrorContext = createContext<{
   handleError: (error: unknown) => void;
 }>({
-  handleError: () => {}
+  // This is just a placeholder that will be overridden by the provider
+  handleError: (_: unknown) => undefined
 });
 
 export function ApiErrorProvider({ children }: PropsWithChildren) {
@@ -25,28 +40,28 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
   const router = useRouter();
   const utils = api.useUtils();
 
-  // Process API errors
-  const handleError = (error: unknown) => {
+  const handleError = useCallback((error: unknown) => {
     if (error instanceof TRPCClientError) {
-      const trpcError = error as TRPCClientError<any>;
+      const trpcError = error;
       
-      // Check for authentication errors
-      if (
+      const isUnauthorizedMessage = 
         trpcError.message.includes("UNAUTHORIZED") || 
-        trpcError.message.includes("unauthorized") ||
-        trpcError.data?.code === "UNAUTHORIZED"
-      ) {
+        trpcError.message.includes("unauthorized");
+      
+      const isUnauthorizedCode = hasErrorCode(trpcError.data) && trpcError.data.code === "UNAUTHORIZED";
+      
+      if (isUnauthorizedMessage || isUnauthorizedCode) {
         if (!hasShownError) {
           setHasShownError(true);
           console.log("Authentication error detected, redirecting to login", trpcError);
           toast.error("Your session has expired. Please sign in again.");
           
           // Clear all queries from cache to prevent further errors
-          utils.invalidate();
+          utils.invalidate().catch(console.error);
           
           // Redirect to login
           setTimeout(() => {
-            router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+            void router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
           }, 500);
         }
         return;
@@ -59,7 +74,7 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
     } else {
       toast.error("An unknown error occurred");
     }
-  };
+  }, [hasShownError, router, utils]);
 
   useEffect(() => {
     const handleGlobalError = (event: ErrorEvent) => {
@@ -77,7 +92,7 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
       window.removeEventListener('error', handleGlobalError);
       window.removeEventListener('unhandledrejection', handleRejection);
     };
-  }, []);
+  }, [handleError]);
 
   return (
     <ApiErrorContext.Provider value={{ handleError }}>

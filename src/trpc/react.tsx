@@ -11,7 +11,6 @@ import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
 import { useSession } from "~/server/auth/client";
 import { type SessionUser } from "~/types/auth";
-import { useApiErrorHandler } from "~/providers/api-error-handler";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
