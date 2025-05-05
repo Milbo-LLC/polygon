@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Scene from "~/app/_components/scene";
 import { io, type Socket } from "socket.io-client";
-import { useSession } from "next-auth/react";
+import { useSession } from "~/server/auth/client";
 import { Cursor } from "~/components/UserCursor";
+import { type ExtendedSessionUser } from "~/types/auth";
+
 interface CursorData {
   position: { x: number; y: number };
   name: string;
@@ -20,8 +22,8 @@ function generateRandomColor(): string {
 
 export default function DocumentPage() {
   const params = useParams();
-  const session = useSession();
-  const user = session.data?.user;
+  const { data: session } = useSession();
+  const user = session?.user as ExtendedSessionUser | undefined;
   const documentId = params.documentId as string;
   const [socket, setSocket] = useState<Socket | null>(null);
   const [cursors, setCursors] = useState<UserCursors>({});

@@ -4,10 +4,11 @@ import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
-import { useSession } from 'next-auth/react';
+import { authClient } from '~/server/auth/client';
 import { type Organization } from '~/validators/organizations';
 import { type MemberRole } from '~/validators/user-organizations';
 import { type UserOrganizationWithOrg } from '~/validators/extended-schemas';
+import { type SessionUser } from '~/types/auth';
 
 type OrganizationContextValue = 
   | ({
@@ -34,8 +35,8 @@ export function OrganizationProvider({
   userId: string | undefined;
 }) {
   const utils = api.useUtils();
-  const session = useSession();
-  const user = session.data?.user;
+  const { data: session } = authClient.useSession();
+  const user = session?.user as SessionUser | undefined;
 
   const { data: organization, isLoading: loadingOrganization } = api.organization.get.useQuery(undefined, {
     enabled: !!userId,
@@ -63,11 +64,8 @@ export function OrganizationProvider({
 
   const updateOrganizationMutation = api.organization.update.useMutation({
     onSuccess: async () => {
-      // Invalidate the entire organization cache
       await utils.organization.invalidate();
-      // Also refetch the specific query
       await utils.organization.get.refetch();
-      // Invalidate user organizations to ensure all data is fresh
       await utils.userOrganization.invalidate();
       toast.success("Organization updated successfully");
     },
@@ -105,16 +103,59 @@ export function OrganizationProvider({
   }
 
   const handleOrgSwitch = async (organizationId: string) => {
-    console.log('Switching to organization:', organizationId);
+    
     try {
-      await updateUserMutation.mutateAsync({
+      // Update the user in the database
+      const updatedUser = await updateUserMutation.mutateAsync({
         id: user?.id,
         activeOrganizationId: organizationId,
       });
+      
+      // Cast the updatedUser to our SessionUser type to access activeOrganizationId
+      const typedUser = updatedUser as unknown as SessionUser;
+      
+      console.log('Database updated successfully:', {
+        userId: typedUser.id,
+        activeOrgId: typedUser.activeOrganizationId
+      });
+      
+      // Force a fresh session fetch to update with new activeOrganizationId
+      console.log('Step 2: Forcing session refresh...');
+      
+      try {
+        // Try to get session with disabled cache
+        const newSessionResponse = await authClient.getSession({ 
+          query: { 
+            disableCookieCache: true 
+          } 
+        });
+        
+        const sessionUser = newSessionResponse?.data?.user as SessionUser | undefined;
+        
+        console.log('Session refresh response:', {
+          success: !!newSessionResponse?.data,
+          userId: sessionUser?.id,
+          activeOrgId: sessionUser?.activeOrganizationId,
+          error: newSessionResponse?.error?.message
+        });
+      } catch (sessionError) {
+        console.error('Error refreshing session:', sessionError);
+      }
+      
+      // Invalidate all cached queries
+      console.log('Step 3: Invalidating TRPC cache...');
       await utils.invalidate();
-      window.location.reload();
+      console.log('TRPC cache invalidated');
+      
+      // Force a hard reload
+      console.log('Step 4: Performing hard reload...');
+      const timestamp = Date.now();
+      
+      // The most reliable way to force a complete refresh with new session data
+      console.log('=== RELOADING PAGE ===');
+      window.location.href = `${window.location.pathname}?t=${timestamp}`;
     } catch (error) {
-      console.error(error);
+      console.error('Error switching organization:', error);
       toast.error(
         'Something went wrong switching your organization. Please try again.',
       );

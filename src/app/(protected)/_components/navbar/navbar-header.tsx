@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import { useAtomValue } from "jotai";
 import { sidebarCollapsedAtom } from "../../atoms";
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { 
   LogOutIcon, 
   UserIcon, 

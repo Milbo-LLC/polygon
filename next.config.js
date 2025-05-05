@@ -13,10 +13,37 @@ const nextConfig = {
       'lh3.googleusercontent.com',
     ],
   },
-  experimental: {
-    // This disables the strict check for Suspense boundaries with CSR
-    missingSuspenseWithCSRBailout: true
-  }
+  headers: async () => {
+    return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      }
+    ]
+  },
+  allowedDevOrigins: ['https://polygon-staging.up.railway.app']
 };
 
 export default nextConfig;

@@ -1,8 +1,8 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { Building, User, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -43,15 +43,7 @@ function InvitationContent() {
     }
   );
 
-  useEffect(() => {
-    if (invitation) {
-      validateInvitation(invitation);
-    } else if (error) {
-      setInvitationState(InvitationState.INVALID);
-    }
-  }, [invitation, error]);
-
-  const validateInvitation = (invitation: OrganizationInvitation) => {
+  const validateInvitation = useCallback((invitation: OrganizationInvitation) => {
     if (!invitation) {
       setInvitationState(InvitationState.INVALID);
       return;
@@ -73,7 +65,16 @@ function InvitationContent() {
     }
 
     setInvitationState(InvitationState.VALID);
-  };
+  }, [session?.user?.email, setInvitationState]);
+
+  useEffect(() => {
+    if (invitation) {
+      validateInvitation(invitation);
+    } else if (error) {
+      setInvitationState(InvitationState.INVALID);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invitation, error]);
 
   const acceptInvitation = api.organizationInvitation.accept.useMutation({
     onError: (error) => {
