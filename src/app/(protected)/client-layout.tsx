@@ -12,6 +12,57 @@ import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { type SessionUser } from "~/types/auth";
 import { useApiErrorHandler } from "~/providers/api-error-handler";
 
+// Helper to check if in PR environment
+const isPREnvironment = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.host;
+    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
+  }
+  return false;
+};
+
+// Helper to get full auth URL for redirects
+const getAuthRedirectUrl = (path: string, params?: Record<string, string>): string => {
+  // For PR environments, we need to construct the right URL to the staging auth server
+  if (isPREnvironment()) {
+    // Get the PR environment origin for the callback
+    const prOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+    
+    // Base redirect path
+    let redirectUrl = path;
+    
+    // Add callback URL parameter if needed
+    if (params?.callbackUrl) {
+      // Ensure the callback URL is absolute with the PR origin
+      const callbackUrl = params.callbackUrl.startsWith('http') 
+        ? params.callbackUrl 
+        : `${prOrigin}${params.callbackUrl.startsWith('/') ? '' : '/'}${params.callbackUrl}`;
+      
+      redirectUrl += `?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+      
+      // Remove from params since we've handled it
+      const { callbackUrl: _callbackUrl, ...restParams } = params;
+      params = restParams;
+    }
+    
+    // Add any remaining params
+    if (params && Object.keys(params).length > 0) {
+      const separator = redirectUrl.includes('?') ? '&' : '?';
+      redirectUrl += separator + new URLSearchParams(params).toString();
+    }
+    
+    console.log(`PR environment redirect to: ${redirectUrl}`);
+    return redirectUrl;
+  }
+  
+  // For non-PR environments, just return the path with params if any
+  if (params && Object.keys(params).length > 0) {
+    return `${path}?${new URLSearchParams(params).toString()}`;
+  }
+  
+  return path;
+};
+
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
   "/settings",
@@ -35,11 +86,23 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!isPending && !session) {
       console.log('No active session detected, redirecting immediately');
+      
+      // Get invitation code if present for the redirect
+      const invitationCode = searchParams.get('code');
+      const redirectParams: Record<string, string> = {};
+      
+      if (invitationCode) {
+        redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
+      }
+      
+      // Build the redirect URL
+      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
+      
       // Use direct window location for more immediate redirect
-      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+      window.location.href = redirectUrl;
       return;
     }
-  }, [session, isPending]);
+  }, [session, isPending, searchParams]);
   
   useEffect(() => {
     if (isPending) {
@@ -61,20 +124,26 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     // Handle authentication redirects
     if (!session) {
       console.log('No active session, redirecting to login page');
-      // Redirect unauthenticated users
+      
+      // Prepare redirect parameters
+      const redirectParams: Record<string, string> = {};
+      
       if (invitationCode) {
-        const callbackUrl = `/invitations?code=${invitationCode}`;
-        window.location.href = `${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
-      } else {
-        window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+        redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
       }
-      return; // Keep loading state until redirect happens
+      
+      // Build the redirect URL
+      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
+      
+      // Redirect immediately
+      window.location.href = redirectUrl;
+      return;
     }
     
     // Handle beta access check for authenticated users
     if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
       router.push('/wait-list');
-      return; // Keep loading state until redirect happens
+      return;
     }
     
     // Set user ID and organization ID
@@ -85,8 +154,12 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     } else {
       console.log('No user ID found in session, redirecting to login');
       handleError(new Error("Authentication error: No user ID found"));
-      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
-      return; // Keep loading state until redirect happens
+      
+      // Build the redirect URL
+      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT);
+      
+      window.location.href = redirectUrl;
+      return;
     }
     
     // Only stop loading if we have a valid user and no redirects are needed

@@ -14,6 +14,33 @@ import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { api } from "~/trpc/react";
 import { useSession } from "~/server/auth/client";
 
+// Helper to check if in PR environment
+const isPREnvironment = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.host;
+    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
+  }
+  return false;
+};
+
+// Helper to get the auth redirect URL for the current environment
+const getAuthRedirectUrl = (): string => {
+  // Base redirect URL
+  const baseUrl = AUTH_REDIRECT_PATH_SIGNED_OUT;
+  
+  // For PR environments, we need to add the callback URL parameter to return to the PR environment
+  if (isPREnvironment() && typeof window !== 'undefined') {
+    // Get the current PR environment URL as the callback
+    const prOrigin = window.location.origin;
+    const callbackUrl = encodeURIComponent(`${prOrigin}/projects`);
+    
+    // Add it to the redirect URL
+    return `${baseUrl}?callbackUrl=${callbackUrl}`;
+  }
+  
+  return baseUrl;
+};
+
 interface ErrorWithCode {
   code: string;
 }
@@ -44,7 +71,11 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!isPending && !session) {
       console.log('No active session detected in ApiErrorProvider, redirecting immediately');
-      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+      
+      // Get the appropriate redirect URL for the current environment
+      const redirectUrl = getAuthRedirectUrl();
+      
+      window.location.href = redirectUrl;
     }
   }, [session, isPending]);
 
@@ -75,8 +106,11 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
           
           utils.invalidate().catch(console.error);
           
+          // Get the appropriate redirect URL for the current environment
+          const redirectUrl = getAuthRedirectUrl();
+          
           // Use immediate redirect with window.location
-          window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+          window.location.href = redirectUrl;
           return;
         }
         return;
@@ -91,7 +125,11 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
           error.message.includes("login") || 
           error.message.includes("unauthorized") ||
           error.message.includes("UNAUTHORIZED")) {
-        window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+            
+        // Get the appropriate redirect URL for the current environment
+        const redirectUrl = getAuthRedirectUrl();
+        
+        window.location.href = redirectUrl;
         return;
       }
       

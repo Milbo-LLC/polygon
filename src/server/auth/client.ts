@@ -5,14 +5,14 @@ import { env } from "~/env";
 const getBaseURL = () => {
   // For client-side, check the environment
   if (typeof window !== 'undefined') {
-    // Check if we're in a PR environment calling staging
+    // Check if we're in a PR environment
     const isPREnvironment = window.location.host.includes('polygon-pr-') || 
-                             window.location.host.includes('polygon-polygon-pr-');
+                           window.location.host.includes('polygon-polygon-pr-');
     
-    if (isPREnvironment && env.NEXT_PUBLIC_BETTER_AUTH_URL.includes('polygon-staging')) {
-      // If in PR environment and using staging URL, log it for debugging
+    if (isPREnvironment) {
+      // For PR environments, always use the staging auth URL
       console.log('PR environment using staging auth URL:', env.NEXT_PUBLIC_BETTER_AUTH_URL);
-      return env.NEXT_PUBLIC_BETTER_AUTH_URL; // Use the staging URL from environment variables
+      return env.NEXT_PUBLIC_BETTER_AUTH_URL;
     }
     
     // For other Railway environments or production, use the current origin
@@ -26,9 +26,27 @@ const getBaseURL = () => {
   return env.NEXT_PUBLIC_BETTER_AUTH_URL;
 };
 
+// Get the current origin for use in requests
+const getCurrentOrigin = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return '';
+};
+
 // Create the auth client with the appropriate base URL
 export const authClient = typeof window !== 'undefined' 
-  ? createAuthClient({ baseURL: getBaseURL() })
+  ? createAuthClient({ 
+      baseURL: getBaseURL(),
+      requestOptions: {
+        headers: {
+          // Add origin header to help with CORS
+          'X-Forwarded-Origin': getCurrentOrigin(),
+          'X-Requested-From': getCurrentOrigin()
+        },
+        credentials: 'include', // Ensure cookies are sent with requests
+      }
+    })
   : createAuthClient({ baseURL: env.NEXT_PUBLIC_BETTER_AUTH_URL });
 
 export const {
@@ -49,8 +67,13 @@ export const signInWithGoogle = async (callbackUrl?: string) => {
     });
   }
   
+  const origin = getCurrentOrigin();
+  const redirectUrl = callbackUrl ?? origin;
+  
+  console.log(`Sign-in with Google, using redirect URL: ${redirectUrl}`);
+  
   return signIn.social({
     provider: "google",
-    callbackURL: callbackUrl
+    callbackURL: redirectUrl
   });
 }; 

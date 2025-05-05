@@ -10,6 +10,54 @@ const port = process.env.PORT || 3000;
 const app = next({ dev });
 const handler = app.getRequestHandler();
 
+// Helper function to check if a PR environment domain
+const isPREnvironmentDomain = (origin) => {
+  if (!origin) return false;
+  
+  // Extract domain from origin
+  let domain;
+  try {
+    domain = new URL(origin).hostname;
+  } catch {
+    domain = origin;
+  }
+  
+  return domain.includes('polygon-polygon-pr-') || domain.includes('polygon-pr-');
+};
+
+// Create an array of allowed origins
+const getAllowedOrigins = () => {
+  // Always allow the current domain and localhost
+  const defaultOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    'http://localhost:3000',
+    'https://polygon-staging.up.railway.app',
+    'https://polygon.up.railway.app',
+  ].filter(Boolean);
+  
+  // In dev/test, be more permissive
+  if (dev || process.env.NODE_ENV === 'test') {
+    return '*';
+  }
+  
+  return (origin, callback) => {
+    // Check if it's a PR environment domain
+    if (isPREnvironmentDomain(origin)) {
+      console.log(`Allowing CORS for PR environment: ${origin}`);
+      callback(null, true);
+      return;
+    }
+    
+    // Check against our list of allowed origins
+    if (!origin || defaultOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`Rejecting CORS for origin: ${origin}`);
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  };
+};
+
 // Track connected users and their cursor positions
 const documentUsers = new Map();
 // Track users in each organization
@@ -20,8 +68,9 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || "*", // Add CORS for production
-      methods: ["GET", "POST"]
+      origin: getAllowedOrigins(),
+      methods: ["GET", "POST"],
+      credentials: true
     }
   });
 
@@ -29,8 +78,20 @@ app.prepare().then(() => {
   const connectedUsers = new Map();
 
   io.on("connection", (socket) => {
+    console.log(`Socket connected with ID: ${socket.id}`);
+    
+    // Log connection details
+    const handshake = socket.handshake;
+    if (handshake.headers.referer) {
+      console.log(`Socket connection from referer: ${handshake.headers.referer}`);
+    }
+    if (handshake.headers.origin) {
+      console.log(`Socket connection from origin: ${handshake.headers.origin}`);
+    }
+    
     // Handle joining a document room
     socket.on("joinDocument", ({ documentId, userId, name }) => {
+      console.log(`User ${name} (${userId}) joined document ${documentId}`);
       socket.join(documentId);
 
       // Initialize user in the document with their name

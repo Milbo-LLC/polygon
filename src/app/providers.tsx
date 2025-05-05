@@ -13,6 +13,33 @@ import { ThemeProvider } from '~/providers/theme-provider';
 import { ApiErrorProvider } from '~/providers/api-error-handler';
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from '~/constants/links';
 
+// Helper to check if in PR environment
+const isPREnvironment = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.host;
+    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
+  }
+  return false;
+};
+
+// Helper to get the auth redirect URL for the current environment
+const getAuthRedirectUrl = (): string => {
+  // Base redirect URL
+  const baseUrl = AUTH_REDIRECT_PATH_SIGNED_OUT;
+  
+  // For PR environments, we need to add the callback URL parameter to return to the PR environment
+  if (isPREnvironment() && typeof window !== 'undefined') {
+    // Get the current PR environment URL as the callback
+    const prOrigin = window.location.origin;
+    const callbackUrl = encodeURIComponent(`${prOrigin}/projects`);
+    
+    // Add it to the redirect URL
+    return `${baseUrl}?callbackUrl=${callbackUrl}`;
+  }
+  
+  return baseUrl;
+};
+
 function SessionChecker() {
   const { data: session, isPending } = useSession();
   const pathname = usePathname();
@@ -23,7 +50,11 @@ function SessionChecker() {
   useEffect(() => {
     if (!isPending && !session && !isAuthRoute) {
       console.log('Root provider: No active session detected, redirecting immediately');
-      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+      
+      // Get the appropriate redirect URL for the current environment
+      const redirectUrl = getAuthRedirectUrl();
+      
+      window.location.href = redirectUrl;
     }
   }, [session, isPending, isAuthRoute]);
   
