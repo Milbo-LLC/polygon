@@ -11,6 +11,7 @@ import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
 import { useSession } from "~/server/auth/client";
 import { type SessionUser } from "~/types/auth";
+import { useApiErrorHandler } from "~/providers/api-error-handler";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -41,6 +42,7 @@ export type RouterOutputs = inferRouterOutputs<AppRouter>;
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   const { data: session } = useSession();
+  const { handleError } = useApiErrorHandler();
   
   const user = session?.user as SessionUser | undefined;
   const activeOrganizationId = user?.activeOrganizationId;
@@ -67,6 +69,8 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             
             return headers;
           },
+          // Handle any HTTP errors
+          AbortController: typeof window !== 'undefined' ? window.AbortController : undefined,
         }),
       ],
     }),
@@ -74,7 +78,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
+      <api.Provider client={trpcClient} queryClient={queryClient} onError={handleError}>
         {props.children}
       </api.Provider>
     </QueryClientProvider>

@@ -31,6 +31,12 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   
   // Do all checks in useEffect to avoid hydration mismatch
   useEffect(() => {
+    // Always stay in loading state while session is pending
+    if (isPending) {
+      setIsLoading(true);
+      return;
+    }
+    
     // Check if current path should have navbar
     const showNavbar = !ROUTES_WITHOUT_NAVBAR.some(route => pathname.startsWith(route));
     setShouldShowNavbar(showNavbar);
@@ -43,33 +49,38 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
     
     // Handle authentication redirects
-    if (!isPending) {
-      if (!session) {
-        // Redirect unauthenticated users
-        if (invitationCode) {
-          const callbackUrl = `/invitations?code=${invitationCode}`;
-          router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-        } else {
-          router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
-        }
+    if (!session) {
+      console.log('No active session, redirecting to login page');
+      // Redirect unauthenticated users
+      if (invitationCode) {
+        const callbackUrl = `/invitations?code=${invitationCode}`;
+        router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
       } else {
-        // Handle beta access check for authenticated users
-        if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
-          router.push('/wait-list');
-        }
-        
-        // Set user ID and organization ID
-        const user = session.user as SessionUser | undefined;
-        if (user?.id) {
-          console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
-          setUserId(user.id);
-        }
-        
-        // We're done loading
-        setIsLoading(false);
+        router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
       }
+      return; // Keep loading state until redirect happens
     }
-  }, [session, isPending, pathname, searchParams, router, posthog ]);
+    
+    // Handle beta access check for authenticated users
+    if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
+      router.push('/wait-list');
+      return; // Keep loading state until redirect happens
+    }
+    
+    // Set user ID and organization ID
+    const user = session.user as SessionUser | undefined;
+    if (user?.id) {
+      console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
+      setUserId(user.id);
+    } else {
+      console.log('No user ID found in session, redirecting to login');
+      router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+      return; // Keep loading state until redirect happens
+    }
+    
+    // Only stop loading if we have a valid user and no redirects are needed
+    setIsLoading(false);
+  }, [session, isPending, pathname, searchParams, router, posthog]);
 
   if (isLoading) {
     return (

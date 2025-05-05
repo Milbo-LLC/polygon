@@ -10,6 +10,7 @@ import { usePostHog } from 'posthog-js/react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { ThemeProvider } from '~/providers/theme-provider';
+import { ApiErrorProvider } from '~/providers/api-error-handler';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
@@ -80,12 +81,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // The client automatically provides session context
   return (
     <TRPCReactProvider>
-      <PostHogProvider>
-        <PostHogIdentifier />
-        <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
-      </PostHogProvider>
+      <ApiErrorProvider>
+        <PostHogProvider>
+          <PostHogIdentifier />
+          <ThemeProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </ThemeProvider>
+        </PostHogProvider>
+      </ApiErrorProvider>
     </TRPCReactProvider>
   );
 }
