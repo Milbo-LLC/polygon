@@ -9,7 +9,7 @@ export const { POST, GET } = toNextJsHandler(auth);
 // Handle OPTIONS requests for CORS preflight
 export async function OPTIONS(request: NextRequest) {
   // Get the origin from the request headers
-  const origin = request.headers.get('origin') || '*';
+  const origin = request.headers.get('origin') ?? '*';
   
   console.log('Auth route handling OPTIONS request from origin:', origin);
   
