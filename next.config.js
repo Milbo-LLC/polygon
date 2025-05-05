@@ -77,4 +77,7 @@ const nextConfig = {
   allowedDevOrigins: undefined
 };
 
+// ✅ THIS WILL PRINT IN RAILWAY BUILD LOGS
+console.log("🚀 Next config loaded. allowedDevOrigins:", nextConfig.allowedDevOrigins);
+
 export default nextConfig;
