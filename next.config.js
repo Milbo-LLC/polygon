@@ -43,8 +43,7 @@ const nextConfig = {
       }
     ]
   },
-  optimizeFonts: true,
-  allowedDevOrigins: true,
+  allowedDevOrigins: ['https://polygon-staging.up.railway.app']
 };
 
 export default nextConfig;
