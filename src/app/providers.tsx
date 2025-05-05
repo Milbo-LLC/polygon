@@ -11,14 +11,31 @@ import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
 import { ThemeProvider } from '~/providers/theme-provider';
 import { ApiErrorProvider } from '~/providers/api-error-handler';
+import { AUTH_REDIRECT_PATH_SIGNED_OUT } from '~/constants/links';
+
+function SessionChecker() {
+  const { data: session, isPending } = useSession();
+  const pathname = usePathname();
+  
+  // Skip check for auth routes
+  const isAuthRoute = pathname?.startsWith('/login') || pathname?.startsWith('/signup');
+  
+  useEffect(() => {
+    if (!isPending && !session && !isAuthRoute) {
+      console.log('Root provider: No active session detected, redirecting immediately');
+      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+    }
+  }, [session, isPending, isAuthRoute]);
+  
+  return null;
+}
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-
   useEffect(() => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
-      person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-      capture_pageview: false // Disable automatic pageview capture, as we capture manually
+      person_profiles: 'identified_only',
+      capture_pageview: false
     })
   }, [])
 
@@ -50,7 +67,6 @@ function PostHogPageView() {
   const searchParams = useSearchParams()
   const posthog = usePostHog()
 
-  // Track pageviews
   useEffect(() => {
     if (pathname && posthog) {
       let url = window.origin + pathname
@@ -65,9 +81,6 @@ function PostHogPageView() {
   return null
 }
 
-// Wrap PostHogPageView in Suspense to avoid the useSearchParams usage above
-// from de-opting the whole app into client-side rendering
-// See: https://nextjs.org/docs/messages/deopted-into-client-rendering
 function SuspendedPostHogPageView() {
   return (
     <Suspense fallback={null}>
@@ -77,11 +90,10 @@ function SuspendedPostHogPageView() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  // Better Auth doesn't use a SessionProvider like NextAuth.js
-  // The client automatically provides session context
   return (
     <TRPCReactProvider>
       <ApiErrorProvider>
+        <SessionChecker />
         <PostHogProvider>
           <PostHogIdentifier />
           <ThemeProvider>

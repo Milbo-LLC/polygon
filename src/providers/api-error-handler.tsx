@@ -1,7 +1,6 @@
 "use client";
 
 import { TRPCClientError } from "@trpc/client";
-import { useRouter } from "next/navigation";
 import { 
   createContext, 
   useContext, 
@@ -13,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { api } from "~/trpc/react";
+import { useSession } from "~/server/auth/client";
 
 interface ErrorWithCode {
   code: string;
@@ -37,12 +37,29 @@ const ApiErrorContext = createContext<{
 
 export function ApiErrorProvider({ children }: PropsWithChildren) {
   const [hasShownError, setHasShownError] = useState(false);
-  const router = useRouter();
   const utils = api.useUtils();
+  const { data: session, isPending } = useSession();
+
+  // Add a function to check auth status when initialized
+  useEffect(() => {
+    if (!isPending && !session) {
+      console.log('No active session detected in ApiErrorProvider, redirecting immediately');
+      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+    }
+  }, [session, isPending]);
 
   const handleError = useCallback((error: unknown) => {
+    // Add detailed console logging
+    console.log('API Error Handler received error:', error);
+    
     if (error instanceof TRPCClientError) {
       const trpcError = error;
+      
+      // Safe way to log the error details without unsafe assignments
+      console.log('TRPC Error message:', trpcError.message);
+      if (trpcError.data) {
+        console.log('TRPC Error data:', typeof trpcError.data);
+      }
       
       const isUnauthorizedMessage = 
         trpcError.message.includes("UNAUTHORIZED") || 
@@ -53,35 +70,46 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
       if (isUnauthorizedMessage || isUnauthorizedCode) {
         if (!hasShownError) {
           setHasShownError(true);
-          console.log("Authentication error detected, redirecting to login", trpcError);
+          console.log("Authentication error detected, redirecting to login immediately");
           toast.error("Your session has expired. Please sign in again.");
           
-          // Clear all queries from cache to prevent further errors
           utils.invalidate().catch(console.error);
           
-          // Redirect to login
-          setTimeout(() => {
-            void router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
-          }, 500);
+          // Use immediate redirect with window.location
+          window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+          return;
         }
         return;
       }
       
-      // Handle other API errors
       toast.error(trpcError.message || "An error occurred");
     } else if (error instanceof Error) {
+      console.log('Standard Error:', error.message, error.stack);
+      
+      // Check if error message suggests auth issues
+      if (error.message.includes("auth") || 
+          error.message.includes("login") || 
+          error.message.includes("unauthorized") ||
+          error.message.includes("UNAUTHORIZED")) {
+        window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+        return;
+      }
+      
       toast.error(error.message || "An error occurred");
     } else {
+      console.log('Unknown error type:', error);
       toast.error("An unknown error occurred");
     }
-  }, [hasShownError, router, utils]);
+  }, [hasShownError, utils]);
 
   useEffect(() => {
     const handleGlobalError = (event: ErrorEvent) => {
+      console.log('Global error event caught:', event);
       handleError(event.error);
     };
     
     const handleRejection = (event: PromiseRejectionEvent) => {
+      console.log('Unhandled promise rejection caught:', event);
       handleError(event.reason);
     };
     

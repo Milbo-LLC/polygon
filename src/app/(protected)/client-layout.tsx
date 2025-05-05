@@ -31,9 +31,17 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const searchParams = useSearchParams();
   const { handleError } = useApiErrorHandler();
   
-  // Do all checks in useEffect to avoid hydration mismatch
+  // Immediately check for session on client-side to avoid any delay
   useEffect(() => {
-    // Always stay in loading state while session is pending
+    if (!isPending && !session) {
+      console.log('No active session detected, redirecting immediately');
+      // Use direct window location for more immediate redirect
+      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+      return;
+    }
+  }, [session, isPending]);
+  
+  useEffect(() => {
     if (isPending) {
       setIsLoading(true);
       return;
@@ -56,9 +64,9 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
       // Redirect unauthenticated users
       if (invitationCode) {
         const callbackUrl = `/invitations?code=${invitationCode}`;
-        router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        window.location.href = `${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
       } else {
-        router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+        window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
       }
       return; // Keep loading state until redirect happens
     }
@@ -77,7 +85,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     } else {
       console.log('No user ID found in session, redirecting to login');
       handleError(new Error("Authentication error: No user ID found"));
-      router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
+      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
       return; // Keep loading state until redirect happens
     }
     
