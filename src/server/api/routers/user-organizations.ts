@@ -13,22 +13,34 @@ type UserOrganizationWithOrganization = UserOrganization & {
   user: User;
 };
 
-export const parseUserOrganization = (uo: UserOrganizationWithOrganization) => ({
-  createdAt: uo.createdAt,
-  updatedAt: uo.updatedAt,
-  deletedAt: uo.deletedAt,
-  userId: uo.userId,
-  organizationId: uo.organizationId,
-  role: uo.role as MemberRole,
-  organization: uo.organization,
-  user: uo.user
-});
+export const parseUserOrganization = (uo: UserOrganizationWithOrganization) => {
+  // Create a copy of the user object to safely modify it
+  const user = { ...uo.user };
+  
+  // Instead of converting boolean to Date, we'll keep the original value 
+  // as it will be properly handled during serialization
+  
+  return {
+    createdAt: uo.createdAt,
+    updatedAt: uo.updatedAt,
+    deletedAt: uo.deletedAt,
+    userId: uo.userId,
+    organizationId: uo.organizationId,
+    role: uo.role as MemberRole,
+    organization: uo.organization,
+    user: user
+  };
+};
 
 export const userOrganizationRouter = createTRPCRouter({
   get: protectedProcedure
     .output(UserOrganizationWithOrgSchema)
     .query(async ({ ctx }) => {
       const organizationId = ctx.organizationId;
+      if (!organizationId || !ctx.session?.user?.id) {
+        throw new Error("User not authenticated or no active organization");
+      }
+      
       const userId = ctx.session.user.id;
 
       const userOrganization = await ctx.db.userOrganization.findFirst({

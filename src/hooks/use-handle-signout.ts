@@ -1,4 +1,4 @@
-import { signOut } from "next-auth/react";
+import { signOut } from "~/server/auth/client";
 
 export const useHandleSignout = () => {
 

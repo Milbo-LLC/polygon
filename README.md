@@ -16,13 +16,13 @@ Polygon is an open-source 3D modeling tool for the AI future. Built off of [T3 S
    pnpm install
    ```
 
-2. Set up environment variables:
+2. Login to Doppler
+
+   We use Doppler for sharing env variables, so login first:
 
    ```bash
-   cp .env.example .env
+   doppler login
    ```
-
-   Then configure the `.env` file with appropriate values.
 
 3. Start the database:
 
@@ -30,7 +30,14 @@ Polygon is an open-source 3D modeling tool for the AI future. Built off of [T3 S
    ./start-database.sh
    ```
 
-4. Run the development server:
+4. Run migration script on database
+
+   ```bash
+   pnpm db:generate
+   ```
+
+
+5. Run the development server:
 
    ```bash
    pnpm dev

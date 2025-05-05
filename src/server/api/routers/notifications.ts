@@ -11,7 +11,7 @@ export const notificationRouter = createTRPCRouter({
     .input(CreateNotificationSchema)
     .output(NotificationSchema)
     .mutation(async ({ ctx, input }) => {
-      const organizationId = ctx.session.user.organizations[0]?.id;
+      const organizationId = ctx.organizationId as string | null;
       if (!organizationId) {
         throw new Error("No active organization");
       }

@@ -12,10 +12,6 @@ const nextConfig = {
       'polygon-public-prod.s3.us-east-1.amazonaws.com',
       'lh3.googleusercontent.com',
     ],
-  },
-  experimental: {
-    // This disables the strict check for Suspense boundaries with CSR
-    missingSuspenseWithCSRBailout: true
   }
 };
 

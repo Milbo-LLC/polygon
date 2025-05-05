@@ -1,10 +1,37 @@
-import NextAuth from "next-auth";
 import { cache } from "react";
-
+import { headers } from "next/headers";
 import { authConfig } from "./config";
+import { type Session } from "~/types/auth";
 
-const { auth: uncachedAuth, handlers, signIn, signOut } = NextAuth(authConfig);
+// Export the auth instance for use in API routes
+export const auth = authConfig;
 
-const auth = cache(uncachedAuth);
+// Create a cached version of getSession for server components
+export const getSession = cache(async () => {
+  return auth.api.getSession({
+    headers: await headers()
+  }) as Promise<Session | null>;
+});
 
-export { auth, handlers, signIn, signOut };
+// Export a simple function to get the user session
+export async function getUserSession() {
+  console.log("Calling getUserSession...");
+  const startTime = Date.now();
+  
+  try {
+    const session = await getSession();
+    const endTime = Date.now();
+    
+    console.log(`Session retrieved in ${endTime - startTime}ms`, {
+      present: !!session,
+      userId: session?.user?.id,
+      // Access the activeOrganizationId safely
+      activeOrgId: session?.user?.activeOrganizationId,
+    });
+    
+    return session;
+  } catch (error) {
+    console.error("Error retrieving session:", error);
+    return null;
+  }
+}

@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession } from '~/server/auth/client';
 import { api } from '~/trpc/react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '~/components/ui/alert-dialog';
 import { LockIcon } from 'lucide-react';

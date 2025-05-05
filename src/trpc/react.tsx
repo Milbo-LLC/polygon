@@ -9,7 +9,8 @@ import SuperJSON from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
-import { useSession } from "next-auth/react";
+import { useSession } from "~/server/auth/client";
+import { type SessionUser } from "~/types/auth";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -39,9 +40,10 @@ export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
-  const user = useSession();
-  console.log(`user: `, user);
-  const activeOrganizationId = user.data?.user?.activeOrganizationId;
+  const { data: session } = useSession();
+  
+  const user = session?.user as SessionUser | undefined;
+  const activeOrganizationId = user?.activeOrganizationId;
 
   const trpcClient = useMemo(() => 
     api.createClient({

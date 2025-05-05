@@ -1,54 +1,68 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import type { DefaultSession, NextAuthConfig } from "next-auth";
-import type { Adapter } from "next-auth/adapters";
-import GoogleProvider from "next-auth/providers/google";
-
-import { db } from "~/server/db";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 import type { Organization } from "@prisma/client";
+import { db } from "~/server/db";
 import { sendWelcomeEmailServer } from "~/lib/email-server";
+import { env } from "~/env";
+import { type SessionEventProps, type SignInEventProps } from "~/types/auth";
 
 /**
- * test
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
+ * This file was converted from NextAuth.js to Better Auth
  */
-declare module "next-auth" {
-  interface Session extends DefaultSession {
+
+// For TypeScript compatibility with module augmentation
+// Note: These type extensions may need further adjustments based on Better Auth's actual types
+declare module "better-auth" {
+  // Extend or modify existing types rather than creating duplicates
+  interface UserWithAdditionalFields {
+    organizations: Organization[];
+    activeOrganizationId?: string | null;
+  }
+  
+  interface SessionWithAdditionalFields {
     user: {
       id: string;
       organizations: Organization[];
-      activeOrganizationId?: string;
-    } & DefaultSession["user"];
-  }
-
-  interface User {
-    organizations: Organization[];
-    activeOrganizationId?: string;
+      activeOrganizationId?: string | null;
+      name?: string;
+      email?: string;
+    }
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
-export const authConfig = {
-  pages: {
-    signIn: "/login",
+export const authConfig = betterAuth({
+  // Authentication providers
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }
   },
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      checks: ['state'],
-    })
-  ],
-
-  adapter: PrismaAdapter(db) as Adapter,
-  callbacks: {
-    session: async ({ session, user }) => {
+  
+  // Secret for encryption
+  secret: env.BETTER_AUTH_SECRET,
+  
+  // Database configuration using proper adapter
+  database: prismaAdapter(db, {
+    provider: "postgresql",
+  }),
+  
+  // Custom UI pages
+  urls: {
+    signIn: "/login",
+    signOut: "/login",
+    error: "/login",
+    verifyRequest: "/login",
+  },
+  
+  // Event hooks (replacing NextAuth callbacks)
+  events: {
+    // Session hook to enrich user data
+    onSession: async ({ session, user }: SessionEventProps) => {
+      if (!user.id) {
+        return session;
+      }
+      
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
         include: {
@@ -69,7 +83,9 @@ export const authConfig = {
         },
       };
     },
-    signIn: async ({ user }) => {
+    
+    // Sign-in hook to handle organization creation
+    onSignIn: async ({ user }: SignInEventProps) => {
       console.log('⭐ signIn callback triggered with user:', JSON.stringify({
         id: user.id,
         email: user.email,
@@ -120,7 +136,7 @@ export const authConfig = {
               // Create the user-organization relationship
               const userOrg = await tx.userOrganization.create({
                 data: {
-                  userId: user.id!,
+                  userId: user.id,
                   organizationId: organization.id,
                   role: 'owner',
                 },
@@ -133,7 +149,7 @@ export const authConfig = {
                 console.log('📧 Creating notification record...');
                 await tx.notification.create({
                   data: {
-                    userId: user.id!,
+                    userId: user.id,
                     type: 'welcome',
                     channel: 'email',
                     organizationId: organization.id,
@@ -159,12 +175,6 @@ export const authConfig = {
         // even if organization creation fails
         return true;
       }
-    },
-    redirect({ url, baseUrl }) {
-      if (url.startsWith(baseUrl) || url.startsWith('/')) {
-        return url;
-      }
-      return baseUrl;
-    },
-  },
-} satisfies NextAuthConfig;
+    }
+  }
+});

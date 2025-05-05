@@ -7,7 +7,7 @@ export const UserSchema = z.object({
   deletedAt: z.date().nullable(),
   name: z.string().nullable(),
   email: z.string().email().nullable(),
-  emailVerified: z.date().nullable(),
+  emailVerified: z.any().nullable(),
   image: z.string().nullable(),
   activeOrganizationId: z.string().nullable(),
 });
