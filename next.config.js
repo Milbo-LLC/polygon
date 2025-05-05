@@ -74,12 +74,9 @@ const nextConfig = {
   },
   crossOrigin: 'anonymous',
   basePath: '',
-  allowedDevOrigins: [
-    'https://polygon-staging.up.railway.app',
-    'https://*.up.railway.app',
-    'https://polygon-polygon-pr-([0-9]+).up.railway.app',
-    'https://polygon-pr-([0-9]+).up.railway.app'
-  ]
+  allowedDevOrigins: process.env.NODE_ENV === 'production' ? [
+    'https://polygon.up.railway.app',
+  ] : undefined
 };
 
 export default nextConfig;
