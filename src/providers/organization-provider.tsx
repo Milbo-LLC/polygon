@@ -103,16 +103,9 @@ export function OrganizationProvider({
   }
 
   const handleOrgSwitch = async (organizationId: string) => {
-    console.log('=== ORGANIZATION SWITCH STARTED ===');
-    console.log('Current session:', {
-      userId: user?.id,
-      activeOrgId: user?.activeOrganizationId,
-      target: organizationId
-    });
     
     try {
       // Update the user in the database
-      console.log('Step 1: Updating user in database...');
       const updatedUser = await updateUserMutation.mutateAsync({
         id: user?.id,
         activeOrganizationId: organizationId,
