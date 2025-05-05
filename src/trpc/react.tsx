@@ -42,7 +42,6 @@ export type RouterOutputs = inferRouterOutputs<AppRouter>;
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   const { data: session } = useSession();
-  const { handleError } = useApiErrorHandler();
   
   const user = session?.user as SessionUser | undefined;
   const activeOrganizationId = user?.activeOrganizationId;
@@ -62,15 +61,12 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             
-            // Set organization ID in the header if available
             if (activeOrganizationId) {
               headers.set("x-organization-id", activeOrganizationId);
             }
             
             return headers;
           },
-          // Handle any HTTP errors
-          AbortController: typeof window !== 'undefined' ? window.AbortController : undefined,
         }),
       ],
     }),
@@ -78,7 +74,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient} onError={handleError}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
       </api.Provider>
     </QueryClientProvider>

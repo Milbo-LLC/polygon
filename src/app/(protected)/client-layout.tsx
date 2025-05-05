@@ -10,6 +10,7 @@ import { useSession } from "~/server/auth/client";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { type SessionUser } from "~/types/auth";
+import { useApiErrorHandler } from "~/providers/api-error-handler";
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -28,6 +29,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { handleError } = useApiErrorHandler();
   
   // Do all checks in useEffect to avoid hydration mismatch
   useEffect(() => {
@@ -74,13 +76,14 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
       setUserId(user.id);
     } else {
       console.log('No user ID found in session, redirecting to login');
+      handleError(new Error("Authentication error: No user ID found"));
       router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
       return; // Keep loading state until redirect happens
     }
     
     // Only stop loading if we have a valid user and no redirects are needed
     setIsLoading(false);
-  }, [session, isPending, pathname, searchParams, router, posthog]);
+  }, [session, isPending, pathname, searchParams, router, posthog, handleError]);
 
   if (isLoading) {
     return (

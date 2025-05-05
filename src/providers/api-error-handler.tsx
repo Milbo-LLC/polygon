@@ -61,6 +61,24 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
     }
   };
 
+  useEffect(() => {
+    const handleGlobalError = (event: ErrorEvent) => {
+      handleError(event.error);
+    };
+    
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      handleError(event.reason);
+    };
+    
+    window.addEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleRejection);
+    
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
+  }, []);
+
   return (
     <ApiErrorContext.Provider value={{ handleError }}>
       {children}
