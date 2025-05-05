@@ -23,44 +23,14 @@ const isPREnvironment = (): boolean => {
 
 // Helper to get full auth URL for redirects
 const getAuthRedirectUrl = (path: string, params?: Record<string, string>): string => {
-  // For PR environments, we need to construct the right URL to the staging auth server
-  if (isPREnvironment()) {
-    // Get the PR environment origin for the callback
-    const prOrigin = typeof window !== 'undefined' ? window.location.origin : '';
-    
-    // Base redirect path
-    let redirectUrl = path;
-    
-    // Add callback URL parameter if needed
-    if (params?.callbackUrl) {
-      // Ensure the callback URL is absolute with the PR origin
-      const callbackUrl = params.callbackUrl.startsWith('http') 
-        ? params.callbackUrl 
-        : `${prOrigin}${params.callbackUrl.startsWith('/') ? '' : '/'}${params.callbackUrl}`;
-      
-      redirectUrl += `?callbackUrl=${encodeURIComponent(callbackUrl)}`;
-      
-      // Remove from params since we've handled it
-      const { callbackUrl: _callbackUrl, ...restParams } = params;
-      params = restParams;
-    }
-    
-    // Add any remaining params
-    if (params && Object.keys(params).length > 0) {
-      const separator = redirectUrl.includes('?') ? '&' : '?';
-      redirectUrl += separator + new URLSearchParams(params).toString();
-    }
-    
-    console.log(`PR environment redirect to: ${redirectUrl}`);
-    return redirectUrl;
-  }
+  let redirectUrl = path;
   
-  // For non-PR environments, just return the path with params if any
+  // Add any params
   if (params && Object.keys(params).length > 0) {
-    return `${path}?${new URLSearchParams(params).toString()}`;
+    redirectUrl += `?${new URLSearchParams(params).toString()}`;
   }
   
-  return path;
+  return redirectUrl;
 };
 
 // Updated to catch all settings routes
@@ -82,28 +52,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const searchParams = useSearchParams();
   const { handleError } = useApiErrorHandler();
   
-  // Immediately check for session on client-side to avoid any delay
-  useEffect(() => {
-    if (!isPending && !session) {
-      console.log('No active session detected, redirecting immediately');
-      
-      // Get invitation code if present for the redirect
-      const invitationCode = searchParams.get('code');
-      const redirectParams: Record<string, string> = {};
-      
-      if (invitationCode) {
-        redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
-      }
-      
-      // Build the redirect URL
-      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
-      
-      // Use direct window location for more immediate redirect
-      window.location.href = redirectUrl;
-      return;
-    }
-  }, [session, isPending, searchParams]);
-  
+  // Check session and redirect if needed
   useEffect(() => {
     if (isPending) {
       setIsLoading(true);
@@ -123,8 +72,6 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     
     // Handle authentication redirects
     if (!session) {
-      console.log('No active session, redirecting to login page');
-      
       // Prepare redirect parameters
       const redirectParams: Record<string, string> = {};
       
@@ -149,10 +96,8 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     // Set user ID and organization ID
     const user = session.user as SessionUser | undefined;
     if (user?.id) {
-      console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
       setUserId(user.id);
     } else {
-      console.log('No user ID found in session, redirecting to login');
       handleError(new Error("Authentication error: No user ID found"));
       
       // Build the redirect URL

@@ -43,7 +43,6 @@ const getAllowedOrigins = () => {
   return (origin, callback) => {
     // Check if it's a PR environment domain
     if (isPREnvironmentDomain(origin)) {
-      console.log(`Allowing CORS for PR environment: ${origin}`);
       callback(null, true);
       return;
     }
@@ -52,7 +51,6 @@ const getAllowedOrigins = () => {
     if (!origin || defaultOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log(`Rejecting CORS for origin: ${origin}`);
       callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   };
@@ -70,7 +68,8 @@ app.prepare().then(() => {
     cors: {
       origin: getAllowedOrigins(),
       methods: ["GET", "POST"],
-      credentials: true
+      credentials: true,
+      allowedHeaders: ["X-Requested-From", "X-Forwarded-Origin"]
     }
   });
 

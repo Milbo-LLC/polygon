@@ -36,54 +36,26 @@ export function middleware(request: NextRequest) {
   const host = request.headers.get('host') ?? '';
   const requestedFrom = request.headers.get('x-requested-from');
   
-  console.log(`Middleware processing ${request.method} request to ${url} from origin: ${origin}, on host: ${host}`);
-  if (requestedFrom) {
-    console.log(`Request includes X-Requested-From header: ${requestedFrom}`);
+  // Always handle OPTIONS requests first - critical for CORS
+  if (request.method === 'OPTIONS') {
+    return addCORSHeaders(new NextResponse(null, { status: 200 }), origin);
   }
   
-  // Skip handling for static assets and add proper CORS headers
-  if (url.startsWith('/_next/') || url.includes('.') || url.includes('favicon')) {
-    console.log('Static asset request detected, adding CORS headers');
-    const response = NextResponse.next();
-    return addCORSHeaders(response, origin);
-  }
-
-  // Check environment types
-  const isPR = isPREnvironment(origin, host);
-  const isStaging = isStagingEnvironment(host);
-  
-  if (isPR) {
-    console.log('PR environment detected');
-  }
-  
-  if (isStaging) {
-    console.log('Staging environment detected');
-  }
-
-  // Handle auth and API routes with special attention
+  // Handle API routes
   if (url.startsWith('/api/')) {
-    console.log('Handling API request');
-    
-    // Always handle OPTIONS requests first - critical for CORS
-    if (request.method === 'OPTIONS') {
-      console.log('Handling OPTIONS preflight request');
-      return addCORSHeaders(new NextResponse(null, { status: 200 }), origin);
-    }
-    
     // Special handling for authentication-related endpoints
     if (url.startsWith('/api/auth/')) {
-      console.log('Auth API request detected');
+      const isPR = isPREnvironment(origin, host);
+      const isStaging = isStagingEnvironment(host);
       
       // Special case: PR environment requesting auth from staging
       if ((isPR && isStaging) || (requestedFrom?.includes('polygon-polygon-pr-'))) {
-        console.log('Cross-origin auth request from PR to staging detected - ensuring CORS headers');
         const response = NextResponse.next();
         return addCORSHeaders(response, origin ?? requestedFrom);
       }
     }
     
     // Add CORS headers to all API responses
-    console.log('Adding CORS headers to API response');
     const response = NextResponse.next();
     return addCORSHeaders(response, origin);
   }
@@ -92,7 +64,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Match API routes, static assets, and auth routes
+// Only match API routes
 export const config = {
-  matcher: ['/api/:path*', '/_next/:path*', '/favicon.ico'],
+  matcher: ['/api/:path*'],
 }; 
