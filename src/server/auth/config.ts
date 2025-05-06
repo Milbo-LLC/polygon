@@ -46,15 +46,6 @@ const isPR =
   host.includes("polygon-pr-") ||
   host.includes("polygon-polygon-pr-");
 
-console.log("🛡 trustedOrigins - isPR:", isPR, " host:", host);
-console.log("RAILWAY_PUBLIC_DOMAIN", process.env.RAILWAY_PUBLIC_DOMAIN);
-console.log("RAILWAY_STATIC_URL", process.env.RAILWAY_STATIC_URL);
-console.log("RAILWAY_URL", process.env.RAILWAY_URL);
-console.log("RAILWAY_ENVIRONMENT_NAME", process.env.RAILWAY_ENVIRONMENT_NAME);
-console.log("RAILWAY_PROJECT_NAME", process.env.RAILWAY_PROJECT_NAME);
-console.log("RAILWAY_PROJECT_ID", process.env.RAILWAY_PROJECT_ID);
-console.log("RAILWAY_REGION", process.env.RAILWAY_REGION);
-
 const trustedOrigins = [
   "https://polygon-staging.up.railway.app",
   "https://polygon.up.railway.app",
@@ -65,7 +56,6 @@ if (isPR && host) {
   const prDomain = `https://${host}`;
   trustedOrigins.push(prDomain);
 }
-console.log("🛡 Final trustedOrigins:", trustedOrigins);
 
 export const authConfig = betterAuth({
   // Social providers

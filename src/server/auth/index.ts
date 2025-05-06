@@ -8,8 +8,10 @@ export const auth = authConfig;
 
 // Create a cached version of getSession for server components
 export const getSession = cache(async () => {
+  const incomingHeaders = await headers();
+
   return auth.api.getSession({
-    headers: await headers()
+    headers: incomingHeaders
   }) as Promise<Session | null>;
 });
 
@@ -29,6 +31,7 @@ export async function getUserSession() {
       activeOrgId: session?.user?.activeOrganizationId,
     });
     
+    console.log("Session:", session);
     return session;
   } catch (error) {
     console.error("Error retrieving session:", error);
