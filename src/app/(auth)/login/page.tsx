@@ -17,19 +17,18 @@ export default async function LoginPage() {
   const session = await getUserSession();
 
   // Only redirect if we're confident there's a valid user
+  console.log("Session in Login Page:", session);
+  console.log("User ID in Login Page:", session?.user?.id);
   if (session?.user?.id) {
     redirect(AUTH_REDIRECT_PATH_SIGNED_IN);
+    console.log("Redirecting to:", AUTH_REDIRECT_PATH_SIGNED_IN);
   }
 
+  console.log("Not redirecting to:", AUTH_REDIRECT_PATH_SIGNED_IN);
+  
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
-      <Suspense fallback={
-        <div className="flex flex-col items-center justify-center max-w-2xl w-full">
-          <Skeleton className="h-[300px] w-full max-w-md" />
-        </div>
-      }>
-        <AuthForm mode="login" />
-      </Suspense>
+      <AuthForm mode="login" />
     </div>
   );
 }

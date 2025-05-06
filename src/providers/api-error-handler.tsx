@@ -7,14 +7,6 @@ import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { api } from "~/trpc/react";
 import { useSession } from "~/server/auth/client";
 
-const isPREnvironment = (): boolean => {
-  if (typeof window !== 'undefined') {
-    const host = window.location.host;
-    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
-  }
-  return false;
-};
-
 const ApiErrorContext = createContext<{
   handleError: (error: unknown) => void;
 }>({
@@ -27,9 +19,24 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
   const { data: session, isPending } = useSession();
 
   useEffect(() => {
-    if (!isPending && !session && !isPREnvironment()) {
-      console.log('ApiErrorProvider: No session detected, redirecting...');
-      window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
+    // Check if already on auth route
+    const pathname = window.location.pathname;
+    const isAuthRoute = pathname === '/login' || 
+                       pathname === AUTH_REDIRECT_PATH_SIGNED_OUT ||
+                       pathname.startsWith('/signup') ||
+                       pathname.startsWith('/api/auth');
+    
+    // Only redirect if not on an auth route
+    if (!isPending && !session && !isAuthRoute) {
+      // Prevent infinite loop
+      const alreadyRedirected = window.location.href.includes("authRedirect=1");
+      if (!alreadyRedirected) {
+        console.log('ApiErrorProvider: No session detected, redirecting...');
+        const separator = AUTH_REDIRECT_PATH_SIGNED_OUT.includes("?") ? "&" : "?";
+        window.location.href = `${AUTH_REDIRECT_PATH_SIGNED_OUT}${separator}authRedirect=1`;
+      } else {
+        console.error("Authentication failed or cookies are blocked. Stopping further redirects in ApiErrorProvider.");
+      }
     }
   }, [session, isPending]);
 
@@ -38,7 +45,7 @@ export function ApiErrorProvider({ children }: PropsWithChildren) {
 
     if (error instanceof TRPCClientError) {
       const isUnauthorized = error.message.includes("UNAUTHORIZED");
-      if (isUnauthorized && !hasShownError && !isPREnvironment()) {
+      if (isUnauthorized && !hasShownError) {
         setHasShownError(true);
         toast.error("Your session expired. Please sign in again.");
         utils.invalidate().catch(console.error);

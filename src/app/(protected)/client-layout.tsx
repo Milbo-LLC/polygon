@@ -45,6 +45,10 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   
   // Check session and redirect if needed
   useEffect(() => {
+    console.log("ClientLayoutContent running effect");
+    console.log("Current pathname:", pathname);
+    console.log("Session status:", {isPending, hasSession: !!session});
+    
     if (isPending) {
       setIsLoading(true);
       return;
@@ -63,25 +67,11 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     
     // Handle authentication redirects
     if (!session) {
-      const redirectParams: Record<string, string> = {};
-      if (invitationCode) {
-        redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
-      }
-
-      let redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
-
-      // 🚨 Prevent infinite loop by checking if we've already redirected once
-      const alreadyRedirected = window.location.href.includes("authRedirect=1");
-      if (!alreadyRedirected) {
-        const separator = redirectUrl.includes("?") ? "&" : "?";
-        redirectUrl = `${redirectUrl}${separator}authRedirect=1`;
-        window.location.href = redirectUrl;
-      } else {
-        console.error(
-          "Authentication failed or cookies are blocked. Stopping further redirects."
-        );
-        setIsLoading(false);
-      }
+      console.log("Would redirect to", AUTH_REDIRECT_PATH_SIGNED_OUT);
+      console.log("Current pathname:", pathname);
+      // Comment out the redirect for testing
+      // window.location.href = redirectUrl;
+      setIsLoading(false);
       return;
     }
     

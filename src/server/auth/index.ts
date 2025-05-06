@@ -10,11 +10,6 @@ export const auth = authConfig;
 export const getSession = cache(async () => {
   const incomingHeaders = await headers();
 
-  console.log("🔎 Incoming cookies:", incomingHeaders.get("cookie"));
-  console.log("🔎 X-Forwarded-Origin:", incomingHeaders.get("x-forwarded-origin"));
-  console.log("🔎 X-Requested-From:", incomingHeaders.get("x-requested-from"));
-  console.log("🔎 Host:", incomingHeaders.get("host"));
-
   return auth.api.getSession({
     headers: incomingHeaders
   }) as Promise<Session | null>;
@@ -23,8 +18,6 @@ export const getSession = cache(async () => {
 // Export a simple function to get the user session
 export async function getUserSession() {
   console.log("Calling getUserSession...");
-  const incomingHeaders = await headers();
-  console.log("Incoming cookies:", incomingHeaders.get("cookie"));
   const startTime = Date.now();
   
   try {
