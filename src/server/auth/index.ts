@@ -29,6 +29,7 @@ export async function getUserSession() {
       activeOrgId: session?.user?.activeOrganizationId,
     });
     
+    console.log("Session:", session);
     return session;
   } catch (error) {
     console.error("Error retrieving session:", error);
