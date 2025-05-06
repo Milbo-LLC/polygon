@@ -26,6 +26,32 @@ const getCurrentOrigin = () => {
   return '';
 };
 
+// Detect and handle the "please_restart_the_process" error
+const handleAuthErrors = () => {
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorCode = urlParams.get('error');
+    
+    if (errorCode === 'please_restart_the_process') {
+      const callbackUrl = urlParams.get('callback') || '/projects';
+      
+      setTimeout(() => {
+        signInWithGoogle(callbackUrl);
+      }, 100);
+      
+      return true;
+    }
+  }
+  return false;
+};
+
+// Run error detection on page load
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    handleAuthErrors();
+  }, 500);
+}
+
 // Create the auth client with the appropriate base URL
 export const authClient = createAuthClient({ 
   baseURL: getBaseURL(),
