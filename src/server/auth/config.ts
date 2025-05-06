@@ -66,7 +66,7 @@ export const authConfig = betterAuth({
   },
 
   trustedOrigins: (() => {
-    const prHost = process.env.VERCEL_URL || process.env.RAILWAY_STATIC_URL || ""; // fallback
+    const prHost = process.env.VERCEL_URL ?? process.env.RAILWAY_STATIC_URL ?? ""; // fallback
     const isPR = prHost.includes("polygon-pr-") || prHost.includes("polygon-polygon-pr-");
     console.log("🛡 trustedOrigins - isPR:", isPR, " prHost:", prHost);
     return isPR
