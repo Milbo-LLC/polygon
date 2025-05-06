@@ -60,7 +60,6 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
             
-            // Set organization ID in the header if available
             if (activeOrganizationId) {
               headers.set("x-organization-id", activeOrganizationId);
             }

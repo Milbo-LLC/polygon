@@ -10,6 +10,19 @@ import { useSession } from "~/server/auth/client";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { type SessionUser } from "~/types/auth";
+import { useApiErrorHandler } from "~/providers/api-error-handler";
+
+// Helper to get full auth URL for redirects
+const getAuthRedirectUrl = (path: string, params?: Record<string, string>): string => {
+  let redirectUrl = path;
+  
+  // Add any params
+  if (params && Object.keys(params).length > 0) {
+    redirectUrl += `?${new URLSearchParams(params).toString()}`;
+  }
+  
+  return redirectUrl;
+};
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -28,9 +41,15 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { handleError } = useApiErrorHandler();
   
-  // Do all checks in useEffect to avoid hydration mismatch
+  // Check session and redirect if needed
   useEffect(() => {
+    if (isPending) {
+      setIsLoading(true);
+      return;
+    }
+    
     // Check if current path should have navbar
     const showNavbar = !ROUTES_WITHOUT_NAVBAR.some(route => pathname.startsWith(route));
     setShouldShowNavbar(showNavbar);
@@ -43,33 +62,45 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
     
     // Handle authentication redirects
-    if (!isPending) {
-      if (!session) {
-        // Redirect unauthenticated users
-        if (invitationCode) {
-          const callbackUrl = `/invitations?code=${invitationCode}`;
-          router.push(`${AUTH_REDIRECT_PATH_SIGNED_OUT}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-        } else {
-          router.push(AUTH_REDIRECT_PATH_SIGNED_OUT);
-        }
-      } else {
-        // Handle beta access check for authenticated users
-        if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
-          router.push('/wait-list');
-        }
-        
-        // Set user ID and organization ID
-        const user = session.user as SessionUser | undefined;
-        if (user?.id) {
-          console.log('Setting user ID and organization ID', user.id, user.activeOrganizationId);
-          setUserId(user.id);
-        }
-        
-        // We're done loading
-        setIsLoading(false);
+    if (!session) {
+      // Prepare redirect parameters
+      const redirectParams: Record<string, string> = {};
+      
+      if (invitationCode) {
+        redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
       }
+      
+      // Build the redirect URL
+      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
+      
+      // Redirect immediately
+      window.location.href = redirectUrl;
+      return;
     }
-  }, [session, isPending, pathname, searchParams, router, posthog ]);
+    
+    // Handle beta access check for authenticated users
+    if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
+      router.push('/wait-list');
+      return;
+    }
+    
+    // Set user ID and organization ID
+    const user = session.user as SessionUser | undefined;
+    if (user?.id) {
+      setUserId(user.id);
+    } else {
+      handleError(new Error("Authentication error: No user ID found"));
+      
+      // Build the redirect URL
+      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT);
+      
+      window.location.href = redirectUrl;
+      return;
+    }
+    
+    // Only stop loading if we have a valid user and no redirects are needed
+    setIsLoading(false);
+  }, [session, isPending, pathname, searchParams, router, posthog, handleError]);
 
   if (isLoading) {
     return (
