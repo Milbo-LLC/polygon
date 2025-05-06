@@ -33,6 +33,11 @@ declare module "better-auth" {
 
 // Helper to infer host dynamically, not relying only on env vars
 const detectHost = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.hostname; // TRUE host in browser at runtime
+  }
+
+  // Fallbacks for server-side (still not great for PRs but better than nothing)
   const envHost =
     process.env.VERCEL_URL ??
     process.env.RAILWAY_STATIC_URL ??
