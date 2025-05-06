@@ -66,11 +66,19 @@ export const authConfig = betterAuth({
   },
 
   trustedOrigins: (() => {
-    const prHost = process.env.VERCEL_URL ?? process.env.RAILWAY_STATIC_URL ?? ""; // fallback
-    const isPR = prHost.includes("polygon-pr-") || prHost.includes("polygon-polygon-pr-");
-    console.log("🛡 trustedOrigins - isPR:", isPR, " prHost:", prHost);
+    const host =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+      "";
+  
+    const isPR =
+      host.includes("polygon-pr-") ||
+      host.includes("polygon-polygon-pr-");
+  
+    console.log("🛡 trustedOrigins - isPR:", isPR, " host:", host);
+  
     return isPR
-      ? undefined // disable origin check for PRs
+      ? [] // Disable trustedOrigins check for PRs
       : [
           "https://polygon-staging.up.railway.app",
           "https://polygon.up.railway.app",
