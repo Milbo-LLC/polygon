@@ -31,13 +31,14 @@ declare module "better-auth" {
 // Trusted Origins Logic 🛡
 // -------------------------
 
-// process.env.HOSTNAME is reliably set to the runtime host by Railway
+// 🔥 Use Railway PR URL first if present
 const host =
-  process.env.HOSTNAME ??
+  process.env.RAILWAY_PUBLIC_DOMAIN ??
   process.env.RAILWAY_STATIC_URL ??
-  process.env.VERCEL_URL ??
   process.env.NEXT_PUBLIC_APP_URL ??
   env.NEXT_PUBLIC_BETTER_AUTH_URL ??
+  process.env.VERCEL_URL ??
+  process.env.HOSTNAME ??
   "";
 
 const isPR =
@@ -53,7 +54,6 @@ console.log("RAILWAY_ENVIRONMENT_NAME", process.env.RAILWAY_ENVIRONMENT_NAME);
 console.log("RAILWAY_PROJECT_NAME", process.env.RAILWAY_PROJECT_NAME);
 console.log("RAILWAY_PROJECT_ID", process.env.RAILWAY_PROJECT_ID);
 console.log("RAILWAY_REGION", process.env.RAILWAY_REGION);
-
 
 const trustedOrigins = isPR
   ? undefined // 🔥 disable trustedOrigins check entirely for PRs
