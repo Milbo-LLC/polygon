@@ -3,18 +3,14 @@ import { env } from "~/env";
 
 // Function to get the base URL depending on the environment
 const getBaseURL = () => {
+  // In local dev, use localhost if needed
   if (typeof window !== 'undefined') {
     const currentHost = window.location.host;
-
-    // 🚀 If we're in a PR environment, use the *current* PR domain as the auth server.
-    const isPREnvironment = currentHost.includes('polygon-pr-') || 
-                            currentHost.includes('polygon-polygon-pr-');
-    if (isPREnvironment) {
-      return window.location.origin; // 👈 Key change: use PR preview domain itself!
+    if (currentHost.startsWith('localhost')) {
+      return window.location.origin;
     }
   }
-
-  // Fallback to the staging/prod auth URL
+  
   return env.NEXT_PUBLIC_BETTER_AUTH_URL;
 };
 
