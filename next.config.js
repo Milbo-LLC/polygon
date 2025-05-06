@@ -16,7 +16,7 @@ const nextConfig = {
   headers: async () => {
     return [
       {
-        source: '/_next/static/:path*',
+        source: '/_next/:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -25,6 +25,10 @@ const nextConfig = {
           {
             key: 'Access-Control-Allow-Origin',
             value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, OPTIONS',
           },
         ],
       },
@@ -39,11 +43,41 @@ const nextConfig = {
             key: 'Access-Control-Allow-Origin',
             value: '*',
           },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, OPTIONS',
+          },
         ],
-      }
+      },
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization, X-Requested-From, X-Forwarded-Origin',
+          },
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true',
+          },
+        ],
+      },
     ]
   },
-  allowedDevOrigins: ['https://polygon-staging.up.railway.app']
+  crossOrigin: 'anonymous',
+  basePath: '',
+  allowedDevOrigins: undefined
 };
+
+// ✅ THIS WILL PRINT IN RAILWAY BUILD LOGS
+console.log("🚀 Next config loaded. allowedDevOrigins:", nextConfig.allowedDevOrigins);
 
 export default nextConfig;

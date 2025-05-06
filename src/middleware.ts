@@ -1,68 +1,68 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Helper to check if request is from a PR environment
+function isPREnvironment(origin: string | null, host: string): boolean {
+  return (
+    !!origin?.includes('-pr-') || 
+    host.includes('-pr-')
+  );
+}
+
+// Helper to check if a host is a staging environment
+function isStagingEnvironment(host: string): boolean {
+  return host.includes('polygon-staging');
+}
+
+// Add CORS headers to response with appropriate values
+function addCORSHeaders(response: NextResponse, origin: string | null): NextResponse {
+  // If origin is null, allow all origins
+  const allowOrigin = origin ?? '*';
+  
+  response.headers.set('Access-Control-Allow-Origin', allowOrigin);
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  response.headers.set('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  return response;
+}
+
 export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin');
   const url = request.nextUrl.pathname;
   const host = request.headers.get('host') ?? '';
+  const requestedFrom = request.headers.get('x-requested-from');
   
-  console.log(`Middleware processing ${request.method} request to ${url} from origin: ${origin}, on host: ${host}`);
-  
-  // Skip handling for static assets
-  if (url.startsWith('/_next/static/')) {
-    return NextResponse.next();
+  // Always handle OPTIONS requests first - critical for CORS
+  if (request.method === 'OPTIONS') {
+    return addCORSHeaders(new NextResponse(null, { status: 200 }), origin);
   }
-
-  // Handle CORS for API routes
+  
+  // Handle API routes
   if (url.startsWith('/api/')) {
-    // Check if this is a staging server and the request is from a PR environment
-    const isStagingHost = host.includes('polygon-staging');
-    const isRequestFromPR = origin?.includes('polygon-polygon-pr-') ?? origin?.includes('polygon-pr-');
-    
-    // We need to explicitly allow the PR environment to access the staging API
-    // This handles the specific error case you're encountering
-    const shouldAllowCORS = isStagingHost && isRequestFromPR;
-    
-    if (shouldAllowCORS) {
-      console.log('Explicitly allowing CORS for PR environment accessing staging API');
-    }
-    
-    // Handle OPTIONS request for preflight (most important for CORS issues)
-    if (request.method === 'OPTIONS') {
-      console.log('Handling OPTIONS preflight request');
+    // Special handling for authentication-related endpoints
+    if (url.startsWith('/api/auth/')) {
+      const isPR = isPREnvironment(origin, host);
+      const isStaging = isStagingEnvironment(host);
       
-      const response = new NextResponse(null, {
-        status: 200,
-        headers: {
-          'Access-Control-Allow-Origin': origin ?? '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-          'Access-Control-Max-Age': '86400',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-      });
-      
-      console.log('Response headers:', Object.fromEntries([...response.headers.entries()]));
-      return response;
+      // Special case: PR environment requesting auth from staging
+      if ((isPR && isStaging) || (requestedFrom?.includes('-pr-'))) {
+        const response = NextResponse.next();
+        return addCORSHeaders(response, origin ?? requestedFrom);
+      }
     }
-    
-    console.log('Handling regular API request');
-    const response = NextResponse.next();
     
     // Add CORS headers to all API responses
-    response.headers.set('Access-Control-Allow-Origin', origin ?? '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
-    
-    console.log('Response headers:', Object.fromEntries([...response.headers.entries()]));
-    return response;
+    const response = NextResponse.next();
+    return addCORSHeaders(response, origin);
   }
   
+  // For all other routes, just continue
   return NextResponse.next();
 }
 
-// Match API routes and static assets
+// Only match API routes
 export const config = {
   matcher: ['/api/:path*'],
 }; 
