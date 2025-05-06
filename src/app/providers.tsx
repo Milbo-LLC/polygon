@@ -23,7 +23,7 @@ const isPREnvironment = (): boolean => {
 function SessionChecker() {
   const { data: session, isPending } = useSession();
   const pathname = usePathname();
-  const isAuthRoute = pathname?.startsWith('/login') || pathname?.startsWith('/signup');
+  const isAuthRoute = pathname === AUTH_REDIRECT_PATH_SIGNED_OUT || pathname?.startsWith('/login') || pathname?.startsWith('/signup');
 
   useEffect(() => {
     if (!isPending && !session && !isAuthRoute && !isPREnvironment()) {
