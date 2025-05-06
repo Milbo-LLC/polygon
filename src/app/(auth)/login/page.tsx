@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
-export default async function LoginPage(props: any) {
+export default async function LoginPage() {
   // Get the session using Better Auth's API
   const session = await getUserSession();
 
@@ -22,19 +22,8 @@ export default async function LoginPage(props: any) {
     redirect(AUTH_REDIRECT_PATH_SIGNED_IN);
   }
 
-  // Extract error parameter safely
-  const searchParams = props?.searchParams ?? {};
-  const isAuthError = searchParams.error === 'please_restart_the_process';
-
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
-      {isAuthError ? (
-        <div className="mb-4 w-full max-w-md rounded-lg bg-yellow-50 p-4 text-center">
-          <p className="text-yellow-800">
-            Your session was interrupted. Retrying authentication...
-          </p>
-        </div>
-      ) : null}
       <Suspense fallback={
         <div className="flex flex-col items-center justify-center max-w-2xl w-full">
           <Skeleton className="h-[300px] w-full max-w-md" />

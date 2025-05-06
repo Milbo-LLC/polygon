@@ -24,7 +24,7 @@ const getCurrentOrigin = (): string => {
 const isPREnvironment = (): boolean => {
   if (typeof window !== 'undefined') {
     const host = window.location.host;
-    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
+    return host.includes('-pr-');
   }
   return false;
 };
@@ -40,7 +40,6 @@ export function AuthForm({
   
   // Get callbackUrl from the URL params or use default
   const paramCallbackUrl = searchParams.get('callbackUrl');
-  const errorCode = searchParams.get('error');
   
   // For PR environments, ensure the callback URL includes the PR domain
   const callbackUrl = (() => {
@@ -72,17 +71,6 @@ export function AuthForm({
       }
     }
   }, [isPending, session, callbackUrl, router]);
-  
-  // Auto retry on error
-  useEffect(() => {
-    if (errorCode === 'please_restart_the_process') {
-      const timer = setTimeout(() => {
-        void signInWithGoogle(callbackUrl);
-      }, 1500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [errorCode, callbackUrl]);
   
   return (
     <Suspense fallback={<div>Loading...</div>}>
