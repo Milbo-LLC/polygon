@@ -29,12 +29,27 @@ const getCurrentOrigin = () => {
 // Detect and handle the "please_restart_the_process" error
 const handleAuthErrors = () => {
   if (typeof window !== 'undefined') {
+    // Check URL params for error
     const urlParams = new URLSearchParams(window.location.search);
     const errorCode = urlParams.get('error');
     
-    if (errorCode === 'please_restart_the_process') {
-      const callbackUrl = urlParams.get('callback') ?? '/projects';
+    // Check if we're on the error page directly
+    const isErrorPage = window.location.pathname === '/api/auth/error' || 
+                      window.location.href.includes('error=please_restart_the_process');
+    
+    if (errorCode === 'please_restart_the_process' || isErrorPage) {
+      // Get callback URL or default to projects
+      const callbackUrl = urlParams.get('callbackUrl') ?? '/projects';
       
+      console.log('Detected please_restart_the_process error, automatically retrying auth...');
+      
+      // Don't show the error page, redirect back to app immediately
+      if (isErrorPage) {
+        window.location.href = `${getCurrentOrigin()}/login`;
+        return true;
+      }
+      
+      // Otherwise retry from current page
       setTimeout(() => {
         void signInWithGoogle(callbackUrl);
       }, 100);
@@ -45,11 +60,15 @@ const handleAuthErrors = () => {
   return false;
 };
 
-// Run error detection on page load
+// Run error detection immediately on page load
 if (typeof window !== 'undefined') {
+  // Check as soon as possible
+  handleAuthErrors();
+  
+  // Also check after a small delay in case the URL changes
   setTimeout(() => {
     void handleAuthErrors();
-  }, 500);
+  }, 100);
 }
 
 // Create the auth client with the appropriate base URL

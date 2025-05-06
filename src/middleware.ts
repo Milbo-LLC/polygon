@@ -36,6 +36,15 @@ export function middleware(request: NextRequest) {
   const host = request.headers.get('host') ?? '';
   const requestedFrom = request.headers.get('x-requested-from');
   
+  // Intercept Better Auth error pages with please_restart_the_process error
+  if (url === '/api/auth/error' && request.nextUrl.searchParams.get('error') === 'please_restart_the_process') {
+    // Get the callbackUrl parameter or redirect to login page
+    const callbackUrl = request.nextUrl.searchParams.get('callbackUrl') ?? '/login';
+    
+    // Redirect directly to login instead of showing the error page
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  
   // Always handle OPTIONS requests first - critical for CORS
   if (request.method === 'OPTIONS') {
     return addCORSHeaders(new NextResponse(null, { status: 200 }), origin);
@@ -64,7 +73,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Only match API routes
+// Update matcher to include the auth error page
 export const config = {
-  matcher: ['/api/:path*'],
+  matcher: ['/api/:path*', '/api/auth/error'],
 }; 
