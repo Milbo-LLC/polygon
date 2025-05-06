@@ -27,21 +27,6 @@ declare module "better-auth" {
   }
 }
 
-// -------------------------
-// Trusted Origins Logic 🛡
-// -------------------------
-
-// PR environments should NOT enforce trustedOrigins, since the URL changes every PR.
-// Staging, prod, local should.
-const trustedOrigins =
-  process.env.NODE_ENV === "production" && !process.env.RAILWAY_PR_NUMBER
-    ? [
-        "https://polygon-staging.up.railway.app",
-        "https://polygon.up.railway.app",
-        "http://localhost:3000",
-      ]
-    : []; // In PR deploys, no trustedOrigins = skip origin check
-
 export const authConfig = betterAuth({
   // Social providers
   socialProviders: {
@@ -80,12 +65,18 @@ export const authConfig = betterAuth({
     },
   },
 
-  // ✅ Add trustedOrigins logic here
-  trustedOrigins,
-
-  // -------------------------
-  // Better Auth event hooks 🔥
-  // -------------------------
+  trustedOrigins: (() => {
+    const prHost = process.env.VERCEL_URL || process.env.RAILWAY_STATIC_URL || ""; // fallback
+    const isPR = prHost.includes("polygon-pr-") || prHost.includes("polygon-polygon-pr-");
+    console.log("🛡 trustedOrigins - isPR:", isPR, " prHost:", prHost);
+    return isPR
+      ? [] // disable origin check for PRs
+      : [
+          "https://polygon-staging.up.railway.app",
+          "https://polygon.up.railway.app",
+          "http://localhost:3000"
+        ];
+  })(),
 
   events: {
     onSession: async ({ session, user }: SessionEventProps) => {
