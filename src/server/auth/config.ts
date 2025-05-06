@@ -31,32 +31,31 @@ declare module "better-auth" {
 // Trusted Origins Logic 🛡
 // -------------------------
 
-// Helper to infer host dynamically, not relying only on env vars
-const detectHost = () => {
-  if (typeof window !== 'undefined') {
-    return window.location.hostname; // TRUE host in browser at runtime
-  }
+// process.env.HOSTNAME is reliably set to the runtime host by Railway
+const host =
+  process.env.HOSTNAME ??
+  process.env.RAILWAY_STATIC_URL ??
+  process.env.VERCEL_URL ??
+  process.env.NEXT_PUBLIC_APP_URL ??
+  env.NEXT_PUBLIC_BETTER_AUTH_URL ??
+  "";
 
-  // Fallbacks for server-side (still not great for PRs but better than nothing)
-  const envHost =
-    process.env.VERCEL_URL ??
-    process.env.RAILWAY_STATIC_URL ??
-    process.env.HOSTNAME ??
-    process.env.NEXT_PUBLIC_APP_URL ??
-    env.NEXT_PUBLIC_BETTER_AUTH_URL ??
-    "";
-
-  return envHost;
-};
-
-const host = detectHost();
 const isPR =
   host.includes("pr-") ||
   host.includes("polygon-pr-") ||
-  host.includes("polygon-polygon-pr-") ||
-  host.includes("railway.app") && host.includes("pr-");
+  host.includes("polygon-polygon-pr-");
 
 console.log("🛡 trustedOrigins - isPR:", isPR, " host:", host);
+
+const trustedOrigins = isPR
+  ? undefined // 🔥 disable trustedOrigins check entirely for PRs
+  : [
+      "https://polygon-staging.up.railway.app",
+      "https://polygon.up.railway.app",
+      "http://localhost:3000",
+    ];
+
+console.log("🛡 Final trustedOrigins:", trustedOrigins);
 
 export const authConfig = betterAuth({
   // Social providers
@@ -96,13 +95,7 @@ export const authConfig = betterAuth({
     },
   },
 
-  trustedOrigins: isPR
-    ? undefined // 🔥 disable trustedOrigins check entirely for PRs
-    : [
-        "https://polygon-staging.up.railway.app",
-        "https://polygon.up.railway.app",
-        "http://localhost:3000",
-      ],
+  trustedOrigins,
 
   events: {
     onSession: async ({ session, user }: SessionEventProps) => {
