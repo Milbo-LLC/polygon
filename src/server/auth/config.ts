@@ -70,7 +70,7 @@ export const authConfig = betterAuth({
     const isPR = prHost.includes("polygon-pr-") || prHost.includes("polygon-polygon-pr-");
     console.log("🛡 trustedOrigins - isPR:", isPR, " prHost:", prHost);
     return isPR
-      ? [] // disable origin check for PRs
+      ? undefined // disable origin check for PRs
       : [
           "https://polygon-staging.up.railway.app",
           "https://polygon.up.railway.app",
