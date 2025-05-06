@@ -10,7 +10,6 @@ import { type SessionEventProps, type SignInEventProps } from "~/types/auth";
  * This file was converted from NextAuth.js to Better Auth
  */
 
-// For TypeScript compatibility with module augmentation
 declare module "better-auth" {
   interface UserWithAdditionalFields {
     organizations: Organization[];
@@ -28,8 +27,23 @@ declare module "better-auth" {
   }
 }
 
+// -------------------------
+// Trusted Origins Logic 🛡
+// -------------------------
+
+// PR environments should NOT enforce trustedOrigins, since the URL changes every PR.
+// Staging, prod, local should.
+const trustedOrigins =
+  process.env.NODE_ENV === "production" && !process.env.RAILWAY_PR_NUMBER
+    ? [
+        "https://polygon-staging.up.railway.app",
+        "https://polygon.up.railway.app",
+        "http://localhost:3000",
+      ]
+    : []; // In PR deploys, no trustedOrigins = skip origin check
+
 export const authConfig = betterAuth({
-  // Authentication providers
+  // Social providers
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
@@ -37,15 +51,12 @@ export const authConfig = betterAuth({
     },
   },
 
-  // Secret for encryption
   secret: env.BETTER_AUTH_SECRET,
 
-  // Database adapter
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),
 
-  // Custom UI pages
   urls: {
     signIn: "/login",
     signOut: "/login",
@@ -53,13 +64,12 @@ export const authConfig = betterAuth({
     verifyRequest: "/login",
   },
 
-  // ⭐ IMPORTANT: Fix session cookie domain for PR environments
   cookies: {
     sessionToken: {
       name: "__Secure-better-auth.session_token",
       options: {
         httpOnly: true,
-        sameSite: "Lax",  // Lax is fine for most apps
+        sameSite: "Lax",
         path: "/",
         secure: true,
         domain:
@@ -70,9 +80,14 @@ export const authConfig = betterAuth({
     },
   },
 
-  // Event hooks (replacing NextAuth callbacks)
+  // ✅ Add trustedOrigins logic here
+  trustedOrigins,
+
+  // -------------------------
+  // Better Auth event hooks 🔥
+  // -------------------------
+
   events: {
-    // Enrich session with organization info
     onSession: async ({ session, user }: SessionEventProps) => {
       if (!user.id) return session;
 
@@ -97,13 +112,15 @@ export const authConfig = betterAuth({
       };
     },
 
-    // Sign-in hook to create personal organization if it doesn't exist
     onSignIn: async ({ user }: SignInEventProps) => {
-      console.log("⭐ signIn callback triggered with user:", JSON.stringify({
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }));
+      console.log(
+        "⭐ signIn callback triggered with user:",
+        JSON.stringify({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        })
+      );
 
       if (!user.id) {
         console.error("❌ No user ID available during signIn callback");
@@ -155,9 +172,11 @@ export const authConfig = betterAuth({
           });
           console.log("✅ Created personal organization and sent welcome email if needed");
         } catch (txError) {
-          console.error("❌ Transaction failed during personal org creation:", txError);
-          // Don't block login even if org creation fails
-          return true;
+          console.error(
+            "❌ Transaction failed during personal org creation:",
+            txError
+          );
+          return true; // Don't block login even if org creation fails
         }
       }
 
