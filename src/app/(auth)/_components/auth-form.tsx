@@ -77,7 +77,7 @@ export function AuthForm({
   useEffect(() => {
     if (errorCode === 'please_restart_the_process') {
       const timer = setTimeout(() => {
-        signInWithGoogle(callbackUrl);
+        void signInWithGoogle(callbackUrl);
       }, 1500);
       
       return () => clearTimeout(timer);

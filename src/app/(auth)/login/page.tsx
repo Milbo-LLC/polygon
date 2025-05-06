@@ -11,15 +11,8 @@ export const metadata: Metadata = {
   description: "Login to our application"
 }
 
-// This is a server component that just passes the entire URL to the client component
-export default async function LoginPage({ 
-  searchParams 
-}: { 
-  searchParams: { 
-    callbackUrl?: string,
-    error?: string
-  } 
-}) {
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
+export default async function LoginPage(props: any) {
   // Get the session using Better Auth's API
   const session = await getUserSession();
 
@@ -29,8 +22,9 @@ export default async function LoginPage({
     redirect(AUTH_REDIRECT_PATH_SIGNED_IN);
   }
 
+  // Extract error parameter safely
+  const searchParams = props?.searchParams ?? {};
   const isAuthError = searchParams.error === 'please_restart_the_process';
-  const callbackUrl = searchParams.callbackUrl;
 
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
@@ -51,3 +45,4 @@ export default async function LoginPage({
     </div>
   );
 }
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */ 

@@ -33,10 +33,10 @@ const handleAuthErrors = () => {
     const errorCode = urlParams.get('error');
     
     if (errorCode === 'please_restart_the_process') {
-      const callbackUrl = urlParams.get('callback') || '/projects';
+      const callbackUrl = urlParams.get('callback') ?? '/projects';
       
       setTimeout(() => {
-        signInWithGoogle(callbackUrl);
+        void signInWithGoogle(callbackUrl);
       }, 100);
       
       return true;
@@ -48,7 +48,7 @@ const handleAuthErrors = () => {
 // Run error detection on page load
 if (typeof window !== 'undefined') {
   setTimeout(() => {
-    handleAuthErrors();
+    void handleAuthErrors();
   }, 500);
 }
 

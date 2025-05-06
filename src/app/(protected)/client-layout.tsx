@@ -12,15 +12,6 @@ import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { type SessionUser } from "~/types/auth";
 import { useApiErrorHandler } from "~/providers/api-error-handler";
 
-// Helper to check if in PR environment
-const isPREnvironment = (): boolean => {
-  if (typeof window !== 'undefined') {
-    const host = window.location.host;
-    return host.includes('polygon-polygon-pr-') || host.includes('polygon-pr-');
-  }
-  return false;
-};
-
 // Helper to get full auth URL for redirects
 const getAuthRedirectUrl = (path: string, params?: Record<string, string>): string => {
   let redirectUrl = path;
