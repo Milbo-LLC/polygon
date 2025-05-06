@@ -55,16 +55,6 @@ console.log("RAILWAY_PROJECT_NAME", process.env.RAILWAY_PROJECT_NAME);
 console.log("RAILWAY_PROJECT_ID", process.env.RAILWAY_PROJECT_ID);
 console.log("RAILWAY_REGION", process.env.RAILWAY_REGION);
 
-const trustedOrigins = isPR
-  ? undefined // 🔥 disable trustedOrigins check entirely for PRs
-  : [
-      "https://polygon-staging.up.railway.app",
-      "https://polygon.up.railway.app",
-      "http://localhost:3000",
-    ];
-
-console.log("🛡 Final trustedOrigins:", trustedOrigins);
-
 export const authConfig = betterAuth({
   // Social providers
   socialProviders: {
@@ -103,7 +93,15 @@ export const authConfig = betterAuth({
     },
   },
 
-  trustedOrigins,
+  ...(isPR
+    ? {} // omit trustedOrigins entirely in PRs
+    : {
+        trustedOrigins: [
+          "https://polygon-staging.up.railway.app",
+          "https://polygon.up.railway.app",
+          "http://localhost:3000",
+        ],
+      }),
 
   events: {
     onSession: async ({ session, user }: SessionEventProps) => {
