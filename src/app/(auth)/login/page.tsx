@@ -28,7 +28,13 @@ export default async function LoginPage() {
   
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
-      <AuthForm mode="login" />
+      <Suspense fallback={
+        <div className="flex flex-col items-center justify-center max-w-2xl w-full">
+          <Skeleton className="h-[300px] w-full max-w-md" />
+        </div>
+      }>
+        <AuthForm mode="login" />
+      </Suspense>
     </div>
   );
 }

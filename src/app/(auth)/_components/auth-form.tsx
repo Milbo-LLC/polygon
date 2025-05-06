@@ -1,6 +1,5 @@
 "use client"
 
-import { Suspense } from "react"
 import {
   Card,
   CardContent,
@@ -12,22 +11,22 @@ import { FaGoogle as GoogleIcon } from "react-icons/fa"
 import { Button } from "~/components/ui/button"
 import { useSearchParams } from "next/navigation"
 
-export function AuthForm({ 
+function AuthFormContent({ 
   mode = "login",
 }: { 
   mode?: "login" | "signup";
 }) {
   const searchParams = useSearchParams();
   
-  // Get callback URL from params or use default
-  const callbackUrl = searchParams.get('callbackUrl') || '/projects';
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/projects';
   
-  // Handle Google sign-in
-  const handleGoogleSignIn = () => {
-    signInWithGoogle(callbackUrl);
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle(callbackUrl);
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+    }
   };
-
-  console.log("Rendering AuthForm with mode:", mode);
 
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl w-full">
@@ -50,4 +49,8 @@ export function AuthForm({
       </Card>
     </div>
   )
+}
+
+export function AuthForm(props: { mode?: "login" | "signup" }) {
+  return <AuthFormContent {...props} />;
 }

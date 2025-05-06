@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { env } from '~/env';
-
-function isPREnvironment(origin: string | null, host: string): boolean {
-  return !!origin?.includes('-pr-') || host.includes('-pr-');
-}
 
 function isStagingEnvironment(host: string): boolean {
   return host.includes('polygon-staging');
