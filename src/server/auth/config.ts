@@ -67,12 +67,12 @@ export const authConfig = betterAuth({
 
   trustedOrigins: (() => {
     const host =
-      process.env.NEXT_PUBLIC_APP_URL ||
-      env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ??
+      env.NEXT_PUBLIC_BETTER_AUTH_URL ??
       "";
   
     const isPR =
-      host.includes("polygon-pr-") ||
+      host.includes("polygon-pr-") ??
       host.includes("polygon-polygon-pr-");
   
     console.log("🛡 trustedOrigins - isPR:", isPR, " host:", host);
