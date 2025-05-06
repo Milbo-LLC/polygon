@@ -4,7 +4,7 @@ import { useSession } from '~/server/auth/client';
 import { TooltipProvider } from '~/components/ui/tooltip';
 import { TRPCReactProvider } from '~/trpc/react';
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useState } from "react";
 import { usePostHog } from 'posthog-js/react';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
@@ -20,17 +20,33 @@ const isPREnvironment = (): boolean => {
   return false;
 };
 
+function isAuthRoute(pathname: string | null): boolean {
+  if (!pathname) return false;
+  return pathname === AUTH_REDIRECT_PATH_SIGNED_OUT || 
+         pathname.startsWith('/login') || 
+         pathname.startsWith('/signup') ||
+         pathname.startsWith('/api/auth') ||
+         pathname === '/';
+}
+
 function SessionChecker() {
   const { data: session, isPending } = useSession();
   const pathname = usePathname();
-  const isAuthRoute = pathname === AUTH_REDIRECT_PATH_SIGNED_OUT || pathname?.startsWith('/login') || pathname?.startsWith('/signup');
-
+  const [hasRedirected, setHasRedirected] = useState(false);
+  
   useEffect(() => {
-    if (!isPending && !session && !isAuthRoute && !isPREnvironment()) {
+    const authRoute = isAuthRoute(pathname);
+    
+    if (isPending || hasRedirected) {
+      return;
+    }
+    
+    if (!session && !authRoute && !isPREnvironment()) {
       console.log('Root provider: No active session detected, redirecting...');
+      setHasRedirected(true);
       window.location.href = AUTH_REDIRECT_PATH_SIGNED_OUT;
     }
-  }, [session, isPending, isAuthRoute]);
+  }, [session, isPending, pathname, hasRedirected]);
 
   return null;
 }

@@ -13,12 +13,11 @@ export const metadata: Metadata = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 export default async function LoginPage() {
-  // Get the session using Better Auth's API
+  // Only check session once and handle redirects safely
   const session = await getUserSession();
 
-  // If user is already authenticated, redirect to default path
-  if (session) {
-    // We'll let client-side code handle redirection to callback URL
+  // Only redirect if we're confident there's a valid user
+  if (session?.user?.id) {
     redirect(AUTH_REDIRECT_PATH_SIGNED_IN);
   }
 

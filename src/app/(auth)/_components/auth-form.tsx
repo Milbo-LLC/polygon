@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useState } from "react"
 import {
   Card,
   CardContent,
@@ -37,6 +37,7 @@ export function AuthForm({
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [hasRedirected, setHasRedirected] = useState(false);
   
   // Get callbackUrl from the URL params or use default
   const paramCallbackUrl = searchParams.get('callbackUrl');
@@ -61,17 +62,23 @@ export function AuthForm({
   
   // Handle redirection after authentication
   useEffect(() => {
-    if (!isPending && session) {
+    if (!isPending && session && !hasRedirected) {
       console.log(`Session detected, redirecting to: ${callbackUrl}`);
-      // For PR environments, use window.location for more reliable redirects
+      setHasRedirected(true);
+      
       if (isPREnvironment() && callbackUrl.startsWith(getCurrentOrigin())) {
         window.location.href = callbackUrl;
       } else {
         router.push(callbackUrl);
       }
     }
-  }, [isPending, session, callbackUrl, router]);
+  }, [isPending, session, callbackUrl, router, hasRedirected]);
   
+  const handleGoogleSignIn = () => {
+    console.log(`Initiating Google sign-in with callback: ${callbackUrl}`);
+    void signInWithGoogle(callbackUrl);
+  };
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex flex-col items-center justify-center max-w-2xl w-full">
@@ -85,10 +92,7 @@ export function AuthForm({
             <Button 
               variant="outline" 
               className="w-full" 
-              onClick={() => {
-                console.log(`Initiating Google sign-in with callback: ${callbackUrl}`);
-                void signInWithGoogle(callbackUrl);
-              }}
+              onClick={handleGoogleSignIn}
             >
               <GoogleIcon />
               {mode === "login" ? "Login with Google" : "Sign up with Google"}

@@ -63,24 +63,31 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     
     // Handle authentication redirects
     if (!session) {
-      // Prepare redirect parameters
       const redirectParams: Record<string, string> = {};
-      
       if (invitationCode) {
         redirectParams.callbackUrl = `/invitations?code=${invitationCode}`;
       }
-      
-      // Build the redirect URL
-      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
-      
-      // Redirect immediately
-      window.location.href = redirectUrl;
+
+      let redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT, redirectParams);
+
+      // 🚨 Prevent infinite loop by checking if we've already redirected once
+      const alreadyRedirected = window.location.href.includes("authRedirect=1");
+      if (!alreadyRedirected) {
+        const separator = redirectUrl.includes("?") ? "&" : "?";
+        redirectUrl = `${redirectUrl}${separator}authRedirect=1`;
+        window.location.href = redirectUrl;
+      } else {
+        console.error(
+          "Authentication failed or cookies are blocked. Stopping further redirects."
+        );
+        setIsLoading(false);
+      }
       return;
     }
     
     // Handle beta access check for authenticated users
     if (!betaAccessEnabled && !(isInvitationPage && !!invitationCode)) {
-      router.push('/wait-list');
+      router.push("/wait-list");
       return;
     }
     
@@ -90,15 +97,21 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
       setUserId(user.id);
     } else {
       handleError(new Error("Authentication error: No user ID found"));
-      
-      // Build the redirect URL
-      const redirectUrl = getAuthRedirectUrl(AUTH_REDIRECT_PATH_SIGNED_OUT);
-      
-      window.location.href = redirectUrl;
+
+      // Also prevent infinite loop here
+      const alreadyRedirected = window.location.href.includes("authRedirect=1");
+      if (!alreadyRedirected) {
+        const redirectUrl = `${AUTH_REDIRECT_PATH_SIGNED_OUT}?authRedirect=1`;
+        window.location.href = redirectUrl;
+      } else {
+        console.error(
+          "Authentication failed: No user ID found. Stopping further redirects."
+        );
+        setIsLoading(false);
+      }
       return;
     }
     
-    // Only stop loading if we have a valid user and no redirects are needed
     setIsLoading(false);
   }, [session, isPending, pathname, searchParams, router, posthog, handleError]);
 
@@ -128,14 +141,14 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
 
 export function ClientLayout({ children }: PropsWithChildren) {
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-screen w-full">
-        <p>Loading...</p>
-      </div>
-    }>
-      <ClientLayoutContent>
-        {children}
-      </ClientLayoutContent>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen w-full">
+          <p>Loading...</p>
+        </div>
+      }
+    >
+      <ClientLayoutContent>{children}</ClientLayoutContent>
     </Suspense>
   );
 }
