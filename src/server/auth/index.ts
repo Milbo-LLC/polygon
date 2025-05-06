@@ -8,14 +8,23 @@ export const auth = authConfig;
 
 // Create a cached version of getSession for server components
 export const getSession = cache(async () => {
+  const incomingHeaders = await headers();
+
+  console.log("🔎 Incoming cookies:", incomingHeaders.get("cookie"));
+  console.log("🔎 X-Forwarded-Origin:", incomingHeaders.get("x-forwarded-origin"));
+  console.log("🔎 X-Requested-From:", incomingHeaders.get("x-requested-from"));
+  console.log("🔎 Host:", incomingHeaders.get("host"));
+
   return auth.api.getSession({
-    headers: await headers()
+    headers: incomingHeaders
   }) as Promise<Session | null>;
 });
 
 // Export a simple function to get the user session
 export async function getUserSession() {
   console.log("Calling getUserSession...");
+  const incomingHeaders = await headers();
+  console.log("Incoming cookies:", incomingHeaders.get("cookie"));
   const startTime = Date.now();
   
   try {
