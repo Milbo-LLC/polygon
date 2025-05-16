@@ -71,7 +71,7 @@ export async function sendOtpEmail(
 ) {
   try {
     const user = await getNameFromEmail(email);
-    const firstName = user?.name?.split(' ')[0] || undefined;
+    const firstName = user?.name?.split(' ')[0] ?? undefined;
 
     const subjects = {
       'sign-in': 'Your Sign-in Code',

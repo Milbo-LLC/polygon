@@ -46,7 +46,7 @@ export function AuthForm(props: { mode?: "login" | "signup" }) {
   
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !email.includes('@')) {
+    if (!email?.includes('@')) {
       setError("Please enter a valid email address")
       return
     }

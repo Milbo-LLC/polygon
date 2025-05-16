@@ -30,7 +30,7 @@ export const OtpEmail: React.FC<OtpEmailProps> = ({ firstName = 'there', otp, ty
         {otp}
       </div>
       <p>This code will expire in 5 minutes.</p>
-      <p>If you didn't request this code, you can safely ignore this email.</p>
+      <p>If you didn&apos;t request this code, you can safely ignore this email.</p>
     </div>
   );
 }; 
