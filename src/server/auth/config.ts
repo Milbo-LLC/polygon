@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { emailOTP } from "better-auth/plugins";
 import type { Organization } from "@prisma/client";
 import { db } from "~/server/db";
-import { sendWelcomeEmailServer } from "~/lib/email-server";
+import { sendWelcomeEmailServer, sendOtpEmail } from "~/lib/email-server";
 import { env } from "~/env";
 import { type SessionEventProps, type SignInEventProps } from "~/types/auth";
 
@@ -65,6 +66,17 @@ export const authConfig = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+
+  plugins: [
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {
+        await sendOtpEmail(email, otp, type);
+      },
+      otpLength: 6,
+      expiresIn: 300, // 5 minutes
+      sendVerificationOnSignUp: true
+    })
+  ],
 
   secret: env.BETTER_AUTH_SECRET,
 
