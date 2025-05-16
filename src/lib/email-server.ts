@@ -106,7 +106,6 @@ export async function sendOtpEmail(
 
 async function getNameFromEmail(email: string) {
   try {
-    // Try to find the user in the database by email
     const user = await import('~/server/db').then(({ db }) => 
       db.user.findUnique({
         where: { email },

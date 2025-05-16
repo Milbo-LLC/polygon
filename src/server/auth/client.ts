@@ -59,7 +59,6 @@ export const sendOTPForEmailVerification = async (email: string) => {
   });
 };
 
-// Helper function to verify email with OTP
 export const verifyEmailWithOTP = async (email: string, otp: string) => {
   return authClient.emailOtp.verifyEmail({
     email,
