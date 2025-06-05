@@ -168,7 +168,7 @@ function ProjectsContent() {
     >
       <CardHeader className="text-center">
         <PlusIcon className="size-8 mx-auto mb-2" />
-        <CardTitle>Create Project</CardTitle>
+        <CardTitle>Create Project Now</CardTitle>
         <P className="text-muted-foreground">Start a new project</P>
       </CardHeader>
     </Card>

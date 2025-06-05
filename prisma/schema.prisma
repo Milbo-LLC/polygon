@@ -143,8 +143,12 @@ model Document {
     name      String
     projectId String
     state     Json      @default("{}")
+    version   Int       @default(0)
 
-    project Project @relation(fields: [projectId], references: [id])
+    project        Project          @relation(fields: [projectId], references: [id])
+    historyEntries HistoryEntry[]
+    stateSnapshots DocumentState[]
+    branches       DocumentBranch[]
 }
 
 model Notification {
@@ -177,4 +181,67 @@ model OrganizationInvitation {
 
     organization  Organization @relation(fields: [organizationId], references: [id])
     invitedByUser User         @relation(fields: [invitedByUserId], references: [id])
+}
+
+// ========== HISTORY SYSTEM MODELS ==========
+
+model HistoryEntry {
+    id              String           @id @default(cuid())
+    createdAt       DateTime         @default(now())
+    documentId      String
+    userId          String
+    version         Int
+    actionType      String           // e.g., "sketch", "3d", "assembly", "appearance"
+    actionSubtype   String           // e.g., "create", "modify", "delete"
+    targetId        String?          // ID of the affected entity
+    parentEntryId   String?          // For tracking dependencies
+    parameters      Json             // Action-specific parameters
+    metadata        Json?            // Additional metadata (e.g., tool settings)
+    branchId        String?
+    isCheckpoint    Boolean          @default(false)
+    
+    document     Document          @relation(fields: [documentId], references: [id], onDelete: Cascade)
+    parentEntry  HistoryEntry?     @relation("HistoryDependency", fields: [parentEntryId], references: [id])
+    childEntries HistoryEntry[]    @relation("HistoryDependency")
+    branch       DocumentBranch?   @relation(fields: [branchId], references: [id])
+
+    @@index([documentId, version])
+    @@index([documentId, createdAt])
+    @@index([actionType, actionSubtype])
+}
+
+model DocumentState {
+    id           String        @id @default(cuid())
+    createdAt    DateTime      @default(now())
+    documentId   String
+    version      Int
+    state        Json          // Complete document state at this version
+    stateHash    String        // Hash for quick comparison
+    isCheckpoint Boolean       @default(false)
+    metadata     Json?         // Performance metrics, size info, etc.
+
+    document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+    @@unique([documentId, version])
+    @@index([documentId, isCheckpoint])
+}
+
+model DocumentBranch {
+    id             String          @id @default(cuid())
+    createdAt      DateTime        @default(now())
+    documentId     String
+    name           String
+    baseVersion    Int             // Version this branch was created from
+    headVersion    Int             // Current version in this branch
+    status         String          @default("active") // active, merged, abandoned
+    mergedAt       DateTime?
+    mergedIntoId   String?
+    metadata       Json?
+
+    document       Document        @relation(fields: [documentId], references: [id], onDelete: Cascade)
+    historyEntries HistoryEntry[]
+    mergedInto     DocumentBranch? @relation("BranchMerge", fields: [mergedIntoId], references: [id])
+    mergedBranches DocumentBranch[] @relation("BranchMerge")
+
+    @@index([documentId, status])
 }

@@ -10,6 +10,9 @@ import useGridSnapping from '~/app/_components/sketch/hooks/use-grid-snapping'
 import { PLANE_CONFIG } from '../config/plane-config'
 import { ToolRenderers } from '../renderers/tools-renderers'
 import { useToolHandler } from '../hooks/use-tool-handler'
+import { useHistory, useHistoryKeyboardShortcuts } from '~/hooks/use-history'
+import { ActionSubtype } from '~/types/history'
+
 interface SketchPlaneProps {
   dimension: Dimension
   tool: Tool
@@ -36,6 +39,12 @@ export default function SketchPlane({
   const { raycaster, pointer, camera } = useThree()
   const snapToGrid = useGridSnapping(gridSize, gridDivisions)
   
+  // Initialize history
+  const history = useHistory({
+    documentId,
+    userId: 'current-user', // TODO: Get from auth context
+  })
+  
   // Get snapped point from intersection
   const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
     if (!intersection?.point) return null
@@ -54,6 +63,22 @@ export default function SketchPlane({
       if (isDrawing && currentSketch) {
         if (currentSketch.points.length >= 2) {
           addSketch(currentSketch)
+          
+          // Record the action in history
+          const actionSubtype = tool === 'rectangle' 
+            ? ActionSubtype.DRAW_RECTANGLE 
+            : ActionSubtype.DRAW_LINE
+            
+          history.recordSketchAction(
+            actionSubtype,
+            currentSketch.id,
+            {
+              points: currentSketch.points,
+              dimension,
+              tool,
+              color: currentSketch.color,
+            }
+          )
         }
         setIsDrawing(false)
         setCurrentSketch(null)
@@ -75,10 +100,10 @@ export default function SketchPlane({
     }
   }, [
     isActive, raycaster, pointer, camera, isDrawing, currentSketch, 
-    addSketch, getSnappedPoint, tool, dimension
+    addSketch, getSnappedPoint, tool, dimension, history
   ])
   
-  // Handle keyboard events
+  // Handle keyboard events with history integration
   useEffect(() => {
     if (!isActive) return
     
@@ -86,15 +111,23 @@ export default function SketchPlane({
       if (e.code === 'Escape' && isDrawing) {
         setIsDrawing(false)
         setCurrentSketch(null)
-      } else if (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault()
-        undoLastSketch()
       }
     }
     
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isActive, isDrawing, undoLastSketch])
+  }, [isActive, isDrawing])
+  
+  // Use history keyboard shortcuts
+  useHistoryKeyboardShortcuts({
+    enabled: isActive,
+    onUndo: () => {
+      history.undo()
+    },
+    onRedo: () => {
+      history.redo()
+    },
+  })
   
   // Handle pointer movement
   useEffect(() => {

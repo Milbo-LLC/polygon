@@ -1,0 +1,2300 @@
+
+> polygon@0.1.0 dev
+> doppler run node server.js
+
+🚀 Next config loaded. allowedDevOrigins: undefined
+> Ready on port 3000
+Socket connected with ID: nFiE2AwBX9URg36WAAAB
+Socket connection from referer: http://localhost:3000/projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s
+ ○ Compiling /projects/[projectId]/[documentId] ...
+ ✓ Compiled /projects/[projectId]/[documentId] in 7s (2786 modules)
+ GET /projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s 200 in 7631ms
+ ✓ Compiled /middleware in 131ms (101 modules)
+ ○ Compiling /api/auth/[...all] ...
+ ✓ Compiled /api/auth/[...all] in 3.3s (3305 modules)
+ GET /api/auth/get-session 200 in 3759ms
+ ○ Compiling /api/trpc/[trpc] ...
+ ✓ Compiled /api/trpc/[trpc] in 746ms (3359 modules)
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; better-auth.session_token=2CypA0CICbpOBih64SV6aUAhzruwtUTd.b26y%2FLV0zGE1qNG3cEjP%2FiiNN0iiMiJW%2FgsHjeFHdOE%3D; sidebar_state=false; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748745797377%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 46ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T01:48:09.061Z,
+    token: '2CypA0CICbpOBih64SV6aUAhzruwtUTd',
+    createdAt: 2025-06-01T01:48:09.061Z,
+    updatedAt: 2025-06-01T01:48:09.061Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: '4VHXlZGeDq0LZyMHLBjCEHWkDwDsJI3l'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 311ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 358ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 443ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 1730ms
+ HEAD /projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s 200 in 275ms
+ GET /api/auth/get-session 200 in 34ms
+ ✓ Compiled in 428ms (3373 modules)
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; better-auth.session_token=2CypA0CICbpOBih64SV6aUAhzruwtUTd.b26y%2FLV0zGE1qNG3cEjP%2FiiNN0iiMiJW%2FgsHjeFHdOE%3D; sidebar_state=false; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748745797377%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT 1
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 39ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T01:48:09.061Z,
+    token: '2CypA0CICbpOBih64SV6aUAhzruwtUTd',
+    createdAt: 2025-06-01T01:48:09.061Z,
+    updatedAt: 2025-06-01T01:48:09.061Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: '4VHXlZGeDq0LZyMHLBjCEHWkDwDsJI3l'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 222ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 387ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 396ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 627ms
+ GET /projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s 200 in 350ms
+ GET /api/auth/get-session 200 in 26ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 14ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; better-auth.session_token=2CypA0CICbpOBih64SV6aUAhzruwtUTd.b26y%2FLV0zGE1qNG3cEjP%2FiiNN0iiMiJW%2FgsHjeFHdOE%3D; sidebar_state=false; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746356154%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 5ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T01:48:09.061Z,
+    token: '2CypA0CICbpOBih64SV6aUAhzruwtUTd',
+    createdAt: 2025-06-01T01:48:09.061Z,
+    updatedAt: 2025-06-01T01:48:09.061Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: '4VHXlZGeDq0LZyMHLBjCEHWkDwDsJI3l'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 176ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 199ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 353ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 373ms
+Socket connected with ID: rqmFs-pHJr52i5DaAAAE
+Socket connection from referer: http://localhost:3000/projects/cmbd1czk20002l42207qiv1wg/cmbd1czka0004l4224mb3wc5s
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd1czka0004l4224mb3wc5s
+ ○ Compiling /projects ...
+ ✓ Compiled /projects in 929ms (3378 modules)
+ GET /projects 200 in 1154ms
+ GET /api/auth/get-session 200 in 141ms
+Socket connected with ID: m3zWhRDX7c6pqudFAAAG
+Socket connection from referer: http://localhost:3000/projects
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 14ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; better-auth.session_token=2CypA0CICbpOBih64SV6aUAhzruwtUTd.b26y%2FLV0zGE1qNG3cEjP%2FiiNN0iiMiJW%2FgsHjeFHdOE%3D; sidebar_state=false; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746364190%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 4ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T01:48:09.061Z,
+    token: '2CypA0CICbpOBih64SV6aUAhzruwtUTd',
+    createdAt: 2025-06-01T01:48:09.061Z,
+    updatedAt: 2025-06-01T01:48:09.061Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: '4VHXlZGeDq0LZyMHLBjCEHWkDwDsJI3l'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 308ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 323ms to execute
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; better-auth.session_token=2CypA0CICbpOBih64SV6aUAhzruwtUTd.b26y%2FLV0zGE1qNG3cEjP%2FiiNN0iiMiJW%2FgsHjeFHdOE%3D; sidebar_state=false; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746364190%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 3ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T01:48:09.061Z,
+    token: '2CypA0CICbpOBih64SV6aUAhzruwtUTd',
+    createdAt: 2025-06-01T01:48:09.061Z,
+    updatedAt: 2025-06-01T01:48:09.061Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: '4VHXlZGeDq0LZyMHLBjCEHWkDwDsJI3l'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 491ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 517ms
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE ("public"."Project"."organizationId" = $1 AND "public"."Project"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+[TRPC] project.getAll took 270ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."organizationId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAllByOrganizationId took 481ms to execute
+ GET /api/trpc/userOrganization.getAllByOrganizationId,project.getAll?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 493ms
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+Auth POST request from origin: http://localhost:3000
+prisma:query SELECT 1
+prisma:query DELETE FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) RETURNING "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent"
+ POST /api/auth/sign-out 200 in 27ms
+ GET /api/auth/get-session 200 in 6ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 851ms (3396 modules)
+Calling getUserSession...
+Calling getUserSession...
+Calling getUserSession...
+Session retrieved in 19ms { present: false, userId: undefined, activeOrgId: undefined }
+Session: null
+Session in Login Page: null
+User ID in Login Page: undefined
+Not redirecting to: /projects
+Session retrieved in 77ms { present: false, userId: undefined, activeOrgId: undefined }
+Session: null
+Session in Login Page: null
+User ID in Login Page: undefined
+Not redirecting to: /projects
+Session retrieved in 73ms { present: false, userId: undefined, activeOrgId: undefined }
+Session: null
+Session in Login Page: null
+User ID in Login Page: undefined
+Not redirecting to: /projects
+ GET /login 200 in 1097ms
+ GET /login 200 in 983ms
+ GET /api/auth/get-session 200 in 75ms
+ GET /api/auth/get-session 200 in 7ms
+Auth POST request from origin: http://localhost:3000
+prisma:query INSERT INTO "public"."Verification" ("id","identifier","value","expires","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6) RETURNING "public"."Verification"."id", "public"."Verification"."userId", "public"."Verification"."token", "public"."Verification"."identifier", "public"."Verification"."value", "public"."Verification"."expires", "public"."Verification"."createdAt", "public"."Verification"."updatedAt"
+ POST /api/auth/sign-in/social 200 in 26ms
+ GET /api/auth/get-session 200 in 3ms
+prisma:query SELECT "public"."Verification"."id", "public"."Verification"."userId", "public"."Verification"."token", "public"."Verification"."identifier", "public"."Verification"."value", "public"."Verification"."expires", "public"."Verification"."createdAt", "public"."Verification"."updatedAt" FROM "public"."Verification" WHERE "public"."Verification"."identifier" = $1 ORDER BY "public"."Verification"."createdAt" DESC LIMIT $2 OFFSET $3
+prisma:query DELETE FROM "public"."Verification" WHERE "public"."Verification"."expires" < $1
+prisma:query DELETE FROM "public"."Verification" WHERE ("public"."Verification"."id" = $1 AND 1=1) RETURNING "public"."Verification"."id", "public"."Verification"."userId", "public"."Verification"."token", "public"."Verification"."identifier", "public"."Verification"."value", "public"."Verification"."expires", "public"."Verification"."createdAt", "public"."Verification"."updatedAt"
+prisma:query SELECT "public"."Account"."id", "public"."Account"."userId", "public"."Account"."type", "public"."Account"."providerId", "public"."Account"."accountId", "public"."Account"."accessToken", "public"."Account"."accessTokenExpiresAt", "public"."Account"."idToken", "public"."Account"."refreshToken", "public"."Account"."expiresAt", "public"."Account"."tokenType", "public"."Account"."scope", "public"."Account"."sessionState", "public"."Account"."refreshTokenExpiresIn", "public"."Account"."createdAt", "public"."Account"."updatedAt" FROM "public"."Account" WHERE ("public"."Account"."accountId" = $1 AND "public"."Account"."providerId" = $2) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+prisma:query UPDATE "public"."Account" SET "accessToken" = $1, "idToken" = $2, "accessTokenExpiresAt" = $3, "scope" = $4, "updatedAt" = $5 WHERE ("public"."Account"."id" = $6 AND 1=1) RETURNING "public"."Account"."id", "public"."Account"."userId", "public"."Account"."type", "public"."Account"."providerId", "public"."Account"."accountId", "public"."Account"."accessToken", "public"."Account"."accessTokenExpiresAt", "public"."Account"."idToken", "public"."Account"."refreshToken", "public"."Account"."expiresAt", "public"."Account"."tokenType", "public"."Account"."scope", "public"."Account"."sessionState", "public"."Account"."refreshTokenExpiresIn", "public"."Account"."createdAt", "public"."Account"."updatedAt"
+prisma:query INSERT INTO "public"."Session" ("id","token","userId","expiresAt","createdAt","updatedAt","ipAddress","userAgent") VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent"
+ GET /api/auth/callback/google?state=t9Fgie_aSuBglBTOGafguUEZHsoLfLNm&code=4%2F0AUJR-x6sG13boRiPzzcAuT0LWz1d44e6atnSh0Zihgj03-tXdMbkS-wEpQmp8JrZYJPSwg&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=1&hd=milbo.co&prompt=none 302 in 281ms
+ GET /projects 200 in 70ms
+ GET /api/auth/get-session 200 in 5ms
+Socket connected with ID: YG03SjIZP8mcNQAPAAAI
+Socket connection from referer: http://localhost:3000/projects
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 32ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746379024%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 7ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 213ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 448ms to execute
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 496ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 540ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746379024%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 3ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."organizationId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAllByOrganizationId took 199ms to execute
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE ("public"."Project"."organizationId" = $1 AND "public"."Project"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+[TRPC] project.getAll took 336ms to execute
+ GET /api/trpc/userOrganization.getAllByOrganizationId,project.getAll?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 350ms
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 36ms
+Socket connected with ID: h2Url6fzJjl6rlFRAAAL
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 938ms (3400 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1029ms
+ GET /api/auth/get-session 200 in 63ms
+ ✓ Compiled in 1436ms (3414 modules)
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 33ms
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 246ms
+ GET /api/auth/get-session 200 in 46ms
+prisma:query SELECT 1
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 38ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746435754%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 8ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 224ms to execute
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 286ms to execute
+Socket connected with ID: TXpbTlKMOw6D3gSyAAAO
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 409ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 444ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 55ms
+ GET /api/auth/get-session 200 in 12ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 1381ms (2799 modules)
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 553ms
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 1298ms
+ ○ Compiling /api/auth/[...all] ...
+ ✓ Compiled /api/auth/[...all] in 789ms (3316 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1155ms
+ GET /api/auth/get-session 200 in 1347ms
+ GET /api/auth/get-session 200 in 11ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 71ms
+ ○ Compiling /api/trpc/[trpc] ...
+ ✓ Compiled /api/trpc/[trpc] in 1002ms (2037 modules)
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746553225%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 10ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 190ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 252ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 403ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 1559ms
+Socket connected with ID: oGyx6jzai40RFujFAAAR
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+ ✓ Compiled in 931ms (3398 modules)
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 91ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 215ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 43ms
+ GET /api/auth/get-session 200 in 91ms
+prisma:query SELECT 1
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 24ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746574078%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 10ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 147ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 447ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 493ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 543ms
+Socket connected with ID: nAnhyDw3XL9RMNCcAAAU
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+Socket connected with ID: GyoSKkHHkB2_tkpZAAAW
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746574078%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 62ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 230ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 257ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 368ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 450ms
+ GET /projects 200 in 78ms
+ GET /api/auth/get-session 200 in 8ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 58ms
+Socket connected with ID: WQK3bHi-P6ci7lwEAAAY
+Socket connection from referer: http://localhost:3000/projects
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 19ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746908677%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 9ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 187ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 357ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 492ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 523ms
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746908677%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 5ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."organizationId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAllByOrganizationId took 258ms to execute
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE ("public"."Project"."organizationId" = $1 AND "public"."Project"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+[TRPC] project.getAll took 363ms to execute
+ GET /api/trpc/userOrganization.getAllByOrganizationId,project.getAll?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 377ms
+ GET /projects 200 in 56ms
+ GET /api/auth/get-session 200 in 31ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 53ms
+Socket connected with ID: o38OVn4yt4HRezuIAAAa
+Socket connection from referer: http://localhost:3000/projects
+prisma:query SELECT 1
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 35ms
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746921149%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 5ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 162ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 272ms to execute
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined organization 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=9e2a6c3f30cc56e49db2dbb1601a3c0f7988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746921149%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 5ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 405ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 427ms
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."organizationId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAllByOrganizationId took 237ms to execute
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE ("public"."Project"."organizationId" = $1 AND "public"."Project"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+[TRPC] project.getAll took 479ms to execute
+ GET /api/trpc/userOrganization.getAllByOrganizationId,project.getAll?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 490ms
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 11ms
+Socket connected with ID: Kiw-emntNG90sLPVAAAd
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ✓ Compiled in 949ms (2799 modules)
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 503ms
+ GET /projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g 200 in 827ms
+ ○ Compiling /api/auth/[...all] ...
+ ✓ Compiled /api/auth/[...all] in 1124ms (1968 modules)
+ GET /api/auth/get-session 200 in 1277ms
+prisma:query SELECT 1
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+ GET /api/auth/get-session 200 in 19ms
+ ✓ Compiled /api/trpc/[trpc] in 167ms (2036 modules)
+
+
+=== CREATING TRPC CONTEXT ===
+Headers present: {
+  accept: '*/*',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'en-US,en;q=0.9',
+  'access-control-allow-credentials': 'true',
+  'access-control-allow-headers': 'Content-Type, Authorization, X-Requested-With, X-Forwarded-Origin, X-Requested-From',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-origin': 'http://localhost:3000',
+  'access-control-max-age': '86400',
+  connection: 'keep-alive',
+  'content-type': 'application/json',
+  cookie: '_ga=GA1.1.809698844.1748206744; _reb2buid=15bc4c8e-b8af-4d9c-8942-14516ce8d761-1748206744926; _reb2bgeo=%7B%22city%22%3A%22Lynn%22%2C%22country%22%3A%22United%20States%22%2C%22countryCode%22%3A%22US%22%2C%22hosting%22%3Afalse%2C%22isp%22%3A%22Comcast%20Cable%20Communications%2C%20LLC%22%2C%22lat%22%3A42.4889%2C%22proxy%22%3Afalse%2C%22region%22%3A%22MA%22%2C%22regionName%22%3A%22Massachusetts%22%2C%22status%22%3A%22success%22%2C%22timezone%22%3A%22America%2FNew_York%22%2C%22zip%22%3A%2201904%22%7D; _lc2_fpi=334389048b87--01jw4kvxp23ce49vwtbfy5twt3; _reb2btd=M2Q4MjdiMGNLKQHP0ZG6QGUyOGM2ZTU4OTNhNDg5YTdkODlhMDA3MTM=; _ga_XWHX75D698=GS2.1.s1748206744$o1$g1$t1748206787$j0$l0$h0; ph_phc_82dxgIiZvuUFV41LErIq8UGCNYmisHq8Fn3a4LGtsYO_posthog=%7B%22distinct_id%22%3A%220197093d-f556-7850-9302-852f50b6b9e8%22%2C%22%24sesid%22%3A%5B1748206790726%2C%220197093d-f555-75b9-99dd-4f765d0f3200%22%2C1748206744917%5D%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2F%22%7D%7D; sync.session_token=jiACM65gnWGuO5PN4WNCPVWvnPZ6tAqh.VEN%2BW1GbEN9nBioJBzikyCzAdwnd8RQEBaThJ2z%2BZ%2Bc%3D; _ga_C9DE8TDM16=GS2.1.s1748206749$o1$g1$t1748207317$j0$l0$h0; ph_phc_cxUDiE61ZKdfn1Cg5UUJZdSeNabGpYeVHPnNQC5J1iS_posthog=%7B%22distinct_id%22%3A%22dfd29b28-de51-40d9-b05f-eda3d2d73edf%22%2C%22%24sesid%22%3A%5B1748700367618%2C%22019726aa-0b02-7e3a-b18a-bc3d9d3d19ef%22%2C1748700367618%5D%2C%22%24epp%22%3Atrue%7D; sidebar_state=true; better-auth.session_token=nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC.neKrU4nEqv8%2Bw7F6EGNLnVPWF5OB1KYIX%2B3CrvyvpIY%3D; __next_hmr_refresh_hash__=46c451bebc0865e6af51f841f430f7307988dd3c7ffe4536; ph_phc_i8ZKwM5UBaaIUTv8uVSh5OQfPI098Mmpy7Bv2zpDj3E_posthog=%7B%22distinct_id%22%3A%22noah%40milbo.co%22%2C%22%24sesid%22%3A%5B1748746995572%2C%220197291e-06a6-781c-bb43-8f601afe603c%22%2C1748741523110%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Flogin%22%7D%7D',
+  host: 'localhost:3000',
+  referer: 'http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g',
+  'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"macOS"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-origin',
+  'trpc-accept': 'application/jsonl',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+  'x-forwarded-for': '::1',
+  'x-forwarded-host': 'localhost:3000',
+  'x-forwarded-port': '3000',
+  'x-forwarded-proto': 'http',
+  'x-trpc-source': 'nextjs-react'
+}
+Calling getUserSession...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."token", "public"."Session"."userId", "public"."Session"."expiresAt", "public"."Session"."createdAt", "public"."Session"."updatedAt", "public"."Session"."ipAddress", "public"."Session"."userAgent" FROM "public"."Session" WHERE "public"."Session"."token" = $1 LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" = $1 LIMIT $2 OFFSET $3
+Session retrieved in 8ms {
+  present: true,
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined
+}
+Session: {
+  session: {
+    expiresAt: 2025-06-08T02:52:58.256Z,
+    token: 'nPWkTuZlTlrWa3fcyCF5wCslmlHRkwwC',
+    createdAt: 2025-06-01T02:52:58.256Z,
+    updatedAt: 2025-06-01T02:52:58.256Z,
+    ipAddress: '',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    id: 'RfsSwuGwzJ2WLHQmqcEXlRnUmjkRZG65'
+  },
+  user: {
+    name: 'Noah Milberger',
+    email: 'noah@milbo.co',
+    emailVerified: true,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocLKwGCioRUhmgv0VCLRfbLh5n5XoF9T4mRAz43gPkO9JHnNQw=s96-c',
+    createdAt: 2025-06-01T01:48:09.049Z,
+    updatedAt: 2025-06-01T02:22:34.566Z,
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY'
+  }
+}
+Session obtained: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+Session in createInnerTRPCContext: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: undefined,
+  userEmail: 'noah@milbo.co'
+}
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE "public"."UserOrganization"."userId" = $1 OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+Found 1 organizations for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+Available organizations: [
+  {
+    id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+    name: 'Personal',
+    role: 'owner'
+  }
+]
+prisma:query SELECT "public"."User"."id", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Database user check: {
+  userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  activeOrgId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  sessionActiveOrgId: undefined
+}
+Active organization ID found in database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+🔑 Using active organization ID from database: 14LrABVybuaEbp89kzhYF9PyZWTH0UfY for user 14LrABVybuaEbp89kzhYF9PyZWTH0UfY
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."deletedAt" IS NULL) OFFSET $2
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.getAll took 230ms to execute
+prisma:query SELECT "public"."UserOrganization"."userId", "public"."UserOrganization"."organizationId", "public"."UserOrganization"."createdAt", "public"."UserOrganization"."updatedAt", "public"."UserOrganization"."deletedAt", "public"."UserOrganization"."role" FROM "public"."UserOrganization" WHERE ("public"."UserOrganization"."userId" = $1 AND "public"."UserOrganization"."organizationId" = $2 AND "public"."UserOrganization"."deletedAt" IS NULL) LIMIT $3 OFFSET $4
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE "public"."Organization"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."User"."id", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."deletedAt", "public"."User"."name", "public"."User"."email", "public"."User"."emailVerified", "public"."User"."image", "public"."User"."activeOrganizationId" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+[TRPC] userOrganization.get took 447ms to execute
+prisma:query SELECT "public"."Organization"."id", "public"."Organization"."createdAt", "public"."Organization"."updatedAt", "public"."Organization"."deletedAt", "public"."Organization"."name", "public"."Organization"."logoUrl" FROM "public"."Organization" WHERE ("public"."Organization"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Project"."id", "public"."Project"."createdAt", "public"."Project"."updatedAt", "public"."Project"."deletedAt", "public"."Project"."name", "public"."Project"."description", "public"."Project"."userId", "public"."Project"."organizationId" FROM "public"."Project" WHERE "public"."Project"."organizationId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Document"."id", "public"."Document"."createdAt", "public"."Document"."updatedAt", "public"."Document"."deletedAt", "public"."Document"."name", "public"."Document"."projectId", "public"."Document"."state", "public"."Document"."version" FROM "public"."Document" WHERE "public"."Document"."projectId" IN ($1,$2,$3) OFFSET $4
+server - organization:  {
+  id: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+  createdAt: 2025-06-01T01:48:11.993Z,
+  updatedAt: 2025-06-01T01:48:11.993Z,
+  deletedAt: null,
+  name: 'Personal',
+  logoUrl: null,
+  projects: [
+    {
+      id: 'cmbd04or3000213c5616ahsjm',
+      createdAt: 2025-06-01T01:48:14.799Z,
+      updatedAt: 2025-06-01T01:48:14.799Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1czk20002l42207qiv1wg',
+      createdAt: 2025-06-01T02:22:41.666Z,
+      updatedAt: 2025-06-01T02:22:41.666Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    },
+    {
+      id: 'cmbd1s6wc0002xke5n21q1qju',
+      createdAt: 2025-06-01T02:34:31.020Z,
+      updatedAt: 2025-06-01T02:34:31.020Z,
+      deletedAt: null,
+      name: 'New Project',
+      description: null,
+      userId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      organizationId: '14LrABVybuaEbp89kzhYF9PyZWTH0UfY',
+      documents: [Array]
+    }
+  ]
+}
+[TRPC] organization.get took 457ms to execute
+ GET /api/trpc/organization.get,userOrganization.getAll,userOrganization.get?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%222%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 802ms
+Socket connected with ID: ZaMx-uAT1STzk4LVAAAg
+Socket connection from referer: http://localhost:3000/projects/cmbd04or3000213c5616ahsjm/cmbd04or6000413c5w4tgki8g
+User Noah Milberger (14LrABVybuaEbp89kzhYF9PyZWTH0UfY) joined document cmbd04or6000413c5w4tgki8g
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1594ms (3384 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1770ms
+ GET /api/auth/get-session 200 in 21ms

@@ -12,6 +12,7 @@ import PlaneSelector from './sketch/_components/plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
 import DynamicAxesHelper from './dynamic-axes-helper'
+import HistoryControls from './history-controls'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -152,6 +153,7 @@ export default function Scene() {
     <div className="flex h-full w-full relative">
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
       <ControlPanel />
+      <HistoryControls />
       <Canvas 
         className="flex h-full w-full" 
         camera={{

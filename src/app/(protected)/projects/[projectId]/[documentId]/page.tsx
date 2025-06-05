@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Scene from "~/app/_components/scene";
+import CadWorkspace from "~/app/_components/cad-workspace";
 import { io, type Socket } from "socket.io-client";
 import { useSession } from "~/server/auth/client";
 import { Cursor } from "~/components/UserCursor";
@@ -21,6 +21,9 @@ function generateRandomColor(): string {
 }
 
 export default function DocumentPage() {
+  console.log('HERE')
+  console.log('📄 DocumentPage is rendering!')
+  
   const params = useParams();
   const { data: session } = useSession();
   const user = session?.user as ExtendedSessionUser | undefined;
@@ -90,12 +93,14 @@ export default function DocumentPage() {
     });
   };
 
+  console.log('📄 About to render CadWorkspace with userId:', user?.id)
+
   return (
     <div 
-      className="flex w-full h-full relative" 
+      className="flex w-full h-screen relative overflow-hidden" 
       onMouseMove={handleMouseMove}
     >
-      <Scene />
+      <CadWorkspace userId={user?.id} />
       <div className="fixed inset-0 z-50 pointer-events-none">
         {Object.entries(cursors).map(([userId, { position, name }]) => (
           <Cursor
