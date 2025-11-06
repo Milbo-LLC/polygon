@@ -29,7 +29,7 @@ import { Input } from "~/components/ui/input";
 import { socket } from "~/socket";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useOrganizationContext } from "~/providers/organization-provider";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import { Logo } from "~/components/ui/logo";
 import { type ExtendedSessionUser } from "~/types/auth";
 
@@ -44,7 +44,7 @@ function ProjectsContent() {
   const [newName, setNewName] = useState("");
   const router = useRouter();
   const { organization } = useOrganizationContext();
-  const { data: session } = useSession();
+  const { session } = useSession();
   const user = session?.user as ExtendedSessionUser | undefined;
   
   const { data: userOrganization } = api.userOrganization.get.useQuery(undefined, {

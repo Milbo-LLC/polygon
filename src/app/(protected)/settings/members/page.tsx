@@ -43,7 +43,7 @@ import {
 import { Large, Muted, Small } from "~/components/ui/typography";
 import { api } from "~/trpc/react";
 import { useOrganizationContext } from "~/providers/organization-provider";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,7 +80,7 @@ type InviteFormValues = z.infer<typeof inviteFormSchema>;
 type UpdateRoleFormValues = z.infer<typeof updateRoleSchema>;
 
 export default function MembersSettingsPage() {
-  const { data: session } = useSession();
+  const { session } = useSession();
   const user = session?.user as ExtendedSessionUser | undefined;
   const { organization } = useOrganizationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);

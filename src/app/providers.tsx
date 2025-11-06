@@ -1,8 +1,7 @@
 'use client';
 
-import { useSession } from '~/server/auth/client';
 import { TooltipProvider } from '~/components/ui/tooltip';
-import { TRPCReactProvider } from '~/trpc/react';
+import { TRPCReactProvider, TRPCClientProvider } from '~/trpc/react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 import { usePostHog } from 'posthog-js/react';
@@ -10,23 +9,24 @@ import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import { ThemeProvider } from '~/providers/theme-provider';
 import { ApiErrorProvider } from '~/providers/api-error-handler';
+import { SessionProvider, useSession } from '~/providers/session-provider';
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from '~/constants/links';
 
 function SessionChecker() {
-  const { data: session, isPending } = useSession();
+  const { session, isPending } = useSession();
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     if (isPending) return; // still loading session
-    
+
     console.log("SessionChecker running with pathname:", pathname);
-    
+
     const isLoginPage = pathname === '/login' || pathname === AUTH_REDIRECT_PATH_SIGNED_OUT;
     const isSignupPage = pathname?.startsWith('/signup');
     const isAuthApiRoute = pathname?.startsWith('/api/auth');
     const authRoute = isLoginPage || isSignupPage || isAuthApiRoute;
-    
+
     console.log("Is auth route?", authRoute);
 
     if (!session && !authRoute) {
@@ -41,7 +41,7 @@ function SessionChecker() {
 }
 
 function PostHogIdentifier() {
-  const { data: session } = useSession();
+  const { session } = useSession();
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -97,15 +97,19 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <TRPCReactProvider>
-      <ApiErrorProvider>
-        <SessionChecker />
-        <PostHogProvider>
-          <PostHogIdentifier />
-          <ThemeProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </ThemeProvider>
-        </PostHogProvider>
-      </ApiErrorProvider>
+      <SessionProvider>
+        <TRPCClientProvider>
+          <ApiErrorProvider>
+            <SessionChecker />
+            <PostHogProvider>
+              <PostHogIdentifier />
+              <ThemeProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </ThemeProvider>
+            </PostHogProvider>
+          </ApiErrorProvider>
+        </TRPCClientProvider>
+      </SessionProvider>
     </TRPCReactProvider>
   );
 }

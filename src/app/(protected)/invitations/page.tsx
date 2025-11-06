@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from '~/server/auth/client';
+import { useSession } from '~/providers/session-provider';
 import { Building, User, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -30,7 +30,7 @@ function InvitationContent() {
   const code = searchParams.get('code');
   console.log('code: ', code);
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useSession();
   const [accepting, setAccepting] = useState(false);
   const [invitationState, setInvitationState] = useState<InvitationState>(InvitationState.LOADING);
   const {handleOrgSwitch} = useOrganizationContext();

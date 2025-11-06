@@ -1,8 +1,9 @@
 import { Button } from "~/components/ui/button"
-import { PencilRulerIcon } from "lucide-react"
+import { PencilRulerIcon, BoxIcon } from "lucide-react"
 import { useAtom } from "jotai"
 import { canvasStateAtom } from "../(protected)/atoms"
 import SketchControls from "./sketch/_components/sketch-controls"
+import ExtrudeControls from "./extrude/_components/extrude-controls"
 import { Tooltip, TooltipTrigger, TooltipContent } from "~/components/ui/tooltip"
 
 export default function ControlPanel() {
@@ -15,6 +16,13 @@ export default function ControlPanel() {
     })
   }
 
+  const toggleExtrudeMode = () => {
+    setCanvasState({
+      ...canvasState,
+      selectedTool: canvasState.selectedTool === 'extrude' ? null : 'extrude'
+    })
+  }
+
   const tools = [
     {
       name: 'sketch',
@@ -22,6 +30,13 @@ export default function ControlPanel() {
       onClick: toggleSketchMode,
       component: <SketchControls />,
       tooltip: 'Sketch - Draw lines and shapes'
+    },
+    {
+      name: 'extrude',
+      icon: <BoxIcon />,
+      onClick: toggleExtrudeMode,
+      component: <ExtrudeControls />,
+      tooltip: 'Extrude - Convert 2D sketches to 3D'
     },
   ]
 
