@@ -12,6 +12,9 @@ import PlaneSelector from './sketch/_components/plane-selector'
 import { useAtom, useAtomValue } from 'jotai'
 import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
 import DynamicAxesHelper from './dynamic-axes-helper'
+import ExtrudeHandler from './extrude/_components/extrude-handler'
+import ExtrudedShapes from './extrude/_components/extruded-shapes'
+import Timeline from './history/timeline'
 
 // Camera position controller component
 function CameraPositioner({ 
@@ -122,9 +125,12 @@ function CameraPositioner({
 }
 
 export default function Scene() {
+  console.log('[Scene] Scene component function called')
   const cameraControlsRef = useRef<CameraControls | null>(null)
   const canvasState = useAtomValue(canvasStateAtom)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
+  
+  console.log('[Scene] Scene component initialized, canvasState:', canvasState)
   
   // Use a ref to track previous sketch mode state
   const prevSketchModeActiveRef = useRef<boolean>(false);
@@ -133,6 +139,7 @@ export default function Scene() {
   const gridDivisions = 100
 
   const isSketchModeActive = canvasState.selectedTool === 'sketch'
+  const isExtrudeModeActive = canvasState.selectedTool === 'extrude'
 
   useEffect(() => {
     // Get previous sketch mode state
@@ -148,10 +155,13 @@ export default function Scene() {
     
   }, [isSketchModeActive, sketchState, setSketchState]);
 
+  console.log('[Scene] Rendering Scene component with Timeline')
+
   return (
     <div className="flex h-full w-full relative">
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
       <ControlPanel />
+      <Timeline />
       <Canvas 
         className="flex h-full w-full" 
         camera={{
@@ -172,12 +182,18 @@ export default function Scene() {
         <Gizmo />
         <Grid />
         <DynamicAxesHelper />
-        
+
         {/* Plane selector - only show when in sketch mode and no dimension selected */}
         <PlaneSelector
           isActive={isSketchModeActive && sketchState.dimension === null}
           gridSize={gridSize}
         />
+
+        {/* Extrude mode handler */}
+        <ExtrudeHandler isActive={isExtrudeModeActive} />
+
+        {/* Render extruded 3D shapes */}
+        <ExtrudedShapes />
         
         {/* X-plane drawings - always visible */}
         <SketchPlane

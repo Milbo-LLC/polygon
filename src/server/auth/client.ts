@@ -3,8 +3,12 @@ import { emailOTPClient } from "better-auth/client/plugins";
 import { env } from "~/env";
 
 // Create the auth client with the appropriate base URL and disable automatic session
-export const authClient = createAuthClient({ 
+export const authClient = createAuthClient({
   baseURL: env.NEXT_PUBLIC_BETTER_AUTH_URL,
+  fetchOptions: {
+    // Prevent overly aggressive caching that might cause stale sessions
+    cache: 'no-cache'
+  },
   requestOptions: {
     credentials: 'include',
     mode: 'cors'

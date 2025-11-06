@@ -6,7 +6,7 @@ import { FEATURE_FLAGS } from "~/constants/app";
 import { usePostHog } from "posthog-js/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OrganizationProvider } from "~/providers/organization-provider";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { type SessionUser } from "~/types/auth";
@@ -35,8 +35,8 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   const [isLoading, setIsLoading] = useState(true);
   const [shouldShowNavbar, setShouldShowNavbar] = useState(false);
   const [userId, setUserId] = useState<string | undefined>(undefined);
-  
-  const { data: session, isPending } = useSession();
+
+  const { session, isPending } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const pathname = usePathname();

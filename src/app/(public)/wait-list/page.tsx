@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AUTH_REDIRECT_PATH_SIGN_UP } from "~/constants/links";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { H3, P } from "~/components/ui/typography";
@@ -18,7 +18,7 @@ export default function WaitListPage() {
 
   const { handleSignout } = useHandleSignout();
 
-  const { data: session, isPending } = useSession();
+  const { session, isPending } = useSession();
   const betaAccessEnabled = posthog.isFeatureEnabled(FEATURE_FLAGS.BetaAccess);
 
   useEffect(() => {

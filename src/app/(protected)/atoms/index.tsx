@@ -20,16 +20,18 @@ export const canvasStateAtom = atomWithStorage<CanvasState>('canvasState', {
   selectedTool: null,
 });
 
-export type SketchTool = 'pencil' | 'rectangle'
+export type SketchTool = 'pencil' | 'rectangle' | 'eraser' | 'select'
 
 export type SketchState = {
   selectedTool: SketchTool
   dimension: Dimension | null
+  selectedSketchId: string | null
 }
 
 export const sketchStateAtom = atom<SketchState>({
   selectedTool: 'pencil',
   dimension: null,
+  selectedSketchId: null,
 })
 
 export interface Point3D {
@@ -51,3 +53,78 @@ export const documentSketchesAtom = atomFamily((documentId: string) => atomWithS
   y: [],
   z: []
 }))
+
+export interface ExtrudedShape {
+  id: string
+  sketchId: string
+  dimension: Dimension
+  depth: number
+  color: string
+}
+
+export const documentExtrudedShapesAtom = atomFamily((documentId: string) => atomWithStorage<ExtrudedShape[]>(`polygon:extrude:document-${documentId}`, []))
+
+export type ExtrudeState = {
+  selectedSketchId: string | null
+  depth: number
+}
+
+export const extrudeStateAtom = atom<ExtrudeState>({
+  selectedSketchId: null,
+  depth: 10,
+})
+
+// History types
+export type HistoryActionType =
+  | 'create_sketch'
+  | 'delete_sketch'
+  | 'clear_sketches'
+  | 'extrude'
+  | 'undo_sketch'
+
+export interface HistoryAction {
+  type: HistoryActionType
+  description: string
+  metadata: {
+    sketchId?: string
+    dimension?: string
+    depth?: number
+    tool?: string
+    count?: number
+  }
+}
+
+export interface HistoryStep {
+  id: string
+  timestamp: number
+  action: HistoryAction
+  state: {
+    sketches: Record<string, DrawingItem[]>
+    extrudedShapes: ExtrudedShape[]
+  }
+}
+
+export interface DocumentHistory {
+  steps: HistoryStep[]
+  currentStepIndex: number
+}
+
+// History atom per document
+export const documentHistoryAtom = atomFamily((documentId: string) =>
+  atomWithStorage<DocumentHistory>(`polygon:history:document-${documentId}`, {
+    steps: [{
+      id: 'initial',
+      timestamp: Date.now(),
+      action: {
+        type: 'create_sketch',
+        description: 'Document created',
+        metadata: {}
+      },
+      state: {
+        sketches: { x: [], y: [], z: [] },
+        extrudedShapes: []
+      }
+    }],
+    currentStepIndex: 0
+  })
+)

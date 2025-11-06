@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from '~/server/auth/client';
+import { useSession } from '~/providers/session-provider';
 import { api } from '~/trpc/react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '~/components/ui/alert-dialog';
 import { LockIcon } from 'lucide-react';
@@ -31,7 +31,7 @@ export default function WorkspaceSettingsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session } = useSession();
   
   // Check if this is a personal organization (userId === orgId)
   const isPersonalOrg = session?.user?.id === organization?.id;

@@ -5,6 +5,7 @@ import { type ReactNode, createContext, useContext, useMemo } from 'react';
 import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { authClient } from '~/server/auth/client';
+import { useSession } from '~/providers/session-provider';
 import { type Organization } from '~/validators/organizations';
 import { type MemberRole } from '~/validators/user-organizations';
 import { type UserOrganizationWithOrg } from '~/validators/extended-schemas';
@@ -35,7 +36,7 @@ export function OrganizationProvider({
   userId: string | undefined;
 }) {
   const utils = api.useUtils();
-  const { data: session } = authClient.useSession();
+  const { session } = useSession();
   const user = session?.user as SessionUser | undefined;
 
   const { data: organization, isLoading: loadingOrganization } = api.organization.get.useQuery(undefined, {
