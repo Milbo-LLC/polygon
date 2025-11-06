@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Scene from "~/app/_components/scene";
 import { io, type Socket } from "socket.io-client";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import { Cursor } from "~/components/UserCursor";
 import { type ExtendedSessionUser } from "~/types/auth";
 
@@ -22,7 +22,7 @@ function generateRandomColor(): string {
 
 export default function DocumentPage() {
   const params = useParams();
-  const { data: session } = useSession();
+  const { session } = useSession();
   const user = session?.user as ExtendedSessionUser | undefined;
   const documentId = params.documentId as string;
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -89,6 +89,8 @@ export default function DocumentPage() {
       name: user?.name ?? 'Unknown',
     });
   };
+
+  console.log('[DocumentPage] Rendering DocumentPage, documentId:', documentId)
 
   return (
     <div 

@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import { useAtomValue } from "jotai";
 import { sidebarCollapsedAtom } from "../../atoms";
 import { useRouter } from 'next/navigation';
-import { useSession } from '~/server/auth/client';
+import { useSession } from '~/providers/session-provider';
 import { 
   LogOutIcon, 
   UserIcon, 
@@ -41,8 +41,8 @@ export default function NavbarHeader() {
   const { handleSignout } = useHandleSignout();
   const sidebarCollapsed = useAtomValue(sidebarCollapsedAtom);
   const router = useRouter();
-  const { data } = useSession();
-  const user = data?.user;
+  const { session } = useSession();
+  const user = session?.user;
   
   // Create workspace items dynamically from user organizations
   const workspaceItems = useMemo(() => {

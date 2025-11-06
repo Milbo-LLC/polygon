@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect, type PropsWithChildren,
 import { toast } from "sonner";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
 import { api } from "~/trpc/react";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 
 const ApiErrorContext = createContext<{
   handleError: (error: unknown) => void;
@@ -16,7 +16,7 @@ const ApiErrorContext = createContext<{
 export function ApiErrorProvider({ children }: PropsWithChildren) {
   const [hasShownError, setHasShownError] = useState(false);
   const utils = api.useUtils();
-  const { data: session, isPending } = useSession();
+  const { session, isPending } = useSession();
 
   useEffect(() => {
     // Check if already on auth route

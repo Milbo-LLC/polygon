@@ -9,7 +9,7 @@ import SuperJSON from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
-import { useSession } from "~/server/auth/client";
+import { useSession } from "~/providers/session-provider";
 import { type SessionUser } from "~/types/auth";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
@@ -38,14 +38,15 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export function TRPCReactProvider(props: { children: React.ReactNode }) {
+// Inner provider that needs session
+export function TRPCClientProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
-  const { data: session } = useSession();
-  
+  const { session } = useSession();
+
   const user = session?.user as SessionUser | undefined;
   const activeOrganizationId = user?.activeOrganizationId;
 
-  const trpcClient = useMemo(() => 
+  const trpcClient = useMemo(() =>
     api.createClient({
       links: [
         loggerLink({
@@ -59,11 +60,11 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
-            
+
             if (activeOrganizationId) {
               headers.set("x-organization-id", activeOrganizationId);
             }
-            
+
             return headers;
           },
         }),
@@ -72,10 +73,19 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   [activeOrganizationId]);
 
   return (
+    <api.Provider client={trpcClient} queryClient={queryClient}>
+      {props.children}
+    </api.Provider>
+  );
+}
+
+// Outer provider that doesn't need session
+export function TRPCReactProvider(props: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
+
+  return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
-        {props.children}
-      </api.Provider>
+      {props.children}
     </QueryClientProvider>
   );
 }

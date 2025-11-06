@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Large, Muted, Small } from '~/components/ui/typography';
-import { useSession } from '~/server/auth/client';
+import { useSession } from '~/providers/session-provider';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { TeamLogoInput } from '~/components/team-logo-input';
@@ -25,7 +25,7 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export default function AccountSettingsPage() {
-  const { data: session } = useSession();
+  const { session } = useSession();
   const updateUser = api.user.update.useMutation({
     onSuccess: async (_data: User) => {
       // Instead of using updateSession (which doesn't exist in Better Auth),
