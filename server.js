@@ -164,6 +164,10 @@ app.prepare().then(() => {
       });
     });
 
+    socket.on("document:state:update", ({ documentId, state }) => {
+      socket.to(documentId).emit("document:state:updated", { state });
+    });
+
     // Handle disconnection
     socket.on("disconnect", () => {
       const userInfo = connectedUsers.get(socket.id);

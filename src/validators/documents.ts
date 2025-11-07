@@ -1,10 +1,12 @@
 import { z } from "zod";
 
-export const DocumentStateSchema = z.object({
-  actions: z.array(z.string()).optional(),
-});
+import {
+  createEmptyDocumentState,
+  documentStateSchema,
+  type DocumentState,
+} from "~/types/modeling";
 
-export type DocumentState = z.infer<typeof DocumentStateSchema>;
+export const DocumentStateSchema = documentStateSchema;
 
 export const DocumentSchema = z.object({
   id: z.string(),
@@ -12,7 +14,7 @@ export const DocumentSchema = z.object({
   updatedAt: z.date(),
   name: z.string(),
   projectId: z.string(),
-  state: z.any(), // or more specific schema for your state
+  state: DocumentStateSchema,
 });
 
 export type Document = z.infer<typeof DocumentSchema>;
@@ -29,3 +31,5 @@ export const UpdateDocumentSchema = DocumentSchema.omit({
   updatedAt: true,
   projectId: true,
 }).partial();
+
+export const emptyDocumentState = createEmptyDocumentState;

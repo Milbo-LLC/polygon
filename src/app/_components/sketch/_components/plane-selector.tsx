@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { Line } from '@react-three/drei'
 import { useAtom } from 'jotai'
 import { sketchStateAtom } from '../../../(protected)/atoms'
-import { type Dimension } from './sketch-controls'
+import { type Dimension } from "~/types/modeling"
 
 interface PlaneSelectorProps {
   isActive: boolean

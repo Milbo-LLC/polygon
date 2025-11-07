@@ -20,18 +20,13 @@ function SessionChecker() {
   useEffect(() => {
     if (isPending) return; // still loading session
 
-    console.log("SessionChecker running with pathname:", pathname);
-
     const isLoginPage = pathname === '/login' || pathname === AUTH_REDIRECT_PATH_SIGNED_OUT;
     const isSignupPage = pathname?.startsWith('/signup');
     const isAuthApiRoute = pathname?.startsWith('/api/auth');
     const authRoute = isLoginPage || isSignupPage || isAuthApiRoute;
 
-    console.log("Is auth route?", authRoute);
-
     if (!session && !authRoute) {
       if (pathname !== AUTH_REDIRECT_PATH_SIGNED_OUT) {
-        console.log('No session, redirecting to login...');
         router.replace(AUTH_REDIRECT_PATH_SIGNED_OUT);
       }
     }

@@ -7,6 +7,7 @@ import { io, type Socket } from "socket.io-client";
 import { useSession } from "~/providers/session-provider";
 import { Cursor } from "~/components/UserCursor";
 import { type ExtendedSessionUser } from "~/types/auth";
+import { useDocumentModelingSync } from "~/app/_components/document/use-document-modeling-sync";
 
 interface CursorData {
   position: { x: number; y: number };
@@ -28,6 +29,7 @@ export default function DocumentPage() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [cursors, setCursors] = useState<UserCursors>({});
   const [myColor] = useState(generateRandomColor()); // Generate once when component mounts
+  const { isLoading } = useDocumentModelingSync(documentId, socket);
 
   // Initialize Socket.IO connection
   useEffect(() => {
@@ -90,13 +92,16 @@ export default function DocumentPage() {
     });
   };
 
-  console.log('[DocumentPage] Rendering DocumentPage, documentId:', documentId)
-
   return (
-    <div 
-      className="flex w-full h-full relative" 
+    <div
+      className="flex w-full h-full relative"
       onMouseMove={handleMouseMove}
     >
+      {isLoading && (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-background/70">
+          <span className="text-sm text-muted-foreground">Loading document…</span>
+        </div>
+      )}
       <Scene />
       <div className="fixed inset-0 z-50 pointer-events-none">
         {Object.entries(cursors).map(([userId, { position, name }]) => (

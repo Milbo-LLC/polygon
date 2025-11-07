@@ -2,9 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { Button } from "~/components/ui/button"
 import { useAtom, useAtomValue } from "jotai"
 import { canvasStateAtom, sketchStateAtom } from "../../../(protected)/atoms"
-
-export type Dimension = 'x' | 'y' | 'z'
-export type Tool = 'pencil' | 'rectangle' | 'eraser' | 'select'
+import { type Tool } from "~/types/modeling"
 
 export default function SketchControls() {
   const canvasState = useAtomValue(canvasStateAtom)

@@ -5,7 +5,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { CreateDocumentSchema, DocumentSchema, DocumentStateSchema, UpdateDocumentSchema } from "~/validators/documents";
+import { CreateDocumentSchema, DocumentSchema, DocumentStateSchema, UpdateDocumentSchema, emptyDocumentState } from "~/validators/documents";
 import type { Document } from "~/validators/documents";
 
 // Helper function to parse document state
@@ -15,7 +15,7 @@ export const parseDocument = (dbDocument: Prisma.DocumentGetPayload<object>): Do
   
   return {
     ...documentWithoutDeletedAt,
-    state: DocumentStateSchema.parse(dbDocument.state ?? { actions: [] }),
+    state: DocumentStateSchema.parse(dbDocument.state ?? emptyDocumentState()),
   };
 };
 
@@ -33,9 +33,7 @@ export const documentRouter = createTRPCRouter({
         data: {
           name: input.name,
           projectId: input.projectId,
-          state: {
-            actions: [],
-          },
+          state: emptyDocumentState(),
         },
       });
 
