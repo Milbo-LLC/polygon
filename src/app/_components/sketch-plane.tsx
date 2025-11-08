@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
-import { type Dimension, type Tool } from './sketch/_components/sketch-controls'
+import { type Dimension, type Tool } from "~/types/modeling"
 
 interface SketchPlaneProps {
   dimension: Dimension

@@ -45,10 +45,6 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
   
   // Check session and redirect if needed
   useEffect(() => {
-    console.log("ClientLayoutContent running effect");
-    console.log("Current pathname:", pathname);
-    console.log("Session status:", {isPending, hasSession: !!session});
-    
     if (isPending) {
       setIsLoading(true);
       return;
@@ -67,10 +63,6 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     
     // Handle authentication redirects
     if (!session) {
-      console.log("Would redirect to", AUTH_REDIRECT_PATH_SIGNED_OUT);
-      console.log("Current pathname:", pathname);
-      // Comment out the redirect for testing
-      // window.location.href = redirectUrl;
       setIsLoading(false);
       return;
     }

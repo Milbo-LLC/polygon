@@ -1,6 +1,26 @@
 import { atom } from "jotai";
 import { atomFamily, atomWithStorage } from "jotai/utils";
-import { type Tool, type Dimension } from "~/app/_components/sketch/_components/sketch-controls";
+import {
+  createEmptyDocumentState,
+  createEmptySketchRecord,
+  type Dimension,
+  type DocumentHistory,
+  type DrawingItem,
+  type ExtrudedShape,
+  type HistoryAction,
+  type HistoryActionType,
+  type HistoryStep,
+  type Point3D,
+  type Tool,
+} from "~/types/modeling";
+
+const createInitialHistorySnapshot = () => {
+  const initial = createEmptyDocumentState();
+  return {
+    sketches: initial.sketches,
+    extrudedShapes: initial.extrudedShapes,
+  };
+};
 
 export const sidebarCollapsedAtom = atomWithStorage<boolean>("polygon:sidebar:collapsed", false);
 
@@ -34,35 +54,16 @@ export const sketchStateAtom = atom<SketchState>({
   selectedSketchId: null,
 })
 
-export interface Point3D {
-  x: number
-  y: number
-  z: number
-}
+export const documentSketchesAtom = atomFamily((documentId: string) =>
+  atomWithStorage<Record<Dimension, DrawingItem[]>>(
+    `polygon:sketch:document-${documentId}`,
+    createEmptySketchRecord(),
+  ),
+);
 
-export interface DrawingItem {
-  id: string
-  tool: Tool
-  color: string
-  points: Point3D[]
-  dimension: Dimension // Track which dimension this drawing belongs to
-}
-
-export const documentSketchesAtom = atomFamily((documentId: string) => atomWithStorage<Record<Dimension, DrawingItem[]>>(`polygon:sketch:document-${documentId}`, {
-  x: [],
-  y: [],
-  z: []
-}))
-
-export interface ExtrudedShape {
-  id: string
-  sketchId: string
-  dimension: Dimension
-  depth: number
-  color: string
-}
-
-export const documentExtrudedShapesAtom = atomFamily((documentId: string) => atomWithStorage<ExtrudedShape[]>(`polygon:extrude:document-${documentId}`, []))
+export const documentExtrudedShapesAtom = atomFamily((documentId: string) =>
+  atomWithStorage<ExtrudedShape[]>(`polygon:extrude:document-${documentId}`, []),
+)
 
 export type ExtrudeState = {
   selectedSketchId: string | null
@@ -75,40 +76,6 @@ export const extrudeStateAtom = atom<ExtrudeState>({
 })
 
 // History types
-export type HistoryActionType =
-  | 'create_sketch'
-  | 'delete_sketch'
-  | 'clear_sketches'
-  | 'extrude'
-  | 'undo_sketch'
-
-export interface HistoryAction {
-  type: HistoryActionType
-  description: string
-  metadata: {
-    sketchId?: string
-    dimension?: string
-    depth?: number
-    tool?: string
-    count?: number
-  }
-}
-
-export interface HistoryStep {
-  id: string
-  timestamp: number
-  action: HistoryAction
-  state: {
-    sketches: Record<string, DrawingItem[]>
-    extrudedShapes: ExtrudedShape[]
-  }
-}
-
-export interface DocumentHistory {
-  steps: HistoryStep[]
-  currentStepIndex: number
-}
-
 // History atom per document
 export const documentHistoryAtom = atomFamily((documentId: string) =>
   atomWithStorage<DocumentHistory>(`polygon:history:document-${documentId}`, {
@@ -121,10 +88,11 @@ export const documentHistoryAtom = atomFamily((documentId: string) =>
         metadata: {}
       },
       state: {
-        sketches: { x: [], y: [], z: [] },
-        extrudedShapes: []
+        ...createInitialHistorySnapshot()
       }
     }],
     currentStepIndex: 0
   })
 )
+
+export type { Point3D, DrawingItem, ExtrudedShape, HistoryActionType, HistoryAction, HistoryStep, DocumentHistory };

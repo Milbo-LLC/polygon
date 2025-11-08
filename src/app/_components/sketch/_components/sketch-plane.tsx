@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
-import { type Dimension, type Tool } from './sketch-controls'
+import { type Dimension, type Tool } from "~/types/modeling"
 import { type Point3D, type DrawingItem } from '../../../(protected)/atoms'
 import { useParams } from 'next/navigation'
 import { DEFAULT_LINE_COLOR } from '../config/constants'

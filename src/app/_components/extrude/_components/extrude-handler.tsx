@@ -4,7 +4,7 @@ import { useThree } from '@react-three/fiber'
 import { useParams } from 'next/navigation'
 import { useAtom, useAtomValue } from 'jotai'
 import { extrudeStateAtom, documentSketchesAtom, type Point3D } from '../../../(protected)/atoms'
-import { type Dimension } from '../../sketch/_components/sketch-controls'
+import { type Dimension } from "~/types/modeling"
 
 interface ExtrudeHandlerProps {
   isActive: boolean

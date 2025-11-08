@@ -5,7 +5,7 @@ import { CameraControls } from '@react-three/drei'
 import Grid from './grid'
 import Gizmo from './gizmo'
 import ResetGridButton from './reset-grid-button'
-import { type Dimension } from './sketch/_components/sketch-controls'
+import { type Dimension } from "~/types/modeling"
 import SketchPlane from './sketch/_components/sketch-plane'
 import ControlPanel from './control-panel'
 import PlaneSelector from './sketch/_components/plane-selector'
@@ -125,12 +125,9 @@ function CameraPositioner({
 }
 
 export default function Scene() {
-  console.log('[Scene] Scene component function called')
   const cameraControlsRef = useRef<CameraControls | null>(null)
   const canvasState = useAtomValue(canvasStateAtom)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
-  
-  console.log('[Scene] Scene component initialized, canvasState:', canvasState)
   
   // Use a ref to track previous sketch mode state
   const prevSketchModeActiveRef = useRef<boolean>(false);
@@ -154,8 +151,6 @@ export default function Scene() {
     }
     
   }, [isSketchModeActive, sketchState, setSketchState]);
-
-  console.log('[Scene] Rendering Scene component with Timeline')
 
   return (
     <div className="flex h-full w-full relative">

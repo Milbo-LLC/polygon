@@ -1,5 +1,4 @@
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
 import { Button } from '~/components/ui/button'
 import { ChevronLeft, ChevronRight, PencilIcon, BoxIcon, EraserIcon, Trash2Icon } from 'lucide-react'
 import useDocumentHistory from './use-document-history'
@@ -35,30 +34,13 @@ export default function Timeline() {
   const params = useParams()
   const documentId = params.documentId as string | undefined
   
-  useEffect(() => {
-    console.log('[Timeline] Component mounted/updated')
-    console.log('[Timeline] Params:', params)
-    console.log('[Timeline] DocumentId:', documentId)
-  }, [params, documentId])
-  
   // Don't render if documentId is not available
   if (!documentId) {
-    console.log('[Timeline] No documentId, returning null')
     return null
   }
   
   const { history, currentStepIndex, canGoBack, canGoForward, goToStep, goBack, goForward } = useDocumentHistory(documentId)
   
-  useEffect(() => {
-    console.log('[Timeline] History data:', {
-      stepsCount: history.steps.length,
-      currentStepIndex,
-      history
-    })
-  }, [history, currentStepIndex])
-
-  console.log('[Timeline] Rendering Timeline component with documentId:', documentId)
-
   return (
     <div className="absolute top-4 right-4 z-50 w-80 flex flex-col gap-2 bg-background/95 p-4 rounded-lg backdrop-blur-sm border border-border shadow-lg">
       <div className="flex items-center justify-between mb-2">

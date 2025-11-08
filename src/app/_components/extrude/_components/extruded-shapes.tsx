@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation'
 import { useAtomValue } from 'jotai'
 import { documentExtrudedShapesAtom, documentSketchesAtom, type ExtrudedShape, type DrawingItem } from '../../../(protected)/atoms'
-import { type Dimension } from '../../sketch/_components/sketch-controls'
+import { type Dimension } from "~/types/modeling"
 import * as THREE from 'three'
 import { useMemo } from 'react'
 

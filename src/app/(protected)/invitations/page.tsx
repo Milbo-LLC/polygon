@@ -28,7 +28,6 @@ enum InvitationState {
 function InvitationContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
-  console.log('code: ', code);
   const router = useRouter();
   const { session } = useSession();
   const [accepting, setAccepting] = useState(false);
