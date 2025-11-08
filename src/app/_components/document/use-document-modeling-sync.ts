@@ -15,10 +15,10 @@ import {
 } from "~/validators/documents";
 import {
   createEmptyDocumentState,
-  type DocumentState,
-  type ExtrudedShape,
-  type DrawingItem,
   type Dimension,
+  type DocumentState,
+  type DrawingItem,
+  type ExtrudedShape,
   type Point3D,
 } from "~/types/modeling";
 
@@ -46,6 +46,21 @@ const cloneSketches = (
 const cloneExtrudedShapes = (shapes: ExtrudedShape[]): ExtrudedShape[] =>
   shapes.map(shape => ({ ...shape }));
 
+const createStateSnapshot = (
+  sketches: Record<Dimension, DrawingItem[]>,
+  extrudedShapes: ExtrudedShape[],
+): DocumentState => ({
+  ...createEmptyDocumentState(),
+  sketches: cloneSketches(sketches),
+  extrudedShapes: cloneExtrudedShapes(extrudedShapes),
+});
+
+const serializeState = (state: DocumentState) =>
+  JSON.stringify({
+    sketches: state.sketches,
+    extrudedShapes: state.extrudedShapes,
+  });
+
 export function useDocumentModelingSync(documentId: string, socket: Socket | null) {
   const [sketches, setSketches] = useAtom(documentSketchesAtom(documentId));
   const [extrudedShapes, setExtrudedShapes] = useAtom(
@@ -70,7 +85,7 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     },
   });
 
-  const lastSyncedState = useRef<string>("");
+  const lastAppliedState = useRef<string>("");
   const isApplyingExternalState = useRef(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -79,12 +94,13 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
       const nextSketches = cloneSketches(state.sketches);
       const nextExtrusions = cloneExtrudedShapes(state.extrudedShapes);
 
-      const serialized = JSON.stringify({
+      const serialized = serializeState({
+        ...createEmptyDocumentState(),
         sketches: nextSketches,
         extrudedShapes: nextExtrusions,
       });
 
-      lastSyncedState.current = serialized;
+      lastAppliedState.current = serialized;
       isApplyingExternalState.current = true;
       setSketches(nextSketches);
       setExtrudedShapes(nextExtrusions);
@@ -125,16 +141,52 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
   }, [socket, applyState]);
 
   useEffect(() => {
-    if (isApplyingExternalState.current) return;
+    if (!socket) return;
 
-    const currentState = {
-      sketches,
-      extrudedShapes,
+    const handleHydration = ({ state }: { state: unknown }) => {
+      try {
+        const parsed = DocumentStateSchema.parse(state);
+        applyState(parsed);
+      } catch (error) {
+        console.error("Failed to hydrate document state", error);
+      }
     };
 
-    const serialized = JSON.stringify(currentState);
-    if (serialized === lastSyncedState.current) {
+    socket.on("document:state:hydrated", handleHydration);
+
+    const requestState = () => {
+      socket.emit("document:state:request", { documentId });
+    };
+
+    if (socket.connected) {
+      requestState();
+    } else {
+      socket.once("connect", requestState);
+    }
+
+    return () => {
+      socket.off("document:state:hydrated", handleHydration);
+      socket.off("connect", requestState);
+    };
+  }, [socket, applyState, documentId]);
+
+  useEffect(() => {
+    if (isApplyingExternalState.current) return;
+
+    const stateToPersist = createStateSnapshot(sketches, extrudedShapes);
+    const serialized = serializeState(stateToPersist);
+
+    if (serialized === lastAppliedState.current) {
       return;
+    }
+
+    lastAppliedState.current = serialized;
+
+    if (socket) {
+      socket.emit("document:state:update", {
+        documentId,
+        state: stateToPersist,
+      });
     }
 
     if (debounceRef.current) {
@@ -142,18 +194,7 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     }
 
     debounceRef.current = setTimeout(() => {
-      lastSyncedState.current = serialized;
-      const stateToPersist: DocumentState = {
-        ...createEmptyDocumentState(),
-        sketches: cloneSketches(sketches),
-        extrudedShapes: cloneExtrudedShapes(extrudedShapes),
-      };
-
       persistState({ id: documentId, state: stateToPersist });
-      socket?.emit("document:state:update", {
-        documentId,
-        state: stateToPersist,
-      });
     }, SAVE_DEBOUNCE_MS);
 
     return () => {

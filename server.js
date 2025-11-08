@@ -60,6 +60,20 @@ const getAllowedOrigins = () => {
 const documentUsers = new Map();
 // Track users in each organization
 const organizationUsers = new Map();
+// Cache the latest modeling state for each document so collaborators joining mid-session
+// receive the most up-to-date version without waiting for a database round trip.
+const documentStates = new Map();
+
+const cloneState = (state) => {
+  if (!state) return null;
+
+  try {
+    return JSON.parse(JSON.stringify(state));
+  } catch (error) {
+    console.error("Failed to clone document state", error);
+    return null;
+  }
+};
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
@@ -104,6 +118,18 @@ app.prepare().then(() => {
 
       // Broadcast to others that a new user joined (include name)
       socket.to(documentId).emit("userJoined", { userId, name });
+
+      const latestState = cloneState(documentStates.get(documentId));
+      if (latestState) {
+        socket.emit("document:state:hydrated", { state: latestState });
+      }
+    });
+
+    socket.on("document:state:request", ({ documentId }) => {
+      const latestState = cloneState(documentStates.get(documentId));
+      if (latestState) {
+        socket.emit("document:state:hydrated", { state: latestState });
+      }
     });
 
     // Handle joining an organization room
@@ -165,7 +191,13 @@ app.prepare().then(() => {
     });
 
     socket.on("document:state:update", ({ documentId, state }) => {
-      socket.to(documentId).emit("document:state:updated", { state });
+      const clonedState = cloneState(state);
+      if (!clonedState) {
+        return;
+      }
+
+      documentStates.set(documentId, clonedState);
+      io.to(documentId).emit("document:state:updated", { state: clonedState });
     });
 
     // Handle disconnection
@@ -180,6 +212,11 @@ app.prepare().then(() => {
           if (documentUsers.has(documentId)) {
             documentUsers.get(documentId).delete(userId);
             socket.to(documentId).emit("userLeft", { userId });
+          }
+
+          const remainingRoomMembers = io.sockets.adapter.rooms.get(documentId);
+          if (!remainingRoomMembers || remainingRoomMembers.size === 0) {
+            documentStates.delete(documentId);
           }
         }
         
