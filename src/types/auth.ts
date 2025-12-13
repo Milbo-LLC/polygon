@@ -1,8 +1,12 @@
 import type { Organization } from "@prisma/client";
-import type { User } from "~/validators/users";
 
-// Base session user with essential properties
-export interface SessionUser extends User {
+// Base session user with essential properties returned from Better Auth
+export interface SessionUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  activeOrganizationId?: string | null;
   organizations?: Organization[];
   [key: string]: unknown;
 }

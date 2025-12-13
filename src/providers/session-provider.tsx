@@ -15,11 +15,12 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: PropsWithChildren) {
   // Use React Query directly with our own configuration
-  const { data, isPending, error } = useQuery({
-    queryKey: ['session'],
+  const { data, isPending, error } = useQuery<Session | null>({
+    queryKey: ["session"],
     queryFn: async () => {
       const response = await authClient.getSession();
-      return response.data;
+      // Better Auth's getSession returns a richer object; we narrow it to our Session shape
+      return (response.data as unknown as Session) ?? null;
     },
     // Disable all automatic refetching
     refetchOnMount: false,
@@ -34,7 +35,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
   });
 
   return (
-    <SessionContext.Provider value={{ session: (data as Session) ?? null, isPending, error: error ?? null }}>
+    <SessionContext.Provider
+      value={{ session: data ?? null, isPending, error: error ?? null }}
+    >
       {children}
     </SessionContext.Provider>
   );
