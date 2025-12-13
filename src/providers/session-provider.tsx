@@ -3,11 +3,10 @@
 import { createContext, useContext, type PropsWithChildren } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "~/server/auth/client";
-
-type Session = Awaited<ReturnType<typeof authClient.getSession>>['data'];
+import { type Session } from "~/types/auth";
 
 interface SessionContextValue {
-  session: Session;
+  session: Session | null;
   isPending: boolean;
   error: Error | null;
 }
@@ -35,7 +34,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   });
 
   return (
-    <SessionContext.Provider value={{ session: data ?? null, isPending, error: error as Error | null }}>
+    <SessionContext.Provider value={{ session: (data as Session) ?? null, isPending, error: error ?? null }}>
       {children}
     </SessionContext.Provider>
   );

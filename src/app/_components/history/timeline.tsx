@@ -34,21 +34,16 @@ const actionColors = {
 export default function Timeline() {
   const params = useParams()
   const documentId = params.documentId as string | undefined
-  
+
+  // Call all hooks unconditionally at the top
+  const { history, currentStepIndex, canGoBack, canGoForward, goToStep, goBack, goForward } = useDocumentHistory(documentId ?? '')
+
   useEffect(() => {
     console.log('[Timeline] Component mounted/updated')
     console.log('[Timeline] Params:', params)
     console.log('[Timeline] DocumentId:', documentId)
   }, [params, documentId])
-  
-  // Don't render if documentId is not available
-  if (!documentId) {
-    console.log('[Timeline] No documentId, returning null')
-    return null
-  }
-  
-  const { history, currentStepIndex, canGoBack, canGoForward, goToStep, goBack, goForward } = useDocumentHistory(documentId)
-  
+
   useEffect(() => {
     console.log('[Timeline] History data:', {
       stepsCount: history.steps.length,
@@ -56,6 +51,12 @@ export default function Timeline() {
       history
     })
   }, [history, currentStepIndex])
+
+  // Don't render if documentId is not available (after hooks)
+  if (!documentId) {
+    console.log('[Timeline] No documentId, returning null')
+    return null
+  }
 
   console.log('[Timeline] Rendering Timeline component with documentId:', documentId)
 

@@ -10,7 +10,6 @@ import SuperJSON from "superjson";
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
 import { useSession } from "~/providers/session-provider";
-import { type SessionUser } from "~/types/auth";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -43,7 +42,7 @@ export function TRPCClientProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
   const { session } = useSession();
 
-  const user = session?.user as SessionUser | undefined;
+  const user = session?.user;
   const activeOrganizationId = user?.activeOrganizationId;
 
   const trpcClient = useMemo(() =>

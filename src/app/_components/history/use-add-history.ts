@@ -1,4 +1,4 @@
-import { useSetAtom, type PrimitiveAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useAtomCallback } from 'jotai/utils'
 import { useCallback } from 'react'
 import {

@@ -9,20 +9,7 @@ import { OrganizationProvider } from "~/providers/organization-provider";
 import { useSession } from "~/providers/session-provider";
 import Navbar from "./_components/navbar";
 import { AUTH_REDIRECT_PATH_SIGNED_OUT } from "~/constants/links";
-import { type SessionUser } from "~/types/auth";
 import { useApiErrorHandler } from "~/providers/api-error-handler";
-
-// Helper to get full auth URL for redirects
-const getAuthRedirectUrl = (path: string, params?: Record<string, string>): string => {
-  let redirectUrl = path;
-  
-  // Add any params
-  if (params && Object.keys(params).length > 0) {
-    redirectUrl += `?${new URLSearchParams(params).toString()}`;
-  }
-  
-  return redirectUrl;
-};
 
 // Updated to catch all settings routes
 const ROUTES_WITHOUT_NAVBAR = [
@@ -82,7 +69,7 @@ function ClientLayoutContent({ children }: PropsWithChildren) {
     }
     
     // Set user ID and organization ID
-    const user = session.user as SessionUser | undefined;
+    const user = session.user;
     if (user?.id) {
       setUserId(user.id);
     } else {

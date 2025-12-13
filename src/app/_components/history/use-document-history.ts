@@ -7,7 +7,6 @@ import {
   type HistoryAction,
   type HistoryStep,
   type DrawingItem,
-  type ExtrudedShape
 } from '../../(protected)/atoms'
 
 export default function useDocumentHistory(documentId: string) {

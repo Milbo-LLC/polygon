@@ -37,7 +37,7 @@ export function OrganizationProvider({
 }) {
   const utils = api.useUtils();
   const { session } = useSession();
-  const user = session?.user as SessionUser | undefined;
+  const user = session?.user;
 
   const { data: organization, isLoading: loadingOrganization } = api.organization.get.useQuery(undefined, {
     enabled: !!userId,
