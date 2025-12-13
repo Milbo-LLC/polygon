@@ -19,9 +19,9 @@
     "lint:fix": "doppler run -- next lint --fix",
     "postinstall": "prisma generate",
     "preview": "doppler run -- next build && doppler run -- next start",
-    "start": "doppler run -- NODE_ENV=production node server.js",
-    "start:test": "NODE_ENV=production node server.js",
-    "start:prod": "NODE_ENV=production node server.js",
+    "start": "doppler run -- sh -c 'prisma migrate deploy && NODE_ENV=production node server.js'",
+    "start:test": "prisma migrate deploy && NODE_ENV=production node server.js",
+    "start:prod": "prisma migrate deploy && NODE_ENV=production node server.js",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate"
   },
