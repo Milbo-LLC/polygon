@@ -3,7 +3,7 @@ import type * as THREE from 'three'
 import { useThree } from '@react-three/fiber'
 import { useParams } from 'next/navigation'
 import { useAtom, useAtomValue } from 'jotai'
-import { extrudeStateAtom, documentSketchesAtom, type Point3D } from '../../../(protected)/atoms'
+import { extrudeStateAtom, documentSketchesAtom, sketchStateAtom, type Point3D } from '../../../(protected)/atoms'
 import { type Dimension } from '../../sketch/_components/sketch-controls'
 
 interface ExtrudeHandlerProps {
@@ -15,6 +15,7 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
   const documentId = params.documentId as string
   const documentSketches = useAtomValue(documentSketchesAtom(documentId))
   const [extrudeState, setExtrudeState] = useAtom(extrudeStateAtom)
+  const [sketchState, setSketchState] = useAtom(sketchStateAtom)
   const { raycaster, pointer, camera } = useThree()
   const meshRefs = useRef<Record<string, THREE.Mesh>>({})
 
@@ -54,8 +55,13 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
         const found = findSketchNearPoint(point)
 
         if (found) {
+          // Update both extrude state and sketch state for visual highlighting
           setExtrudeState({
             ...extrudeState,
+            selectedSketchId: found.sketchId
+          })
+          setSketchState({
+            ...sketchState,
             selectedSketchId: found.sketchId
           })
         }
@@ -65,12 +71,16 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
           ...extrudeState,
           selectedSketchId: null
         })
+        setSketchState({
+          ...sketchState,
+          selectedSketchId: null
+        })
       }
     }
 
     window.addEventListener('click', handleClick)
     return () => window.removeEventListener('click', handleClick)
-  }, [isActive, raycaster, pointer, camera, findSketchNearPoint, extrudeState, setExtrudeState])
+  }, [isActive, raycaster, pointer, camera, findSketchNearPoint, extrudeState, setExtrudeState, sketchState, setSketchState])
 
   // Render invisible planes for all three dimensions to catch clicks
   return (

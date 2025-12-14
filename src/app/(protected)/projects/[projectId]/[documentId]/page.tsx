@@ -125,7 +125,7 @@ export default function DocumentPage() {
 
       {/* Auto-save indicator */}
       {(isSaving || hasPendingChanges) && (
-        <div className="fixed top-4 right-4 z-40 bg-white dark:bg-gray-800 px-3 py-2 rounded shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="fixed top-4 right-20 z-40 bg-white dark:bg-gray-800 px-3 py-2 rounded shadow-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-2 text-sm">
             {isSaving ? (
               <>
