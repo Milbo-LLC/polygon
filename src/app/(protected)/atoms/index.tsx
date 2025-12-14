@@ -66,11 +66,13 @@ export const documentExtrudedShapesAtom = atomFamily((documentId: string) => ato
 
 export type ExtrudeState = {
   selectedSketchId: string | null
+  hoveredSketchId: string | null
   depth: number
 }
 
 export const extrudeStateAtom = atom<ExtrudeState>({
   selectedSketchId: null,
+  hoveredSketchId: null,
   depth: 10,
 })
 

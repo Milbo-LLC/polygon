@@ -16,7 +16,7 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
   const documentSketches = useAtomValue(documentSketchesAtom(documentId))
   const [extrudeState, setExtrudeState] = useAtom(extrudeStateAtom)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
-  const { raycaster, pointer, camera } = useThree()
+  const { raycaster, pointer, camera, gl } = useThree()
   const meshRefs = useRef<Record<string, THREE.Mesh>>({})
 
   // Helper to find sketch near a point
@@ -37,6 +37,52 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
     }
     return null
   }, [documentSketches])
+
+  // Handle hover to show cursor feedback
+  useEffect(() => {
+    if (!isActive) return
+
+    const handlePointerMove = () => {
+      const meshArray = Object.values(meshRefs.current)
+      if (meshArray.length === 0) return
+
+      raycaster.setFromCamera(pointer, camera)
+      const intersects = raycaster.intersectObjects(meshArray)
+
+      if (intersects.length > 0 && intersects[0]) {
+        const point = intersects[0].point
+        const found = findSketchNearPoint(point)
+
+        if (found) {
+          // Update hover state
+          setExtrudeState((prev) => ({
+            ...prev,
+            hoveredSketchId: found.sketchId,
+          }))
+          // Change cursor to pointer
+          gl.domElement.style.cursor = 'pointer'
+        } else {
+          setExtrudeState((prev) => ({
+            ...prev,
+            hoveredSketchId: null,
+          }))
+          gl.domElement.style.cursor = 'default'
+        }
+      } else {
+        setExtrudeState((prev) => ({
+          ...prev,
+          hoveredSketchId: null,
+        }))
+        gl.domElement.style.cursor = 'default'
+      }
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      gl.domElement.style.cursor = 'default'
+    }
+  }, [isActive, raycaster, pointer, camera, findSketchNearPoint, setExtrudeState, gl])
 
   // Handle clicks to select sketches
   useEffect(() => {

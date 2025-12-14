@@ -11,8 +11,8 @@ import useGridSnapping from '~/app/_components/sketch/hooks/use-grid-snapping'
 import { PLANE_CONFIG } from '../config/plane-config'
 import { ToolRenderers } from '../renderers/tools-renderers'
 import { useToolHandler } from '../hooks/use-tool-handler'
-import { useAtom } from 'jotai'
-import { sketchStateAtom } from '../../../(protected)/atoms'
+import { useAtom, useAtomValue } from 'jotai'
+import { sketchStateAtom, extrudeStateAtom } from '../../../(protected)/atoms'
 interface SketchPlaneProps {
   dimension: Dimension
   tool: Tool
@@ -44,6 +44,7 @@ export default function SketchPlane({
   const { raycaster, pointer, camera } = useThree()
   const snapToGrid = useGridSnapping(gridSize, gridDivisions)
   const [sketchState, setSketchState] = useAtom(sketchStateAtom)
+  const extrudeState = useAtomValue(extrudeStateAtom)
   
   // Get snapped point from intersection
   const getSnappedPoint = useCallback((intersection: THREE.Intersection): Point3D | null => {
@@ -221,7 +222,8 @@ export default function SketchPlane({
       {sketches.map(sketch => {
         const ToolRenderer = ToolRenderers[sketch.tool]
         const isSelected = sketchState.selectedSketchId === sketch.id
-        return ToolRenderer ? ToolRenderer(sketch, false, isSelected) : null
+        const isHovered = extrudeState.hoveredSketchId === sketch.id
+        return ToolRenderer ? ToolRenderer(sketch, false, isSelected, isHovered) : null
       })}
 
       {isActive && currentSketch && currentSketch.points.length >= 2 && (
