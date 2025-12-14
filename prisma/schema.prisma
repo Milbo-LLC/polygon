@@ -142,9 +142,63 @@ model Document {
     deletedAt DateTime?
     name      String
     projectId String
-    state     Json      @default("{}")
+    state     Json      @default("{}") // Deprecated - will be removed after migration
 
-    project Project @relation(fields: [projectId], references: [id])
+    // Document-level settings for CAD
+    unit          String @default("millimeter")
+    gridSize      Float  @default(100)
+    gridDivisions Int    @default(100)
+
+    project          Project              @relation(fields: [projectId], references: [id])
+    operations       DocumentOperation[]
+    computedGeometry ComputedGeometry[]
+}
+
+// Operation-based CAD history
+model DocumentOperation {
+    id         String    @id @default(cuid())
+    documentId String
+    document   Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+    // Operation metadata
+    sequence Int    // Order in timeline (0, 1, 2, ...)
+    type     String // Operation type discriminator (sketch_line, sketch_rectangle, extrude, etc.)
+    parameters Json // Type-specific parameters
+
+    // Dependency tracking for parametric features
+    dependencies String[] // IDs of operations this depends on
+
+    // Audit trail
+    createdBy String?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    // Soft delete to preserve history
+    deletedAt DateTime?
+
+    @@unique([documentId, sequence])
+    @@index([documentId, sequence])
+    @@index([documentId, deletedAt])
+}
+
+// Cached geometry for performance optimization
+model ComputedGeometry {
+    id         String   @id @default(cuid())
+    documentId String
+    document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+    operationId String @unique
+
+    // Cached Three.js geometry data (serialized)
+    vertices Json // Float32Array
+    indices  Json // Uint16Array
+    normals  Json // Float32Array
+
+    // Cache metadata
+    computedAt DateTime @default(now())
+    isValid    Boolean  @default(true)
+
+    @@index([documentId])
 }
 
 model Notification {
