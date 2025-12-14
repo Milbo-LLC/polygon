@@ -14,6 +14,7 @@ import { canvasStateAtom, sketchStateAtom } from '../(protected)/atoms'
 import DynamicAxesHelper from './dynamic-axes-helper'
 import ExtrudeHandler from './extrude/_components/extrude-handler'
 import ExtrudedShapes from './extrude/_components/extruded-shapes'
+import ExtrudeControls from './extrude/_components/extrude-controls'
 import Timeline from './history/timeline'
 
 // Camera position controller component
@@ -161,6 +162,7 @@ export default function Scene() {
     <div className="flex h-full w-full relative">
       <ResetGridButton cameraControlsRef={cameraControlsRef} />
       <ControlPanel />
+      <ExtrudeControls />
       <Timeline />
       <Canvas 
         className="flex h-full w-full" 

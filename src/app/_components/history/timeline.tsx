@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '~/components/ui/button'
-import { ChevronLeft, ChevronRight, PencilIcon, BoxIcon, EraserIcon, Trash2Icon } from 'lucide-react'
+import { ChevronLeft, ChevronRight, PencilIcon, BoxIcon, EraserIcon, Trash2Icon, History, X } from 'lucide-react'
 import useDocumentHistory from './use-document-history'
 
 function formatTimeAgo(timestamp: number): string {
@@ -34,6 +34,7 @@ const actionColors = {
 export default function Timeline() {
   const params = useParams()
   const documentId = params.documentId as string | undefined
+  const [isExpanded, setIsExpanded] = useState(false)
 
   // Call all hooks unconditionally at the top
   const { history, currentStepIndex, canGoBack, canGoForward, goToStep, goBack, goForward } = useDocumentHistory(documentId ?? '')
@@ -60,6 +61,22 @@ export default function Timeline() {
 
   console.log('[Timeline] Rendering Timeline component with documentId:', documentId)
 
+  // Collapsed view - just a toggle button
+  if (!isExpanded) {
+    return (
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute top-4 right-4 z-50 bg-background/95 backdrop-blur-sm shadow-lg"
+        onClick={() => setIsExpanded(true)}
+        title="Show History"
+      >
+        <History className="h-4 w-4" />
+      </Button>
+    )
+  }
+
+  // Expanded view - full history panel
   return (
     <div className="absolute top-4 right-4 z-50 w-80 flex flex-col gap-2 bg-background/95 p-4 rounded-lg backdrop-blur-sm border border-border shadow-lg">
       <div className="flex items-center justify-between mb-2">
@@ -71,6 +88,7 @@ export default function Timeline() {
             className="h-7 w-7"
             onClick={goBack}
             disabled={!canGoBack}
+            title="Go back"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -80,8 +98,18 @@ export default function Timeline() {
             className="h-7 w-7"
             onClick={goForward}
             disabled={!canGoForward}
+            title="Go forward"
           >
             <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => setIsExpanded(false)}
+            title="Close history"
+          >
+            <X className="h-4 w-4" />
           </Button>
         </div>
       </div>
