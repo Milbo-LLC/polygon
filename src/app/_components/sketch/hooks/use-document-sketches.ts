@@ -1,24 +1,80 @@
 import { type DrawingItem, type HistoryAction } from "~/app/(protected)/atoms"
-import { useAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { documentSketchesAtom } from "~/app/(protected)/atoms"
+import { documentSketchesFromOperationsAtom, documentPendingOperationsAtom, isUsingDatabaseAtom } from "~/app/(protected)/atoms/operations-atoms"
 import { type Dimension } from "~/app/_components/sketch/_components/sketch-controls"
 import { useCallback } from "react"
+import type { Operation } from "~/types/operations"
 
 // Custom hook for document sketches
+// Supports both localStorage (legacy) and database (new) modes
 export default function useDocumentSketches(
   documentId: string,
   dimension: Dimension,
   onHistoryAction?: (action: HistoryAction) => void
 ) {
-  const [documentSketches, setDocumentSketches] = useAtom(documentSketchesAtom(documentId))
+  // Check which mode we're using
+  const isUsingDatabase = useAtomValue(isUsingDatabaseAtom(documentId))
+
+  // localStorage mode atoms
+  const [localStorageSketches, setLocalStorageSketches] = useAtom(documentSketchesAtom(documentId))
+
+  // Database mode atoms
+  const dbSketches = useAtomValue(documentSketchesFromOperationsAtom(documentId))
+  const setPendingOps = useSetAtom(documentPendingOperationsAtom(documentId))
+
+  // Choose the right data source
+  const documentSketches = isUsingDatabase ? dbSketches : localStorageSketches
+  const setDocumentSketches = setLocalStorageSketches
 
   const addSketch = useCallback((sketch: DrawingItem) => {
     if (sketch.points.length < 2) return
 
-    setDocumentSketches({
-      ...documentSketches,
-      [dimension]: [...documentSketches[dimension], sketch]
-    })
+    if (isUsingDatabase) {
+      // Database mode: Create operation
+      let operation: Operation;
+
+      if (sketch.tool === 'rectangle') {
+        operation = {
+          id: sketch.id,
+          sequence: 0, // Will be set by server
+          type: 'sketch_rectangle' as const,
+          parameters: {
+            dimension: sketch.dimension,
+            startPoint: sketch.points[0]!,
+            endPoint: sketch.points[1]!,
+            color: sketch.color,
+          },
+          dependencies: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      } else {
+        operation = {
+          id: sketch.id,
+          sequence: 0, // Will be set by server
+          type: 'sketch_line' as const,
+          parameters: {
+            dimension: sketch.dimension,
+            points: sketch.points,
+            color: sketch.color,
+            closed: false,
+          },
+          dependencies: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      }
+
+      // Add to pending operations (will be auto-saved)
+      setPendingOps((prev) => [...prev, operation])
+    } else {
+      // localStorage mode (legacy)
+      setDocumentSketches({
+        ...documentSketches,
+        [dimension]: [...documentSketches[dimension], sketch]
+      })
+    }
 
     // Record history
     onHistoryAction?.({
@@ -30,7 +86,7 @@ export default function useDocumentSketches(
         tool: sketch.tool
       }
     })
-  }, [documentSketches, dimension, setDocumentSketches, onHistoryAction])
+  }, [isUsingDatabase, documentSketches, dimension, setDocumentSketches, setPendingOps, onHistoryAction])
 
   const undoLastSketch = useCallback(() => {
     const sketchCount = documentSketches[dimension].length
