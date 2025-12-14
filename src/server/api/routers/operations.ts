@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
@@ -189,7 +190,7 @@ export const operationsRouter = createTRPCRouter({
         data: {
           documentId: input.documentId,
           type: input.type,
-          parameters: input.parameters,
+          parameters: input.parameters as Prisma.InputJsonValue,
           dependencies: input.dependencies,
           sequence: nextSequence,
           createdBy: ctx.session.user.id,
@@ -277,7 +278,7 @@ export const operationsRouter = createTRPCRouter({
             data: {
               documentId: input.documentId,
               type: op.type,
-              parameters: op.parameters,
+              parameters: op.parameters as Prisma.InputJsonValue,
               dependencies: op.dependencies,
               sequence: nextSequence++,
               createdBy: ctx.session.user.id,
@@ -369,7 +370,7 @@ export const operationsRouter = createTRPCRouter({
       const updated = await ctx.db.documentOperation.update({
         where: { id: input.operationId },
         data: {
-          parameters: updatedParameters,
+          parameters: updatedParameters as Prisma.InputJsonValue,
           updatedAt: new Date(),
         },
       });
