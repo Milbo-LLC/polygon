@@ -20,7 +20,7 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
   const meshRefs = useRef<Record<string, THREE.Mesh>>({})
 
   // Helper to find sketch near a point
-  const findSketchNearPoint = useCallback((point: Point3D, threshold = 2): { sketchId: string, dimension: Dimension } | null => {
+  const findSketchNearPoint = useCallback((point: Point3D, threshold = 10): { sketchId: string, dimension: Dimension } | null => {
     for (const dim of ['x', 'y', 'z'] as const) {
       for (const sketch of documentSketches[dim]) {
         for (const sketchPoint of sketch.points) {
@@ -127,6 +127,29 @@ export default function ExtrudeHandler({ isActive }: ExtrudeHandlerProps) {
     window.addEventListener('click', handleClick)
     return () => window.removeEventListener('click', handleClick)
   }, [isActive, raycaster, pointer, camera, findSketchNearPoint, extrudeState, setExtrudeState, sketchState, setSketchState])
+
+  // Handle ESC key to deselect
+  useEffect(() => {
+    if (!isActive) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        // Deselect everything
+        setExtrudeState((prev) => ({
+          ...prev,
+          selectedSketchId: null,
+          hoveredSketchId: null,
+        }))
+        setSketchState((prev) => ({
+          ...prev,
+          selectedSketchId: null,
+        }))
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isActive, setExtrudeState, setSketchState])
 
   // Render invisible planes for all three dimensions to catch clicks
   return (
