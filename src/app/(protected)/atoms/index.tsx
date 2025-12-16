@@ -2,6 +2,9 @@ import { atom } from "jotai";
 import { atomFamily, atomWithStorage } from "jotai/utils";
 import { type Tool, type Dimension } from "~/app/_components/sketch/_components/sketch-controls";
 
+// Re-export types for convenience
+export type { Tool, Dimension };
+
 export const sidebarCollapsedAtom = atomWithStorage<boolean>("polygon:sidebar:collapsed", false);
 
 // Theme options: 'light', 'dark', or 'system'
