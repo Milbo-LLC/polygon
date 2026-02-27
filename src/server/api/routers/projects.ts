@@ -6,7 +6,7 @@ import {
 } from "~/server/api/trpc";
 import { CreateProjectSchema, ProjectSchema, UpdateProjectSchema, ProjectWithDocumentsSchema } from "~/validators/projects";
 import { parseDocument } from "./documents";
-import { DocumentSchema, type Document } from "~/validators/documents";
+import { DocumentSchema, emptyDocumentState, type Document } from "~/validators/documents";
 
 type ProjectWithDocuments = Prisma.ProjectGetPayload<{
   include: { documents: true };
@@ -52,7 +52,7 @@ export const projectRouter = createTRPCRouter({
         await tx.document.create({
           data: {
             name: "Untitled Document",
-            state: {},
+            state: emptyDocumentState(),
             projectId: newProject.id,
           },
         });

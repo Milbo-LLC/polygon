@@ -196,6 +196,8 @@ app.prepare().then(() => {
         return;
       }
 
+      console.log(`Document ${documentId} state update received from socket ${socket.id}`);
+
       documentStates.set(documentId, clonedState);
       io.to(documentId).emit("document:state:updated", { state: clonedState });
     });

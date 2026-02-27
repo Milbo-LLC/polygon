@@ -12,10 +12,19 @@ import type { Document } from "~/validators/documents";
 export const parseDocument = (dbDocument: Prisma.DocumentGetPayload<object>): Document => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { deletedAt, ...documentWithoutDeletedAt } = dbDocument;
+  const rawState = dbDocument.state ?? emptyDocumentState();
+  const parsedState = DocumentStateSchema.safeParse(rawState);
+
+  if (!parsedState.success) {
+    console.warn("Invalid document state found, falling back to defaults", {
+      documentId: dbDocument.id,
+      issues: parsedState.error.flatten(),
+    });
+  }
   
   return {
     ...documentWithoutDeletedAt,
-    state: DocumentStateSchema.parse(dbDocument.state ?? emptyDocumentState()),
+    state: parsedState.success ? parsedState.data : emptyDocumentState(),
   };
 };
 

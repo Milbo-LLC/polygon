@@ -88,6 +88,7 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
   const lastAppliedState = useRef<string>("");
   const isApplyingExternalState = useRef(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingStateRef = useRef<DocumentState | null>(null);
 
   const applyState = useCallback(
     (state: DocumentState) => {
@@ -127,6 +128,10 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     const handleStateUpdate = ({ state }: { state: unknown }) => {
       try {
         const parsed = DocumentStateSchema.parse(state);
+        console.debug("[sync] received remote state", {
+          documentId,
+          sourceSocketId: socket?.id,
+        });
         applyState(parsed);
       } catch (error) {
         console.error("Failed to apply remote document state", error);
@@ -138,7 +143,7 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     return () => {
       socket.off("document:state:updated", handleStateUpdate);
     };
-  }, [socket, applyState]);
+  }, [socket, applyState, documentId]);
 
   useEffect(() => {
     if (!socket) return;
@@ -146,6 +151,9 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     const handleHydration = ({ state }: { state: unknown }) => {
       try {
         const parsed = DocumentStateSchema.parse(state);
+        console.debug("[sync] received hydration state", {
+          documentId,
+        });
         applyState(parsed);
       } catch (error) {
         console.error("Failed to hydrate document state", error);
@@ -182,11 +190,20 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
 
     lastAppliedState.current = serialized;
 
-    if (socket) {
+    if (socket && socket.connected) {
+      console.debug("[sync] emitting state", {
+        documentId,
+        socketId: socket.id,
+      });
       socket.emit("document:state:update", {
         documentId,
         state: stateToPersist,
       });
+    } else {
+      console.debug("[sync] queueing state until socket connects", {
+        documentId,
+      });
+      pendingStateRef.current = stateToPersist;
     }
 
     if (debounceRef.current) {
@@ -194,6 +211,7 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
     }
 
     debounceRef.current = setTimeout(() => {
+      console.debug("[sync] persisting state to DB", { documentId });
       persistState({ id: documentId, state: stateToPersist });
     }, SAVE_DEBOUNCE_MS);
 
@@ -203,6 +221,34 @@ export function useDocumentModelingSync(documentId: string, socket: Socket | nul
       }
     };
   }, [sketches, extrudedShapes, documentId, socket, persistState]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const flushPendingState = () => {
+      if (pendingStateRef.current) {
+        console.debug("[sync] flushing pending state", {
+          documentId,
+          socketId: socket.id,
+        });
+        socket.emit("document:state:update", {
+          documentId,
+          state: pendingStateRef.current,
+        });
+        pendingStateRef.current = null;
+      }
+    };
+
+    if (socket.connected) {
+      flushPendingState();
+    } else {
+      socket.once("connect", flushPendingState);
+    }
+
+    return () => {
+      socket.off("connect", flushPendingState);
+    };
+  }, [socket, documentId]);
 
   return {
     isLoading,
